@@ -1,0 +1,62 @@
+{
+  "version": "1",
+  "cognitoConfig": {
+    "identityPoolName": "testAuthIdentityPool",
+    "allowUnauthenticatedIdentities": false,
+    "resourceNameTruncated": "griota23b4567e",
+    "userPoolName": "Griota3",
+    "autoVerifiedAttributes": [
+      "phone_number"
+    ],
+    "mfaConfiguration": "OFF",
+    "mfaTypes": [
+      "SMS Text Message"
+    ],
+    "smsAuthenticationMessage": "Your authentication code is {####}",
+    "smsVerificationMessage": "Your verification code is {####}",
+    "emailVerificationSubject": "Your verification code",
+    "emailVerificationMessage": "Your verification code is {####}",
+    "defaultPasswordPolicy": false,
+    "passwordPolicyMinLength": 8,
+    "passwordPolicyCharacters": [],
+    "requiredAttributes": [
+      "phone_number"
+    ],
+    "aliasAttributes": [],
+    "userpoolClientGenerateSecret": false,
+    "userpoolClientRefreshTokenValidity": 30,
+    "userpoolClientWriteAttributes": [],
+    "userpoolClientReadAttributes": [],
+    "userpoolClientLambdaRole": "Griota23b4567e_userpoolclient_lambda_role",
+    "userpoolClientSetAttributes": false,
+    "sharedId": "23b4567e",
+    "resourceName": "Griota3",
+    "authSelections": "identityPoolAndUserPool",
+    "serviceName": "Cognito",
+    "usernameAttributes": [
+      "phone_number"
+    ],
+    "useDefault": "default",
+    "userPoolGroups": false,
+    "userPoolGroupList": [],
+    "adminQueries": false,
+    "usernameCaseSensitive": false,
+    "useEnabledMfas": true,
+    "authRoleArn": {
+      "Fn::GetAtt": [
+        "AuthRole",
+        "Arn"
+      ]
+    },
+    "unauthRoleArn": {
+      "Fn::GetAtt": [
+        "UnauthRole",
+        "Arn"
+      ]
+    },
+    "breakCircularDependency": true,
+    "dependsOn": [],
+    "hostedUI": false,
+    "authProviders": []
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-griota3-dev-144735-authRole",
+      "UnauthRoleArn": "arn:aws:iam::807453714028:role/amplify-griota3-dev-144735-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::807453714028:role/amplify-griota3-dev-144735-authRole",
+      "Region": "ap-southeast-1",
+      "DeploymentBucketName": "amplify-griota3-dev-144735-deployment",
+      "UnauthRoleName": "amplify-griota3-dev-144735-unauthRole",
+      "StackName": "amplify-griota3-dev-144735",
+      "StackId": "arn:aws:cloudformation:ap-southeast-1:807453714028:stack/amplify-griota3-dev-144735/742e07f0-f896-11ed-b176-0aee62e8ce2e",
+      "AmplifyAppId": "d2wczi8cme05wc"
+    },
+    "categories": {
+      "api": {
+        "griota3": {}
+      },
+      "auth": {
+        "Griota3": {}
+      }
+    }
+  }
+}
