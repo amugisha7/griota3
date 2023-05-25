@@ -26,8 +26,11 @@ const styles = StyleSheet.create({
     },
     
     container_SECONDARY: {
-        backgroundColor: 'F2F2F2',
+        backgroundColor: '#F2F2F2',
               
+    },
+    container_DISABLED: {
+        backgroundColor: '#bcbcbc'
     },
     text: {
         fontWeight: '600',

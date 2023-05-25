@@ -12,14 +12,14 @@ const SignInScreen = ({navigation}) => {
   
   const route = useRoute()
 
-  const [loginError, setLoginError] = useState(null)
-  const [accountCreatedMessage, setAccountCreatedMessage] = useState(null)
-  const [createdUserName, setCreatedUserName] = useState(null)
+  const [loginError, setLoginError] = useState()
+  const [accountCreatedMessage, setAccountCreatedMessage] = useState(route?.params?.accountCreatedMessage)
+  const [createdUserName, setCreatedUserName] = useState(route?.params?.createdUserName)
 
-  useEffect(()=>{
-    setAccountCreatedMessage(route?.params?.accountCreatedMessage); 
-    setCreatedUserName(route?.params?.createdUserName);
-  }, accountCreatedMessage)
+  // useEffect(()=>{
+  //   setAccountCreatedMessage(route?.params?.accountCreatedMessage); 
+  //   setCreatedUserName(route?.params?.createdUserName);
+  // }, accountCreatedMessage)
 
   const { control, handleSubmit} = useForm({
     defaultValues: {
@@ -33,44 +33,46 @@ const SignInScreen = ({navigation}) => {
   const ForgotPasswordPressed = () => {navigation.navigate('Forgot Password')}
 
   const SigningIn = async (data) => {
+    const {username, password} = data
     try { 
-      const response = await Auth.signIn(data.username, data.password)
+      const response = await Auth.signIn(`+256${username.slice(1)}`, password)
       
-      navigation.navigate('Tester')
+      navigation.navigate('FormScreen')
     }
-    catch (err) {
-      err && setLoginError(err)
+    catch(e){
+      setLoginError(e.message)
     }
     
   }
 
-  const PHONE_REGEX = /^0\d{9}/
+  const PHONE_REGEX = /^07\d{8}$/
 
   return (
       <View style={styles.container }>
         <Image source={Logo} style={styles.logo} resizeMode='contain'/>
         
-
-        {accountCreatedMessage &&  <Text>{accountCreatedMessage}</Text>}
+        { loginError && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>ERROR: {loginError}</Text>}
+        
+        {accountCreatedMessage &&  <Text style={{color: 'green', marginVertical: 20}}>{accountCreatedMessage}</Text>}
         <CustomInput 
           name='username' 
-          placeholder='Phone Number (+256712345678)' 
+          placeholder='Phone Number (07xxxxxxxx)' 
           control={control}
-          // rules={{
-          //   required: "This field is required", 
-          //   pattern: {
-          //     value: PHONE_REGEX,
-          //     message: 'Invalid Phone Number (use format 0712345678)'
-          //   },
-          // }}
-          // type={'tel'}
+          rules={{
+            required: "This field is required", 
+            pattern: {
+              value: PHONE_REGEX,
+              message: 'Invalid Phone Number (use format 07xxxxxxxx)'
+            },
+          }}
+          type={'tel'}
         />
         
         <CustomInput 
           name='password'
           placeholder={'Password'} 
           control={control}
-          secureTextEntry={true}
+          secureTextEntry
           rules={{
             required: "This field is required",
             minLength: {
@@ -81,16 +83,14 @@ const SignInScreen = ({navigation}) => {
         />
         <CustomButton onPress={handleSubmit(SigningIn)} buttonFunction={'Sign In'}/>
 
-        {/* <Text style={[styles.link, {marginTop: 20, marginBottom: 20}]} onPress={ForgotPasswordPressed}>Forgot Password</Text> */}
+        <Text style={[styles.link, {marginTop: 20, marginBottom: 20}]} onPress={ForgotPasswordPressed}>Forgot Password</Text>
         <View style={{marginTop: 20}}>
           <Text>Don't yet have an account?</Text>
         </View>
         <View style={{width: '50%'}}>
           <CustomButton onPress={Registering} buttonFunction={'Register'} type='SECONDARY'/>
         </View>
-        <View>
-          { loginError && <Text style={griotaStyles.errors}>Login Failed </Text>}
-        </View>
+        
       </View>
     
   )

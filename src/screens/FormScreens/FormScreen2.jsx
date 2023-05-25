@@ -22,9 +22,6 @@ const FormScreen2 = (
     <View >
       <View >
         <Text style={griotaStyles.title}>More Business Details</Text>
-        <Text style={griotaStyles.text}>Please fill out this form completely to apply for a working capital loan.</Text>
-        <Text style={griotaStyles.text}>Incomplete or misleading information may lead to your loan application being rejected.</Text>
-        <Text style={griotaStyles.text}>Your information will be protected as per our privacy policy. </Text>
       </View>
       <View>
 

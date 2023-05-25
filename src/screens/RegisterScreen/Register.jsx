@@ -6,9 +6,12 @@ import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { useForm } from 'react-hook-form';
 import {Auth} from 'aws-amplify'; 
+import { griotaStyles } from '../../../assets/styles/style';
 
 
 const Register = ({navigation}) => {
+
+  const [errorMessage, setErrorMessage] = useState()
 
   const { control, handleSubmit, watch  } = useForm({
     defaultValues: {
@@ -18,7 +21,7 @@ const Register = ({navigation}) => {
     }
   });
 
-  const PHONE_REGEX = /^0\d{9}/
+  const PHONE_REGEX = /^07\d{8}$/
 
   const pwd = watch('password'); 
 
@@ -40,12 +43,13 @@ const Register = ({navigation}) => {
 
   const registerUser = async (data) => {
     const {username, password} = data;
+    // setPhoneNumber(`+256${username.slice(1)}`)
     try{
-      await Auth.signUp(username, password)
+      await Auth.signUp(`+256${username.slice(1)}`, password)
       navigation.navigate('Confirm Phone Number', {username})
     } 
     catch(e){
-      console.log(e.message);
+      setErrorMessage(e.message);
     }
   }
 
@@ -53,25 +57,26 @@ const Register = ({navigation}) => {
       <View style={styles.container }>
         <Image source={Logo} style={styles.logo}/>
         <Text style={styles.title}>Create an Account</Text>
+        {errorMessage && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>{errorMessage}</Text>}
         <CustomInput 
           name='username' 
-          placeholder='Phone Number (+256712345678)' 
+          placeholder='Phone Number (07xxxxxxxx)' 
           control={control}
-          // rules={{
-          //   required: "This field is required", 
-          //   pattern: {
-          //     value: PHONE_REGEX,
-          //     message: 'Invalid Phone Number (use format 0712345678)'
-          //   },
-          // }}
-          // type={'tel'}
+          rules={{
+            required: "This field is required", 
+            pattern: {
+              value: PHONE_REGEX,
+              message: 'Invalid Phone Number (use format 07xxxxxxxx)'
+            },
+          }}
+          type={'tel'}
         />
         
         <CustomInput 
           name='password'
           placeholder={'Password'} 
           control={control}
-          secureTextEntry={true}
+          secureTextEntry
           rules={{
             required: "This field is required",
             minLength: {
@@ -85,7 +90,7 @@ const Register = ({navigation}) => {
           name='passwordCheck'
           placeholder={'Confirm Password'} 
           control={control}
-          secureTextEntry={true}
+          secureTextEntry
           rules={{
             required: "This field is required",
             validate: value => pwd===value || 'Passwords do not match',

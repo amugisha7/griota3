@@ -28,6 +28,13 @@ export const griotaStyles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    subtitle: {
+        flexWrap: 'wrap',
+        fontSize: 20,
+        fontWeight: 600,
+        marginVertical: 20,
+        color: 'blue',
+    },
     title: {
         flexWrap: 'wrap',
         fontSize: 24,

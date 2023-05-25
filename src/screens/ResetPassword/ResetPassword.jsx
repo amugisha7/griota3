@@ -7,14 +7,13 @@ import CustomButton from '../../components/CustomButton/CustomButton';
 import { useForm } from 'react-hook-form';
 import { Auth } from 'aws-amplify';
 import { useRoute } from '@react-navigation/native';
+import { griotaStyles } from '../../../assets/styles/style';
 
-const ConfirmPhoneNumber = ({navigation}) => {
+const ResetPassword = ({navigation}) => {
 
+  const [error, setError] = useState()
   const route = useRoute()
-
-  const [errorMessage, setErrorMessage] = useState()
-
-  const [createdUserName, setCreatedUserName] = useState(route?.params?.username)
+  const [createdUserName, setCreatedUserName] = useState(route?.params?.phoneNumber)
   
   const { control, handleSubmit, watch  } = useForm({
     defaultValues: {
@@ -24,27 +23,26 @@ const ConfirmPhoneNumber = ({navigation}) => {
   });
   
   const confirmingCode = async (data) => {
-    const {code} = data;
-    const accountCreatedMessage = 'Your Account was created Successfully. Please log in.'
+    const {code, password} = data;
+    const accountCreatedMessage = 'Password changed successfully. Please log in.'
     
     try{
-      const verifCode = await Auth.confirmSignUp(`+256${createdUserName.slice(1)}`, code);
+      const verifCode = await Auth.forgotPasswordSubmit(`+256${createdUserName.slice(1)}`, code, password);
       console.log('user verified')
       navigation.navigate('Sign In', {accountCreatedMessage, createdUserName})
     }
     catch(e){
-      setErrorMessage(e.message)
+      console.log(e.message)
     }
   }
-  const goToRegisterPage = () => {navigation.navigate('Register')}
+  const goToForgotPassword = () => {navigation.navigate('Forgot Password')}
   
   const resendCode = async () => {
     try{
-      const newCode = await Auth.resendSignUp(`+256${createdUserName.slice(1)}`);
-      console.log('new code ', newCode)
+      await Auth.resendSignUp(`+256${createdUserName.slice(1)}`);
     }
     catch(e){
-      setErrorMessage(e.message)
+      setError(e.message)
     }
 
 
@@ -59,7 +57,7 @@ const ConfirmPhoneNumber = ({navigation}) => {
             control={control}
           />
         </View> */}
-        {errorMessage && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>{errorMessage}</Text>}
+        { error && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>ERROR: {error}</Text>}
 
         <Text style={styles.title}>Enter the code sent to your phone number</Text>
         <CustomInput 
@@ -68,6 +66,22 @@ const ConfirmPhoneNumber = ({navigation}) => {
           control={control}
           rules={{}}
         />
+
+        <Text style={styles.title}>Create a New Password</Text>
+        <CustomInput 
+          name='password'
+          placeholder={'Password'} 
+          control={control}
+          secureTextEntry={true}
+          rules={{
+            required: "This field is required",
+            minLength: {
+              value: 8,
+              message: "Too short",
+            } 
+          }}
+        />
+
         <CustomButton onPress={handleSubmit(confirmingCode)} buttonFunction={'Confirm Phone Number'}/>
 
         <View style={{marginTop: 20}}>
@@ -78,14 +92,14 @@ const ConfirmPhoneNumber = ({navigation}) => {
         </View>
 
         <View style={{width: '50%'}}>
-          <CustomButton onPress={goToRegisterPage} buttonFunction={'Change Number'} type='SECONDARY'/>
+          <CustomButton onPress={goToForgotPassword} buttonFunction={'Change Number'} type='SECONDARY'/>
         </View>
         
       </View>
     
   )
 }
-export default ConfirmPhoneNumber
+export default ResetPassword
 
 const styles = StyleSheet.create({
     

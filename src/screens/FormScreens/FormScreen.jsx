@@ -1,28 +1,22 @@
 import { View, Text, StyleSheet, ScrollView } from 'react-native'
 import React from 'react'
 import { useState, useEffect } from 'react'
-import { Pressable } from 'react-native'
+import CheckBox from '@react-native-community/checkbox';
+import { griotaStyles } from '../../../assets/styles/style';
+
 import FormScreen1 from './FormScreen1';
 import FormScreen2 from './FormScreen2';
 import FormScreen3 from './FormScreen3'; 
 import FormScreen4 from './FormScreen4'; 
 import FormScreen5 from './FormScreen5'; 
-// import { Auth } from 'aws-amplify';
+import FormScreen6 from './FormScreen6';
+import FormScreen7 from './FormScreen7';
 import CustomButton from '../../components/CustomButton/CustomButton';
+// import { Auth } from 'aws-amplify';
 
 const FormScreen = ({navigation}) => {
 
   const [phoneNumber, setPhoneNumber] = useState('abc')
-
-  const [fd, setFd] = useState({
-    selectedBusinessType: "",
-    businessActivity: "",
-    selectedBusinesLocation: "",
-    businessAreaPicBlob: {},
-    ownerInBusinessPicBlob: {},
-    outsideOfBusinessPicBlob: {}
-  })
-
   const[formPage, setFormPage] = useState(1)
   const[salesLastWeek, setSalesLastWeek] = useState()
   const[salesBeforeLastWeek, setSalesBeforeLastWeek] = useState()
@@ -40,8 +34,17 @@ const FormScreen = ({navigation}) => {
   const[nextOfKinName, setNextOfKinName] = useState()
   const[nextOfKinRelationship, setNextOfKinRelationship] = useState()
   const[nextOfKinPhoneNumber, setNextOfKinPhoneNumber] = useState()
-
-  
+  const[referee1Name, setReferee1Name] = useState()
+  const[referee1PhoneNumber, setReferee1PhoneNumber] = useState()
+  const[referee1KnownPeriod, setReferee1KnownPeriod] = useState()
+  const[NINofReferee1, setNINofReferee1] = useState()
+  const[ref1NationalIDPic, setRef1NationalIDPic] = useState()
+  const[referee2Name, setReferee2Name] = useState()
+  const[referee2PhoneNumber, setReferee2PhoneNumber] = useState()
+  const[referee2KnownPeriod, setReferee2KnownPeriod] = useState()
+  const[NINofReferee2, setNINofReferee2] = useState()
+  const[ref2NationalIDPic, setRef2NationalIDPic] = useState()
+  const [declaration, setDeclaration] = useState(false)
   // useEffect(()=>{
 
   //   const getPhoneNumber = async()=> {
@@ -103,6 +106,22 @@ const FormScreen = ({navigation}) => {
     setNextOfKinPhoneNumber(nextOfKinPhoneNumber);
     setFormPage(formPage + 1)
   }
+  
+  const receiveFormData6 = (data) =>{
+    const {referee1Name, referee1PhoneNumber, NINofReferee1} = data
+    setReferee1Name(referee1Name);
+    setReferee1PhoneNumber(referee1PhoneNumber);
+    setNINofReferee1(NINofReferee1);
+    setFormPage(formPage + 1)
+  }
+
+  const receiveFormData7 = (data) =>{
+    const {referee2Name, referee2PhoneNumber, NINofReferee2} = data
+    setReferee2Name(referee2Name);
+    setReferee2PhoneNumber(referee2PhoneNumber);
+    setNINofReferee2(NINofReferee2);
+    setFormPage(formPage + 1)
+  }
 
   const showOnConsole=()=>{
     console.log('busienss Activity', businessActivity)
@@ -121,7 +140,17 @@ const FormScreen = ({navigation}) => {
     console.log('name of Next of Kin', nextOfKinName)
     console.log('relationship of NOK', nextOfKinRelationship)
     console.log('NOK phone number ', nextOfKinPhoneNumber)
-    
+    console.log('Ref1 Name ', referee1Name)
+    console.log('Ref1 phone number ',  referee1PhoneNumber)
+    console.log('Ref1 Known period ', referee1KnownPeriod)
+    console.log('Ref1 NIN ',  NINofReferee1)
+    console.log('Ref1 NIN Pic ', ref1NationalIDPic)
+    console.log('Ref2 Name ', referee2Name)
+    console.log('Ref2 phone number ',  referee2PhoneNumber)
+    console.log('Ref2 Known period ', referee2KnownPeriod)
+    console.log('Ref2 NIN ',  NINofReferee2)
+    console.log('Ref2 NIN Pic ', ref2NationalIDPic)
+
 
   }
 
@@ -176,7 +205,41 @@ const FormScreen = ({navigation}) => {
         <View
           style={{display: formPage===6 ?'flex':'none'}}
           >
-          <CustomButton onPress={uploadS3} buttonFunction={'Submit to AWS'}/>
+          <FormScreen6
+            setReferee1KnownPeriod={setReferee1KnownPeriod}
+            receiveFormData6={receiveFormData6}
+            setRef1NationalIDPic={setRef1NationalIDPic}
+          />
+        </View>
+        <View
+          style={{display: formPage===7 ?'flex':'none'}}
+          >
+          <FormScreen7
+            setReferee2KnownPeriod={setReferee2KnownPeriod}
+            receiveFormData7={receiveFormData7}
+            setRef2NationalIDPic={setRef2NationalIDPic}
+          />
+        </View>
+        <View
+          style={{display: formPage===8 ?'flex':'none'}}
+          >
+          <Text style={griotaStyles.title}>Submit Loan Application</Text>
+          <Text style={griotaStyles.label}>Declaration</Text>
+          <View style={{flex: 1, flexDirection: 'row', marginBottom: 40}}>
+            <CheckBox
+              disabled={false}
+              value={declaration}
+              onValueChange={(newValue) => setDeclaration(newValue)}
+            />
+            <Text style={[griotaStyles.text, {textAlign: 'left'}]}>I have not entered false or misleading information.
+              I agree that lying would disqualify me from future loans and could be prosecuted</Text>
+          </View>
+          <View style={{display: declaration?'none':'flex'}}>
+            <CustomButton buttonFunction={'Submit Application'} type={'DISABLED'}/>
+          </View>
+          <View style={{display: declaration?'flex':'none'}}>
+            <CustomButton onPress={uploadS3} buttonFunction={'Submit Application'}/>
+          </View>
         </View>
         { formPage > 1 &&
           <View>
