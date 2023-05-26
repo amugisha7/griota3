@@ -25,6 +25,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     
+    container_PRIMARY: {
+        backgroundColor: '#3D00FF'
+    },
     container_SECONDARY: {
         backgroundColor: '#F2F2F2',
               

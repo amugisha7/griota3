@@ -26,7 +26,7 @@ const App= () => {
   return (
     
      <NavigationContainer>
-       <Stack.Navigator initialRouteName="FormScreen" screenOptions={{headerShown: false}}>
+       <Stack.Navigator initialRouteName="Sign In" screenOptions={{headerShown: false}}>
         
            <Stack.Screen name='Sign In' component={SignInScreen} />
            <Stack.Screen name='Register' component={Register} />

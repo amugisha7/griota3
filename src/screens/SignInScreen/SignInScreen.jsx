@@ -15,11 +15,12 @@ const SignInScreen = ({navigation}) => {
   const [loginError, setLoginError] = useState()
   const [accountCreatedMessage, setAccountCreatedMessage] = useState(route?.params?.accountCreatedMessage)
   const [createdUserName, setCreatedUserName] = useState(route?.params?.createdUserName)
+  const [status, setStatus] = useState('Sign In')
 
-  // useEffect(()=>{
-  //   setAccountCreatedMessage(route?.params?.accountCreatedMessage); 
-  //   setCreatedUserName(route?.params?.createdUserName);
-  // }, accountCreatedMessage)
+  useEffect(()=>{
+    setAccountCreatedMessage(route?.params?.accountCreatedMessage); 
+    setCreatedUserName(route?.params?.createdUserName);
+  }, [accountCreatedMessage, createdUserName])
 
   const { control, handleSubmit} = useForm({
     defaultValues: {
@@ -33,14 +34,18 @@ const SignInScreen = ({navigation}) => {
   const ForgotPasswordPressed = () => {navigation.navigate('Forgot Password')}
 
   const SigningIn = async (data) => {
+    setStatus('Signing In...')
     const {username, password} = data
     try { 
       const response = await Auth.signIn(`+256${username.slice(1)}`, password)
-      
       navigation.navigate('FormScreen')
+      
     }
     catch(e){
       setLoginError(e.message)
+    }
+    finally{
+      setStatus("Sign In")
     }
     
   }
@@ -81,7 +86,7 @@ const SignInScreen = ({navigation}) => {
             }
           }}
         />
-        <CustomButton onPress={handleSubmit(SigningIn)} buttonFunction={'Sign In'}/>
+        <CustomButton onPress={handleSubmit(SigningIn)} buttonFunction={status} />
 
         <Text style={[styles.link, {marginTop: 20, marginBottom: 20}]} onPress={ForgotPasswordPressed}>Forgot Password</Text>
         <View style={{marginTop: 20}}>
