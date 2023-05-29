@@ -8,6 +8,9 @@ import CustomButton from '../components/CustomButton/CustomButton'
 import CustomImageUpload from '../components/CustomImageUpload/CustomImageUpload'
 import { Auth, API, Storage } from 'aws-amplify';
 import { createLoanApplication } from '../graphql/mutations';
+import 'react-native-url-polyfill/auto'
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
 
 // import { S3Image } from 'aws-amplify-react-native'
 
@@ -44,11 +47,11 @@ const Tester = () => {
   const recieveFormData1 = async (data) =>{
     setName(data.userName)
     try{
-      await Storage.remove(`${phoneNumber}ProfilePic.${imageExtension}`);
-      const res = await Storage.put(`${phoneNumber}ProfilePic.${imageExtension}`, profilePicBlob)
-      console.log('the key is ', res.key)
-      console.log('username is ', data.userName)
-
+      // await Storage.remove(`${phoneNumber}ProfilePic.${imageExtension}`);
+      // const res = await Storage.put(`${phoneNumber}ProfilePic.${imageExtension}`, profilePicBlob)
+      // console.log('the key is ', res.key)
+      // console.log('username is ', data.userName)
+      console.log('button clicked')
       const newLoanApplication = await API.graphql({
         query: createLoanApplication,
         variables: {

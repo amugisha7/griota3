@@ -4,15 +4,12 @@
       "dependsOn": [],
       "output": {
         "authConfig": {
-          "additionalAuthenticationProviders": [
-            {
-              "authenticationType": "AWS_IAM"
-            }
-          ],
+          "additionalAuthenticationProviders": [],
           "defaultAuthentication": {
             "apiKeyConfig": {
-              "apiKeyExpirationDays": 30,
-              "description": "api key description"
+              "apiKeyExpirationDate": "2024-05-28T16:18:19.513Z",
+              "apiKeyExpirationDays": 365,
+              "description": "griota3 api key"
             },
             "authenticationType": "API_KEY"
           }

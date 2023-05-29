@@ -1,43 +1,43 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createTodo = /* GraphQL */ `
-  mutation CreateTodo(
-    $input: CreateTodoInput!
-    $condition: ModelTodoConditionInput
+export const createLoanApplication = /* GraphQL */ `
+  mutation CreateLoanApplication(
+    $input: CreateLoanApplicationInput!
+    $condition: ModelLoanApplicationConditionInput
   ) {
-    createTodo(input: $input, condition: $condition) {
+    createLoanApplication(input: $input, condition: $condition) {
       id
       name
-      description
+      profilepic
       createdAt
       updatedAt
     }
   }
 `;
-export const updateTodo = /* GraphQL */ `
-  mutation UpdateTodo(
-    $input: UpdateTodoInput!
-    $condition: ModelTodoConditionInput
+export const updateLoanApplication = /* GraphQL */ `
+  mutation UpdateLoanApplication(
+    $input: UpdateLoanApplicationInput!
+    $condition: ModelLoanApplicationConditionInput
   ) {
-    updateTodo(input: $input, condition: $condition) {
+    updateLoanApplication(input: $input, condition: $condition) {
       id
       name
-      description
+      profilepic
       createdAt
       updatedAt
     }
   }
 `;
-export const deleteTodo = /* GraphQL */ `
-  mutation DeleteTodo(
-    $input: DeleteTodoInput!
-    $condition: ModelTodoConditionInput
+export const deleteLoanApplication = /* GraphQL */ `
+  mutation DeleteLoanApplication(
+    $input: DeleteLoanApplicationInput!
+    $condition: ModelLoanApplicationConditionInput
   ) {
-    deleteTodo(input: $input, condition: $condition) {
+    deleteLoanApplication(input: $input, condition: $condition) {
       id
       name
-      description
+      profilepic
       createdAt
       updatedAt
     }

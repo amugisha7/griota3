@@ -2,5 +2,5 @@
   "AppSyncApiName": "griota3",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
   "DynamoDBEnableServerSideEncryption": false,
-  "AuthModeLastUpdated": "2023-05-29T09:38:59.412Z"
+  "AuthModeLastUpdated": "2023-05-29T16:18:46.139Z"
 }
