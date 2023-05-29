@@ -150,7 +150,8 @@ const FormScreen = ({navigation}) => {
     console.log('Ref2 Known period ', referee2KnownPeriod)
     console.log('Ref2 NIN ',  NINofReferee2)
     console.log('Ref2 NIN Pic ', ref2NationalIDPic)
-
+    
+    navigation.navigate('ApplicationReceived')
 
   }
 

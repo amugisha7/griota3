@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import {Auth} from 'aws-amplify'; 
 import { useRoute } from '@react-navigation/native';
 import { griotaStyles } from '../../../assets/styles/style';
+import { adminUsers } from '../../Lists/adminUsers';
 
 const SignInScreen = ({navigation}) => {
   
@@ -20,6 +21,7 @@ const SignInScreen = ({navigation}) => {
   useEffect(()=>{
     setAccountCreatedMessage(route?.params?.accountCreatedMessage); 
     setCreatedUserName(route?.params?.createdUserName);
+    createdUserName && setLoginError(null)
   }, [accountCreatedMessage, createdUserName])
 
   const { control, handleSubmit} = useForm({
@@ -37,8 +39,10 @@ const SignInScreen = ({navigation}) => {
     setStatus('Signing In...')
     const {username, password} = data
     try { 
-      const response = await Auth.signIn(`+256${username.slice(1)}`, password)
-      navigation.navigate('FormScreen')
+      const user = await Auth.signIn(`+256${username.slice(1)}`, password)
+      user.attributes.phone_number === adminUsers.Admin1.PhoneNumber
+      ? navigation.navigate('AdminScreen')
+      : navigation.navigate('Tester')
       
     }
     catch(e){
@@ -88,7 +92,7 @@ const SignInScreen = ({navigation}) => {
         />
         <CustomButton onPress={handleSubmit(SigningIn)} buttonFunction={status} />
 
-        <Text style={[styles.link, {marginTop: 20, marginBottom: 20}]} onPress={ForgotPasswordPressed}>Forgot Password</Text>
+        {/* <Text style={[styles.link, {marginTop: 20, marginBottom: 20}]} onPress={ForgotPasswordPressed}>Forgot Password</Text> */}
         <View style={{marginTop: 20}}>
           <Text>Don't yet have an account?</Text>
         </View>

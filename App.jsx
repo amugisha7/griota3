@@ -11,7 +11,8 @@ import { View, Text, Dimensions } from 'react-native';
 import FormScreen from './src/screens/FormScreens/FormScreen';
 import Tester from './src/screens/Tester';
 import ResetPassword from './src/screens/ResetPassword/ResetPassword';
-
+import AdminScreen from './src/screens/AdminScreen/AdminScreen';
+import ApplicationReceived from './src/screens/ApplicationReceived/ApplicationReceived';
 
 Amplify.configure(config)
 
@@ -35,6 +36,9 @@ const App= () => {
            <Stack.Screen name='FormScreen' component={FormScreen} />
            <Stack.Screen name='Tester' component={Tester} />
            <Stack.Screen name='ResetPassword' component={ResetPassword} />
+           <Stack.Screen name='AdminScreen' component={AdminScreen} />
+           <Stack.Screen name='ApplicationReceived' component={ApplicationReceived} />
+
            
          
 

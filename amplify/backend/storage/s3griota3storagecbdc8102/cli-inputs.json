@@ -1,0 +1,12 @@
+{
+  "resourceName": "s3griota3storagecbdc8102",
+  "bucketName": "griota3-storage-cbdc8102",
+  "policyUUID": "8d778283",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ]
+}

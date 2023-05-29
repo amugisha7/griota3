@@ -17,6 +17,9 @@
       },
       "auth": {
         "Griota3": {}
+      },
+      "storage": {
+        "s3griota3storagecbdc8102": {}
       }
     }
   }

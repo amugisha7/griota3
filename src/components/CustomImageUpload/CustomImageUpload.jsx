@@ -3,7 +3,7 @@ import React, {useState, useEffect} from 'react'
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker'
 import { griotaStyles } from '../../../assets/styles/style'
 
-const CustomImageUpload = ({ setBlobValue, mylabel}) => {
+const CustomImageUpload = ({ setImageExtension, setBlobValue, mylabel}) => {
 
     const [pic, setPic] = useState(null)
     
@@ -13,6 +13,10 @@ const CustomImageUpload = ({ setBlobValue, mylabel}) => {
       // console.log('image is ', image.assets[0].uri)
       const imageUri = image.assets[0].uri
       const response = await fetch(imageUri);
+      const urlParts = imageUri.split(".");
+      const extension = urlParts[urlParts.length - 1] 
+      console.log('extension is ', extension)
+      setImageExtension(extension)
       const blob = await response.blob();
       setBlobValue(blob) //make a setBlob state method in parent equal to blobValue. 
       
@@ -24,6 +28,10 @@ const CustomImageUpload = ({ setBlobValue, mylabel}) => {
       // console.log('image is ', image.assets[0].uri)
       const imageUri = image.assets[0].uri
       const response = await fetch(imageUri);
+      const urlParts = imageUri.split(".");
+      const extension = urlParts[urlParts.length - 1] 
+      console.log('extension is ', extension)
+      setImageExtension(extension)
       const blob = await response.blob();
       setBlobValue(blob) //make a setBlob state method in parent equal to blobValue. 
       
