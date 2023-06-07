@@ -7,8 +7,33 @@ export const onCreateLoanApplication = /* GraphQL */ `
   ) {
     onCreateLoanApplication(filter: $filter) {
       id
-      name
-      profilepic
+      phoneNumber
+      salesLastWeek
+      salesBeforeLastWeek
+      businessActivity
+      selectedBusinessType
+      selectedBusinessLocation
+      businessAreaPicBlob
+      ownerInBusinessPicBlob
+      outsideOfBusinessPicBlob
+      durationInBsuiness
+      age
+      nationalIDFrontPicBlob
+      fullName
+      nationalIDNumber
+      nextOfKinName
+      nextOfKinRelationship
+      nextOfKinPhoneNumber
+      referee1Name
+      referee1PhoneNumber
+      referee1KnownPeriod
+      NINofReferee1
+      ref1NationalIDPic
+      referee2Name
+      referee2PhoneNumber
+      referee2KnownPeriod
+      NINofReferee2
+      ref2NationalIDPic
       createdAt
       updatedAt
     }
@@ -20,8 +45,33 @@ export const onUpdateLoanApplication = /* GraphQL */ `
   ) {
     onUpdateLoanApplication(filter: $filter) {
       id
-      name
-      profilepic
+      phoneNumber
+      salesLastWeek
+      salesBeforeLastWeek
+      businessActivity
+      selectedBusinessType
+      selectedBusinessLocation
+      businessAreaPicBlob
+      ownerInBusinessPicBlob
+      outsideOfBusinessPicBlob
+      durationInBsuiness
+      age
+      nationalIDFrontPicBlob
+      fullName
+      nationalIDNumber
+      nextOfKinName
+      nextOfKinRelationship
+      nextOfKinPhoneNumber
+      referee1Name
+      referee1PhoneNumber
+      referee1KnownPeriod
+      NINofReferee1
+      ref1NationalIDPic
+      referee2Name
+      referee2PhoneNumber
+      referee2KnownPeriod
+      NINofReferee2
+      ref2NationalIDPic
       createdAt
       updatedAt
     }
@@ -33,8 +83,33 @@ export const onDeleteLoanApplication = /* GraphQL */ `
   ) {
     onDeleteLoanApplication(filter: $filter) {
       id
-      name
-      profilepic
+      phoneNumber
+      salesLastWeek
+      salesBeforeLastWeek
+      businessActivity
+      selectedBusinessType
+      selectedBusinessLocation
+      businessAreaPicBlob
+      ownerInBusinessPicBlob
+      outsideOfBusinessPicBlob
+      durationInBsuiness
+      age
+      nationalIDFrontPicBlob
+      fullName
+      nationalIDNumber
+      nextOfKinName
+      nextOfKinRelationship
+      nextOfKinPhoneNumber
+      referee1Name
+      referee1PhoneNumber
+      referee1KnownPeriod
+      NINofReferee1
+      ref1NationalIDPic
+      referee2Name
+      referee2PhoneNumber
+      referee2KnownPeriod
+      NINofReferee2
+      ref2NationalIDPic
       createdAt
       updatedAt
     }

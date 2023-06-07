@@ -1,6 +1,30 @@
 type LoanApplication @model @auth(rules: [{allow: public}]) {
   id: ID!
-  name: String!
-  profilepic: String
+  phoneNumber: String
+  salesLastWeek: String
+  salesBeforeLastWeek: String
+  businessActivity: String
+  selectedBusinessType: String
+  selectedBusinessLocation: String
+  businessAreaPicBlob: String
+  ownerInBusinessPicBlob: String
+  outsideOfBusinessPicBlob: String
+  durationInBsuiness: String
+  age: String
+  nationalIDFrontPicBlob: String
+  fullName: String
+  nationalIDNumber: String
+  nextOfKinName: String
+  nextOfKinRelationship: String
+  nextOfKinPhoneNumber: String
+  referee1Name: String
+  referee1PhoneNumber: String
+  referee1KnownPeriod: String
+  NINofReferee1: String
+  ref1NationalIDPic: String
+  referee2Name: String
+  referee2PhoneNumber: String
+  referee2KnownPeriod: String
+  NINofReferee2: String
+  ref2NationalIDPic: String
 }
- 

@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text, Pressable } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import CustomInput from '../components/CustomInput/CustomInput'
 import { griotaStyles } from '../../../assets/styles/style';
@@ -6,26 +6,21 @@ import CustomDropDown from '../components/CustomDropDown/CustomDropDown';
 import { useForm } from 'react-hook-form';
 import CustomButton from '../components/CustomButton/CustomButton'
 import CustomImageUpload from '../components/CustomImageUpload/CustomImageUpload'
-import { Auth, API, Storage } from 'aws-amplify';
+import { Amplify, Auth, API } from 'aws-amplify';
 import { createLoanApplication } from '../graphql/mutations';
 import 'react-native-url-polyfill/auto'
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
-
-// import { S3Image } from 'aws-amplify-react-native'
-
-
+import awsconfig from '../aws-exports';
+Amplify.configure(awsconfig);
 
 const Tester = () => {
 
   const [name, setName] = useState(null)
   const [profilePicBlob, setProfilePicBlob] = useState(null)
-  const [imageExtension, setImageExtension] = useState(null)
   const [phoneNumber, setPhoneNumber] = useState()
-  const [imageKey, setImageKey] = useState(null)
 
   useEffect(()=>{
-
     Auth.currentAuthenticatedUser({
       bypassCache: false // Optional, By default is false. If set to true, this call will send a request to Cognito to get the latest user data
     })
@@ -33,7 +28,6 @@ const Tester = () => {
         setPhoneNumber(user.attributes.phone_number)
       })
       .catch((err) => console.log(err));
-    
   },[])
 
   const { control, handleSubmit} = useForm({
@@ -41,31 +35,31 @@ const Tester = () => {
       userName: ''
     }
   });
+  const showOnconsole = () => console.log("Profile pic url: ", profilePicBlob)
 
-  
+  const uploadOneToCloudinary =(file)=>{
+
+    const formData = new FormData();
+    
+    let base64Img = `data:image/jpg;base64,${file.assets[0].base64}`
+    
+    formData.append("upload_preset", "lagiua2k")
+    formData.append("file", base64Img);
+      fetch('https://api.cloudinary.com/v1_1/djtx8rz4q/upload', {
+        body: formData,
+        method: "POST", 
+      })
+      .then(async r => {
+        let data = await r.json()
+        console.log('cloudinary resp: ', data.secure_url)
+        setProfilePicBlob(data.secure_url)
+      })
+      .catch(e =>console.log('cloudinary error: ', e))
+  }
 
   const recieveFormData1 = async (data) =>{
     setName(data.userName)
-    try{
-      // await Storage.remove(`${phoneNumber}ProfilePic.${imageExtension}`);
-      // const res = await Storage.put(`${phoneNumber}ProfilePic.${imageExtension}`, profilePicBlob)
-      // console.log('the key is ', res.key)
-      // console.log('username is ', data.userName)
-      console.log('button clicked')
-      const newLoanApplication = await API.graphql({
-        query: createLoanApplication,
-        variables: {
-          input: {
-            "name": "Andrew Mugisha",
-            "profilepic": "the profile pic"
-          }
-        }
-      });
-      console.log('new loan app ', newLoanApplication)
-    } 
-    catch(e) {
-      console.log(e)
-    }
+    uploadOneToCloudinary(profilePicBlob)
   }
 
   return (
@@ -79,12 +73,13 @@ const Tester = () => {
       <CustomImageUpload 
         mylabel={'Upload profile Picture'} 
         setBlobValue={setProfilePicBlob}
-        setImageExtension={setImageExtension}
       />
 
     <CustomButton onPress={handleSubmit(recieveFormData1)} buttonFunction={'Submit'}/>   
 
-
+    <Pressable onPress={showOnconsole}>
+      <Text>Show url on console</Text>
+    </Pressable>
 
     </View>
   )
