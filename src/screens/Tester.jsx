@@ -37,7 +37,7 @@ const Tester = () => {
   });
   const showOnconsole = () => console.log("Profile pic url: ", profilePicBlob)
 
-  const uploadOneToCloudinary =(file)=>{
+  const uploadOneToCloudinary =(file, setBlob)=>{
 
     const formData = new FormData();
     
@@ -52,14 +52,14 @@ const Tester = () => {
       .then(async r => {
         let data = await r.json()
         console.log('cloudinary resp: ', data.secure_url)
-        setProfilePicBlob(data.secure_url)
+        setBlob(data.secure_url)
       })
       .catch(e =>console.log('cloudinary error: ', e))
   }
 
   const recieveFormData1 = async (data) =>{
     setName(data.userName)
-    uploadOneToCloudinary(profilePicBlob)
+    uploadOneToCloudinary(profilePicBlob, setProfilePicBlob)
   }
 
   return (
