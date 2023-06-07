@@ -42,7 +42,7 @@ const SignInScreen = ({navigation}) => {
       const user = await Auth.signIn(`+256${username.slice(1)}`, password)
       user.attributes.phone_number === adminUsers.Admin1.PhoneNumber
       ? navigation.navigate('AdminScreen')
-      : navigation.navigate('Tester')
+      : navigation.navigate('FormScreen')
       
     }
     catch(e){

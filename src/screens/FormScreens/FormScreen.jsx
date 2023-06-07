@@ -1,13 +1,10 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, _View } from 'react-native'
 import React from 'react'
 import { useState, useEffect } from 'react'
 import CheckBox from '@react-native-community/checkbox';
 import { griotaStyles } from '../../../assets/styles/style';
 import { Amplify, Auth, API } from 'aws-amplify';
 import { createLoanApplication } from '../../graphql/mutations';
-import { uploadOneToCloudinary } from '../../../test';
-// require('dotenv').config();
-// const cloudinary = require('cloudinary').v2;
 
 import FormScreen1 from './FormScreen1';
 import FormScreen2 from './FormScreen2';
@@ -49,6 +46,8 @@ const FormScreen = ({navigation}) => {
   const[NINofReferee2, setNINofReferee2] = useState()
   const[ref2NationalIDPic, setRef2NationalIDPic] = useState()
   const[declaration, setDeclaration] = useState(false)
+  const[uploadS3Error, setUploadS3Error] = useState()
+  const[uploadS3Success, setUploadS3Success] = useState()
  
   useEffect(()=>{
 
@@ -62,31 +61,33 @@ const FormScreen = ({navigation}) => {
     
   },[])
 
-  // const uploadOneToCloudinary = async(uri, setUri)=>{
-  //   try{
-  //     const res = await cloudinary.uploader.upload(uri)
-  //     res => setUri(res.secure_url)
-  //   }
-  //   catch(e){
-  //     console.log('upload 1 error ', e)
-  //   }
-  // }
+  const uploadOneToCloudinary =(file, setBlob)=>{
 
-  const uploadAllToCloudinary = async()=>{
-    uploadOneToCloudinary(businessAreaPicBlob, setBusinessAreaPicBlob)
-    .then(()=>uploadOneToCloudinary(ownerInBusinessPicBlob, setOwnerInBusinessPicBlob))
-    .then(()=>uploadOneToCloudinary(outsideOfBusinessPicBlob, setOutsideOfBusinessPicBlob))
-    .then(()=>uploadOneToCloudinary(nationalIDFrontPicBlob, setNationalIDFrontPicBlob))
-    .then(()=>uploadOneToCloudinary(ref1NationalIDPic, setRef1NationalIDPic))
-    .then(()=>uploadOneToCloudinary(ref2NationalIDPic, setRef2NationalIDPic))
-    .catch(e => console.log('upload all cloudinary error: ', e))
+    const formData = new FormData();
+    
+    let base64Img = `data:image/jpg;base64,${file.assets[0].base64}`
+    
+    formData.append("upload_preset", "lagiua2k")
+    formData.append("file", base64Img);
+      fetch('https://api.cloudinary.com/v1_1/djtx8rz4q/upload', {
+        body: formData,
+        method: "POST", 
+      })
+      .then(async r => {
+        let data = await r.json()
+        console.log('cloudinary resp: ', data.secure_url)
+        setBlob(data.secure_url)
+      })
+      .catch(e =>console.log('cloudinary error: ', e))
   }
 
-  const uploadS3 = ()=>{
-    uploadAllToCloudinary()
-    .then(()=>console.log('cloudinary upload complete'))
-    .then(()=>uploadToAmplify())
-    .catch(e => console.log('uploadS3 error: ', e))
+  const uploadAllToCloudinary = async()=>{
+    if(businessAreaPicBlob){uploadOneToCloudinary(businessAreaPicBlob, setBusinessAreaPicBlob)}
+    if(ownerInBusinessPicBlob){uploadOneToCloudinary(ownerInBusinessPicBlob, setOwnerInBusinessPicBlob)}
+    if(outsideOfBusinessPicBlob){uploadOneToCloudinary(outsideOfBusinessPicBlob, setOutsideOfBusinessPicBlob)}
+    if(nationalIDFrontPicBlob){uploadOneToCloudinary(nationalIDFrontPicBlob, setNationalIDFrontPicBlob)}
+    if(ref1NationalIDPic){uploadOneToCloudinary(ref1NationalIDPic, setRef1NationalIDPic)}
+    if(ref2NationalIDPic){uploadOneToCloudinary(ref2NationalIDPic, setRef2NationalIDPic)}
   }
 
   const goBack =()=>setFormPage(pg=>pg-1)
@@ -141,43 +142,55 @@ const FormScreen = ({navigation}) => {
   }
 
   const uploadToAmplify = async()=>{
-    const newLoanApplication = await API.graphql({
-      query: createLoanApplication,
-      variables: {
-        input: {
-          "salesLastWeek":salesLastWeek,
-          "salesBeforeLastWeek":salesBeforeLastWeek,
-          "businessActivity":businessActivity,
-          "selectedBusinessType":selectedBusinessType,
-          "selectedBusinessLocation":selectedBusinessLocation,
-          "businessAreaPicBlob":businessAreaPicBlob,
-          "ownerInBusinessPicBlob":ownerInBusinessPicBlob,
-          "outsideOfBusinessPicBlob":outsideOfBusinessPicBlob,
-          "durationInBsuiness":durationInBsuiness,
-          "age":age,
-          "nationalIDFrontPicBlob":nationalIDFrontPicBlob,
-          "fullName":fullName,
-          "nationalIDNumber":nationalIDNumber,
-          "nextOfKinName":nextOfKinName,
-          "nextOfKinRelationship":nextOfKinRelationship,
-          "nextOfKinPhoneNumber":nextOfKinPhoneNumber,
-          "referee1Name":referee1Name,
-          "referee1PhoneNumber":referee1PhoneNumber,
-          "referee1KnownPeriod":referee1KnownPeriod,
-          "NINofReferee1":NINofReferee1,
-          "ref1NationalIDPic":ref1NationalIDPic,
-          "referee2Name":referee2Name,
-          "referee2PhoneNumber":referee2PhoneNumber,
-          "referee2KnownPeriod":referee2KnownPeriod,
-          "NINofReferee2":NINofReferee2,
-          "ref2NationalIDPic":ref2NationalIDPic,
+    try{
+      const newLoanApplication = await API.graphql({
+        query: createLoanApplication,
+        variables: {
+          input: {
+            "salesLastWeek":salesLastWeek,
+            "salesBeforeLastWeek":salesBeforeLastWeek,
+            "businessActivity":businessActivity,
+            "selectedBusinessType":selectedBusinessType,
+            "selectedBusinessLocation":selectedBusinessLocation,
+            "businessAreaPicBlob":businessAreaPicBlob,
+            "ownerInBusinessPicBlob":ownerInBusinessPicBlob,
+            "outsideOfBusinessPicBlob":outsideOfBusinessPicBlob,
+            "durationInBsuiness":durationInBsuiness,
+            "age":age,
+            "nationalIDFrontPicBlob":nationalIDFrontPicBlob,
+            "fullName":fullName,
+            "nationalIDNumber":nationalIDNumber,
+            "nextOfKinName":nextOfKinName,
+            "nextOfKinRelationship":nextOfKinRelationship,
+            "nextOfKinPhoneNumber":nextOfKinPhoneNumber,
+            "referee1Name":referee1Name,
+            "referee1PhoneNumber":referee1PhoneNumber,
+            "referee1KnownPeriod":referee1KnownPeriod,
+            "NINofReferee1":NINofReferee1,
+            "ref1NationalIDPic":ref1NationalIDPic,
+            "referee2Name":referee2Name,
+            "referee2PhoneNumber":referee2PhoneNumber,
+            "referee2KnownPeriod":referee2KnownPeriod,
+            "NINofReferee2":NINofReferee2,
+            "ref2NationalIDPic":ref2NationalIDPic,
 
+          }
         }
+      });
+      setUploadS3Success(newLoanApplication)
+    }
+    catch(err){
+      if (err){
+        setUploadS3Error("ERROR. Please try again.")
       }
-    });
-    
-    navigation.navigate('ApplicationReceived')
+    }
+  }
 
+  const uploadS3 = ()=>{
+    uploadAllToCloudinary()
+    console.log('cloudinary upload complete')
+    uploadToAmplify()
+    if(uploadS3Success){navigation.navigate('ApplicationReceived')}
   }
 
   return (
@@ -272,16 +285,27 @@ const FormScreen = ({navigation}) => {
             <CustomButton onPress={goBack} buttonFunction={'Back'} type={'SECONDARY'}/>
           </View>
         }
+        { uploadS3Error &&
+          <View>
+            <Text style={griotaStyles.errors}>{uploadS3Error}</Text>
+          </View>
+        }
+        { uploadS3Success &&
+        <View>
+          <Text style={griotaStyles.text}>Submission Successful!</Text>
+        </View>
+        }
       </View>
     </ScrollView>
   )
 }
 
+
 const styles = StyleSheet.create({
-    
+  
   pressable: {
-      margin: 10,
-      width: '50%'
+    margin: 10,
+    width: '50%'
   },
   
 })
