@@ -3,15 +3,34 @@ import React from 'react'
 import { griotaStyles } from '../../../assets/styles/style'
 import { API } from "aws-amplify";
 import { listLoanApplications, getLoanApplication } from "../../graphql/queries";
+import { deleteLoanApplication } from '../../graphql/mutations';
+import createCSV from '../../../test';
 
 const AdminScreen = ({navigation}) => {
 
   const listLoans = async() =>{
     try{
-        const allLoanApplications = await API.graphql({
+      const allLoanApplications = await API.graphql({
         query: listLoanApplications
       });
-      console.log(allLoanApplications.data.listLoanApplications.items[5]);
+      const list = allLoanApplications.data.listLoanApplications.items;
+      // const ids = list.map(item => item.id)
+      console.log('list is: ', list)
+      createCSV(list)
+      
+    }catch(e){console.log(e)}
+  }
+
+  const deleteLoan = async()=>{
+    try{
+      const deletedLoanApplication = await API.graphql({
+        query: deleteLoanApplication,
+        variables: {
+            input: {
+                id: "84ee782a-a410-462d-b4f4-96839ec1e799"
+            }
+        }
+    });
     }catch(e){console.log(e)}
   }
 
@@ -19,6 +38,7 @@ const AdminScreen = ({navigation}) => {
     <View>
       <Text style={griotaStyles.title}>AdminScreen</Text>
       <Button onPress={listLoans} title='List all loans'></Button>
+      <Button onPress={deleteLoan} title='Delete Loan'></Button>
     </View>
   )
 }
