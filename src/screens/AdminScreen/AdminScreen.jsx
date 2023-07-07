@@ -1,12 +1,14 @@
 import { Pressable, StyleSheet, Text, View, Button } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { griotaStyles } from '../../../assets/styles/style'
 import { API } from "aws-amplify";
 import { listLoanApplications, getLoanApplication } from "../../graphql/queries";
 import { deleteLoanApplication } from '../../graphql/mutations';
-import createCSV from '../../../test';
+import { jsonToCSV } from 'react-native-csv'
 
 const AdminScreen = ({navigation}) => {
+
+  const [csvData, setCsvData] = useState(null)
 
   const listLoans = async() =>{
     try{
@@ -15,8 +17,10 @@ const AdminScreen = ({navigation}) => {
       });
       const list = allLoanApplications.data.listLoanApplications.items;
       // const ids = list.map(item => item.id)
-      console.log('list is: ', list)
-      createCSV(list)
+      // console.log('list is: ', list)
+      const results = jsonToCSV(list)
+      setCsvData(list)
+      console.log(results)
       
     }catch(e){console.log(e)}
   }
@@ -35,7 +39,7 @@ const AdminScreen = ({navigation}) => {
   }
 
   return (
-    <View>
+    <View style={{gap: 10}}>
       <Text style={griotaStyles.title}>AdminScreen</Text>
       <Button onPress={listLoans} title='List all loans'></Button>
       <Button onPress={deleteLoan} title='Delete Loan'></Button>

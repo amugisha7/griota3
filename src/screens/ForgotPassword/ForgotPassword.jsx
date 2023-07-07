@@ -8,8 +8,6 @@ import { useForm } from 'react-hook-form';
 import { Auth } from 'aws-amplify';
 import { griotaStyles } from '../../../assets/styles/style';
 
-
-
 const ForgotPassword = ({navigation}) => {
 
   const [error, setError] = useState()

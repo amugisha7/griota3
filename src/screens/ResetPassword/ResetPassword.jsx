@@ -29,13 +29,13 @@ const ResetPassword = ({navigation}) => {
     try{
       const verifCode = await Auth.forgotPasswordSubmit(`+256${createdUserName.slice(1)}`, code, password);
       console.log('user verified')
-      navigation.navigate('Sign In', {accountCreatedMessage, createdUserName})
+      navigation.navigate('SignIn', {accountCreatedMessage, createdUserName})
     }
     catch(e){
       console.log(e.message)
     }
   }
-  const goToForgotPassword = () => {navigation.navigate('Forgot Password')}
+  const goToForgotPassword = () => {navigation.navigate('ForgotPassword')}
   
   const resendCode = async () => {
     try{

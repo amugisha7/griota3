@@ -285,7 +285,7 @@ const FormScreen = ({navigation}) => {
             <CustomButton onPress={goBack} buttonFunction={'Back'} type={'SECONDARY'}/>
           </View>
         }
-        { uploadS3Error &&
+        { (uploadS3Error && !uploadS3Success) &&
           <View>
             <Text style={griotaStyles.errors}>{uploadS3Error}</Text>
           </View>

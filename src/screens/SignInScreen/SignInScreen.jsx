@@ -33,13 +33,13 @@ const SignInScreen = ({navigation}) => {
 
   const Registering = () => navigation.navigate('Register')
 
-  const ForgotPasswordPressed = () => {navigation.navigate('Forgot Password')}
+  const ForgotPasswordPressed = () => {navigation.navigate('ForgotPassword')}
 
   const SigningIn = async (data) => {
     setStatus('Signing In...')
     const {username, password} = data
     try { 
-      const user = await Auth.signIn(`+256${username.slice(1)}`, password)
+      const user = await Auth.signIn(`+256${username.slice(1)}`, `00${password}`)
       user.attributes.phone_number === adminUsers.Admin1.PhoneNumber
       ? navigation.navigate('AdminScreen')
       : navigation.navigate('FormScreen')
@@ -55,6 +55,7 @@ const SignInScreen = ({navigation}) => {
   }
 
   const PHONE_REGEX = /^07\d{8}$/
+  const PIN_REGEX = /\b\d{4}\b/;
 
   return (
       <View style={styles.container }>
@@ -79,15 +80,23 @@ const SignInScreen = ({navigation}) => {
         
         <CustomInput 
           name='password'
-          placeholder={'Password'} 
+          placeholder={'PIN Code'} 
+          secureTextEntry={true}
           control={control}
-          secureTextEntry
           rules={{
             required: "This field is required",
             minLength: {
-              value: 8,
+              value: 4,
               message: "Too short"
-            }
+            },
+            maxLength: {
+              value: 4,
+              message: "Only 4 digits allowed"
+            },
+            pattern: {
+              value: PIN_REGEX,
+              message: 'Must be 4-digit Number'
+            },
           }}
         />
         <CustomButton onPress={handleSubmit(SigningIn)} buttonFunction={status} />

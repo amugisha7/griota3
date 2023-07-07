@@ -1,7 +1,6 @@
 import { View, Text, Image, StyleSheet, Alert } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Logo from '../../../assets/images/Griota_logo.png';
-
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { useForm } from 'react-hook-form';
@@ -11,26 +10,24 @@ import { useRoute } from '@react-navigation/native';
 const ConfirmPhoneNumber = ({navigation}) => {
 
   const route = useRoute()
-
   const [errorMessage, setErrorMessage] = useState()
-
-  const [createdUserName, setCreatedUserName] = useState(route?.params?.username)
+  const [uVPhoneNumber, setUVPhoneNumber] = useState(route?.params?.phoneNumber)
   
+  useEffect(()=>{
+    setUVPhoneNumber(route?.params?.phoneNumber)
+  },[uVPhoneNumber])
+
   const { control, handleSubmit, watch  } = useForm({
     defaultValues: {
-      username: createdUserName,
       code: '',
     }
   });
   
   const confirmingCode = async (data) => {
-    const {code} = data;
-    const accountCreatedMessage = 'Your Account was created Successfully. Please log in.'
-    
+    const {code} = data;    
     try{
-      const verifCode = await Auth.confirmSignUp(`+256${createdUserName.slice(1)}`, code);
-      console.log('user verified')
-      navigation.navigate('Sign In', {accountCreatedMessage, createdUserName})
+      await Auth.confirmSignUp(`+256${uVPhoneNumber.slice(1)}`, code);
+      navigation.navigate('CreateNewPin', {uVPhoneNumber})
     }
     catch(e){
       setErrorMessage(e.message)
@@ -46,19 +43,12 @@ const ConfirmPhoneNumber = ({navigation}) => {
     catch(e){
       setErrorMessage(e.message)
     }
-
-
   }
 
   return (
       <View style={styles.container }>
         <Image source={Logo} style={styles.logo}/>
-        {/* <View style={{}}>
-          <CustomInput
-            name='username'
-            control={control}
-          />
-        </View> */}
+        
         {errorMessage && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>{errorMessage}</Text>}
 
         <Text style={styles.title}>Enter the code sent to your phone number</Text>

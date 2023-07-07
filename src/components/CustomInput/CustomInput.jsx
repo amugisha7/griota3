@@ -3,7 +3,7 @@ import React from 'react'
 import { Controller } from "react-hook-form";
 import { griotaStyles } from '../../../assets/styles/style';
 
-const CustomInput = ({control, name, placeholder, secureTextEntry, rules, type, mylabel}) => {
+const CustomInput = ({control, name, placeholder, secureTextEntry, rules, type, mylabel, multiline}) => {
 
   return (
     <View style={griotaStyles.container}>
@@ -17,13 +17,13 @@ const CustomInput = ({control, name, placeholder, secureTextEntry, rules, type, 
             <View style={{width: '100%'}}>
               <TextInput
                 placeholder={placeholder}
+                secureTextEntry={secureTextEntry}
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
                 style={[styles.textInput, {borderColor: error ? 'red' : 'gray'}]}
-                secureTextEntry={secureTextEntry}
                 type={type}
-                multiline={true}
+                multiline={multiline}
               />
 
             </View>
