@@ -6,28 +6,32 @@ import CustomButton from '../../components/CustomButton/CustomButton';
 import { useForm } from 'react-hook-form';
 import { Auth } from 'aws-amplify';
 import { useRoute } from '@react-navigation/native';
+import { griotaStyles } from '../../../assets/styles/style';
 
 const ConfirmPhoneNumber = ({navigation}) => {
 
   const route = useRoute()
   const [errorMessage, setErrorMessage] = useState()
-  const [uVPhoneNumber, setUVPhoneNumber] = useState(route?.params?.phoneNumber)
-  
-  useEffect(()=>{
-    setUVPhoneNumber(route?.params?.phoneNumber)
-  },[uVPhoneNumber])
+  const phoneNumber = route?.params?.phoneNumber
+  const firstName = route?.params?.firstName
+  const otherName = route?.params?.otherName
+  const idNumber = route?.params?.idNumber
+  const selectedStage = route?.params?.selectedStage
+  const stageIdCardPicFile = route?.params?.idPicURL
 
-  const { control, handleSubmit, watch  } = useForm({
+  const { control, handleSubmit } = useForm({
     defaultValues: {
       code: '',
     }
   });
-  
+
   const confirmingCode = async (data) => {
     const {code} = data;    
     try{
-      await Auth.confirmSignUp(`+256${uVPhoneNumber.slice(1)}`, code);
-      navigation.navigate('CreateNewPin', {uVPhoneNumber})
+      await Auth.confirmSignUp(`+256${phoneNumber.slice(1)}`, code);
+      navigation.navigate('CreateNewPin', {
+        phoneNumber, firstName, otherName, selectedStage, idNumber, stageIdCardPicFile
+      })
     }
     catch(e){
       setErrorMessage(e.message)

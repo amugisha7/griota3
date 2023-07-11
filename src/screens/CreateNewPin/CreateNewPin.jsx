@@ -6,18 +6,34 @@ import CustomButton from '../../components/CustomButton/CustomButton';
 import { useForm } from 'react-hook-form';
 import { Auth } from 'aws-amplify';
 import { useRoute } from '@react-navigation/native';
+import { API, graphqlOperation } from "aws-amplify";
+import { griotaStyles } from '../../../assets/styles/style';
 
 const CreateNewPin = ({navigation}) => {
 
   const route = useRoute()
   const [errorMessage, setErrorMessage] = useState()
-  const [vPhoneNumber, setVPhoneNumber] = useState(route?.params?.uVPhoneNumber);
   const [succesMessage, setSuccessMessage] = useState()
   const PIN_REGEX = /\b\d{4}\b/;
+  const [pin, setPin] = useState()
   
+  const phoneNumber = route?.params?.phoneNumber
+  const firstName = route?.params?.firstName
+  const otherName = route?.params?.otherName
+  const idNumber = route?.params?.idNumber
+  const selectedStage = route?.params?.selectedStage
+  const stageIdCardPicFile = route?.params?.stageIdCardPicFile
+  const type = 'boda';
+  
+  // const phoneNumber = '0774568769'
+  // const firstName = 'FirstBoda1'
+  // const otherName = 'OtherBoda1'
+  // const idNumber = '11aa1'
+  // const selectedStage = 'Bulindo' 
+  // const stageIdCardPicFile = '12345'
+
   useEffect(()=>{
-    setVPhoneNumber(route?.params?.uVPhoneNumber)
-    SigningIn(vPhoneNumber)
+    SigningIn()
   },[])
   
   const { control, handleSubmit, watch  } = useForm({
@@ -29,35 +45,67 @@ const CreateNewPin = ({navigation}) => {
   const pwd = watch('password'); 
 
   const SetNewPin = (data) => {
-    const {password} = data;   
+    const {password} = data; 
+    setPin(password)  
     ChangePin(password)
   }
+
   const SigningIn = async() => {
     try { 
-      await Auth.signIn(`+256${vPhoneNumber.slice(1)}`, vPhoneNumber)
+      const signedInUser = await Auth.signIn(`+256${phoneNumber.slice(1)}`, phoneNumber)
+      console.log('user in ', signedInUser)
     }
     catch(e){
-      setErrorMessage(e.message)
+      console.log('couldnt sign in' ,e )
     }
   }
+
+  const uploadToAmplify = async() => {
+    try {
+      const boda = await API.graphql(graphqlOperation(
+        `mutation MyMutation {
+          createBoda(input: {
+            id: "${phoneNumber}",
+            firstname: "${firstName}", 
+            othername: "${otherName}", 
+            phoneNumber: "${phoneNumber}", 
+            picOfStageId: "${stageIdCardPicFile}", 
+            type: "${type}", 
+            idNumber: "${idNumber}",
+            stageBodasId: "01${selectedStage}",
+            pin: "${pin}"
+          }){
+            id
+          }
+        }`
+      ))
+      console.log('boda created: ', boda)
+      if(boda) {setSuccessMessage('PIN CHANGE SUCCESSFUL');}
+    }
+    catch(e)
+    {
+      console.log('failed to create boda: ', e)
+    }
+  }
+
   const ChangePin = (password)=>{
     Auth.currentAuthenticatedUser()
-        .then((user) => {
-            return Auth.changePassword(user, vPhoneNumber, `00${password}`);
-        })
-        .then(()=>{
-          setTimeout(()=>setSuccessMessage('PIN CHANGE SUCCESSFUL'), 1000)
-          navigation.navigate('FormScreen')
-        })
-        .catch((err) => setErrorMessage(err));
+      .then((user) => {
+          return Auth.changePassword(user, phoneNumber, `00${password}`);
+      })
+      .then(()=>{
+        uploadToAmplify();
+        setTimeout(()=>{navigation.navigate('ApplyForLoan', {phoneNumber, pin})},1500)
+      })
+      .catch((err) => console.log('unable to change password ', err));
   }
 
   return (
       <View style={styles.container }>
         <Image source={Logo} style={styles.logo}/>
         
-        {errorMessage && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>{errorMessage}</Text>}
-        {succesMessage &&  <Text style={{color: 'green', marginVertical: 20}}>{succesMessage}</Text>}
+        {errorMessage && <Text style={[griotaStyles.errors, {marginVertical: 20}]}> {errorMessage} </Text>}
+        {succesMessage &&  <Text style={{color: 'green', marginVertical: 20}}> {succesMessage} </Text>}
 
         <Text style={styles.title}>You Phone Number has been Verified.</Text>
         <Text style={styles.title}>Please set a New 4-Digit PIN Code.</Text>

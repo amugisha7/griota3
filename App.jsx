@@ -14,6 +14,7 @@ import ResetPassword from './src/screens/ResetPassword/ResetPassword';
 import AdminScreen from './src/screens/AdminScreen/AdminScreen';
 import ApplicationReceived from './src/screens/ApplicationReceived/ApplicationReceived';
 import CreateNewPin from './src/screens/CreateNewPin/CreateNewPin';
+import ApplyForLoan from './src/screens/ApplyForLoan/ApplyForLoan';
 
 Amplify.configure(config)
 
@@ -22,13 +23,12 @@ const Stack = createNativeStackNavigator();
 const screenWidth = Dimensions.get('window').width;
 console.log('Screen width:', screenWidth);
 
-
 const App= () => {
   
   return (
     
      <NavigationContainer>
-       <Stack.Navigator initialRouteName="Sign In" screenOptions={{headerShown: false}}>
+       <Stack.Navigator initialRouteName="SignIn" screenOptions={{headerShown: false}}>
         
            <Stack.Screen name='SignIn' component={SignInScreen} />
            <Stack.Screen name='Register' component={Register} />
@@ -40,6 +40,7 @@ const App= () => {
            <Stack.Screen name='AdminScreen' component={AdminScreen} />
            <Stack.Screen name='ApplicationReceived' component={ApplicationReceived} />
            <Stack.Screen name='CreateNewPin' component={CreateNewPin} />
+           <Stack.Screen name='ApplyForLoan' component={ApplyForLoan} />
 
        </Stack.Navigator>
      </NavigationContainer>

@@ -14,14 +14,15 @@ const Register = ({navigation}) => {
 
   const [errorMessage, setErrorMessage] = useState()
   const [selectedStage, setSelectedStage] = useState()
-  const [stageIdCardPicBlob, setStageIdCardPicBlob] = useState()
+  const [stageIdCardPicFile, setStageIdCardPicFile] = useState()
+  const [idPicURL, setIdPicURL] =useState()
 
   const { control, handleSubmit, watch  } = useForm({
     defaultValues: {
       phoneNumber: '',
       firstName: '',
       otherName: '',
-      stageId: ''
+      idNumber: ''
     }
   });
 
@@ -42,17 +43,40 @@ const Register = ({navigation}) => {
   }
 
   const goToSignIn = () => {navigation.navigate('SignIn')}
+  
+  const uploadOneToCloudinary = async (file)=>{
+    const formData = new FormData();
+    let base64Img = `data:image/jpg;base64,${file.assets[0].base64}`
+    formData.append("upload_preset", "lagiua2k")
+    formData.append("file", base64Img);
+    fetch('https://api.cloudinary.com/v1_1/djtx8rz4q/upload', {
+      body: formData,
+      method: "POST", 
+    })
+    .then(async r => {
+      let data = await r.json()
+      console.log('cloudinary resp: ', data.secure_url)
+      setIdPicURL(data.secure_url)
+    })
+    .catch(e =>console.log('cloudinary error: ', e))
+  }
 
-  const registerUser = async (data) => {
-    const {phoneNumber, firstName, otherName, stageId} = data;
-    // create user in GraphQL and save stageId to cloudinary. 
+  const registerUser = async(phoneNumber) =>{
     try{
-      await Auth.signUp(`+256${phoneNumber.slice(1)}`, phoneNumber)
-      navigation.navigate('ConfirmPhoneNumber', {phoneNumber})
+      const {user} = await Auth.signUp(`+256${phoneNumber.slice(1)}`, phoneNumber)
     } 
     catch(e){
-      setErrorMessage(e.message);
+      console.log('unable to sign up ', e);
     }
+  }
+  
+  const createBoda = async (data) => {
+    const {phoneNumber, firstName, otherName, idNumber} = data;
+    uploadOneToCloudinary(stageIdCardPicFile)
+    .then(()=>registerUser(phoneNumber))
+    .then(()=>navigation.navigate('ConfirmPhoneNumber', {
+      phoneNumber, firstName, otherName, selectedStage, idNumber, idPicURL
+    }))
   }
 
   return (
@@ -79,6 +103,7 @@ const Register = ({navigation}) => {
               items={registeredStages}
               setSelectedItem={setSelectedStage} 
               mylabel={'Select Your Stage'}
+              //Bulindo is equal to 01Bulindo in Amplify
             />
             <CustomInput
               name='firstName'
@@ -99,7 +124,7 @@ const Register = ({navigation}) => {
               }}
             />
             <CustomInput
-              name='stageId'
+              name='idNumber'
               mylabel='Enter your Stage ID as shown on your stage card'
               control={control}
               placeholder=''
@@ -109,10 +134,10 @@ const Register = ({navigation}) => {
             />
             <CustomImageUpload
                 mylabel={'Upload picture of your Stage Card'}
-                setBlobValue={setStageIdCardPicBlob}/>
+                setBlobValue={setStageIdCardPicFile}/>
           {selectedStage === 'Select from list' ?
             <Text style={[griotaStyles.errors, {marginVertical: 20}]}>Please select a stage to proceed</Text> : 
-            <CustomButton onPress={handleSubmit(registerUser)} buttonFunction={'Register'}/>}
+            <CustomButton onPress={handleSubmit(createBoda)} buttonFunction={'Register'}/>}
           <Text style={{fontSize: 12}}>By registering you accept the{' '}
             <Text style={styles.link} onPress={goToTermsOfUse}>Terms of Use{' '}</Text>and {' '}
             <Text style={styles.link} onPress={goToPrivacyPolicy}>Privacy Policy</Text>

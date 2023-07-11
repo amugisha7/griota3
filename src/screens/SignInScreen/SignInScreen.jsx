@@ -14,20 +14,23 @@ const SignInScreen = ({navigation}) => {
   const route = useRoute()
 
   const [loginError, setLoginError] = useState()
-  const [accountCreatedMessage, setAccountCreatedMessage] = useState(route?.params?.accountCreatedMessage)
-  const [createdUserName, setCreatedUserName] = useState(route?.params?.createdUserName)
+  // const [accountCreatedMessage, setAccountCreatedMessage] = useState(route?.params?.accountCreatedMessage)
+  // const [createdUserName, setCreatedUserName] = useState(route?.params?.createdUserName)
   const [status, setStatus] = useState('Sign In')
 
-  useEffect(()=>{
-    setAccountCreatedMessage(route?.params?.accountCreatedMessage); 
-    setCreatedUserName(route?.params?.createdUserName);
-    createdUserName && setLoginError(null)
-  }, [accountCreatedMessage, createdUserName])
+  useEffect(()=>{setLoginError(null)},[])
+
+  // useEffect(()=>{
+  //   setAccountCreatedMessage(route?.params?.accountCreatedMessage); 
+  //   setCreatedUserName(route?.params?.createdUserName);
+  //   createdUserName && setLoginError(null)
+  // }, [accountCreatedMessage, createdUserName])
 
   const { control, handleSubmit} = useForm({
     defaultValues: {
-      username: createdUserName ? createdUserName : '',
-      password: ''
+      // username: createdUserName ? createdUserName : '',
+      password: '',
+      username: ''
     }
   });
 
@@ -38,12 +41,13 @@ const SignInScreen = ({navigation}) => {
   const SigningIn = async (data) => {
     setStatus('Signing In...')
     const {username, password} = data
+    const phoneNumber = username; 
+    const pin = password; 
     try { 
       const user = await Auth.signIn(`+256${username.slice(1)}`, `00${password}`)
       user.attributes.phone_number === adminUsers.Admin1.PhoneNumber
       ? navigation.navigate('AdminScreen')
-      : navigation.navigate('FormScreen')
-      
+      : navigation.navigate('ApplyForLoan', {phoneNumber, pin})
     }
     catch(e){
       setLoginError(e.message)
@@ -63,7 +67,7 @@ const SignInScreen = ({navigation}) => {
         
         { loginError && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>ERROR: {loginError}</Text>}
         
-        {accountCreatedMessage &&  <Text style={{color: 'green', marginVertical: 20}}>{accountCreatedMessage}</Text>}
+        {/* {accountCreatedMessage &&  <Text style={{color: 'green', marginVertical: 20}}>{accountCreatedMessage}</Text>} */}
         <CustomInput 
           name='username' 
           placeholder='Phone Number (07xxxxxxxx)' 
