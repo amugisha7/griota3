@@ -21,10 +21,11 @@ const ApplyForLoan = ({navigation}) => {
   const [stage, setStage] = useState()
   const [idNumber, setIdNumber] = useState()
   const [pinCodeTest, setPinCodeTest] = useState()
+  const [amplifyPin, setAmplifyPin] = useState()
   const PIN_REGEX = /\b\d{4}\b/;
 
   const phoneNumber = route?.params?.phoneNumber
-  const pin = route?.params?.pin
+  const pin = route?.params?.password
   
   useEffect(()=>{
     console.log(phoneNumber)
@@ -42,6 +43,7 @@ const ApplyForLoan = ({navigation}) => {
             }
             othername
             idNumber
+            pin
           }
         }`
       ))
@@ -50,6 +52,7 @@ const ApplyForLoan = ({navigation}) => {
         setOtherName(boda.data.getBoda.othername)
         setStage(boda.data.getBoda.stage.name)
         setIdNumber(boda.data.getBoda.idNumber)
+        setAmplifyPin(boda.data.getBoda.pin)
       }
     }
     catch(e)
@@ -94,7 +97,7 @@ const ApplyForLoan = ({navigation}) => {
     setStatus('Submitting');
     const {pinCode } = data; 
     setPinCodeTest(pinCode)
-    if (pinCode === pin){
+    if (pinCode === pin || pinCode === amplifyPin){
         registerApplication()
         .then(()=>navigation.navigate('ApplicationReceived'))
         .then(()=>setStatus('Submit Application'))

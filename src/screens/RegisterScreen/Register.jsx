@@ -1,5 +1,5 @@
 import { View, Text, Image, StyleSheet, Alert, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Logo from '../../../assets/images/Griota_logo.png';
 import CustomDropDown from '../../components/CustomDropDown/CustomDropDown';
 import CustomImageUpload from "../../components/CustomImageUpload/CustomImageUpload";
@@ -11,11 +11,18 @@ import { griotaStyles } from '../../../assets/styles/style';
 import { registeredStages } from '../../Lists/registeredStages';
 
 const Register = ({navigation}) => {
-
+  
   const [errorMessage, setErrorMessage] = useState()
   const [selectedStage, setSelectedStage] = useState()
   const [stageIdCardPicFile, setStageIdCardPicFile] = useState()
   const [idPicURL, setIdPicURL] =useState()
+  const [bodaData, setBodaData] = useState()
+  
+  useEffect(()=>{
+    if(idPicURL && bodaData) {
+      registerUser()
+    }
+  },[idPicURL])
 
   const { control, handleSubmit, watch  } = useForm({
     defaultValues: {
@@ -55,15 +62,21 @@ const Register = ({navigation}) => {
     })
     .then(async r => {
       let data = await r.json()
-      console.log('cloudinary resp: ', data.secure_url)
+      // console.log('cloudinary resp: ', data.secure_url)
       setIdPicURL(data.secure_url)
     })
     .catch(e =>console.log('cloudinary error: ', e))
   }
 
-  const registerUser = async(phoneNumber) =>{
+  const registerUser = async() =>{
     try{
+      const {phoneNumber, firstName, otherName, idNumber} = bodaData
       const {user} = await Auth.signUp(`+256${phoneNumber.slice(1)}`, phoneNumber)
+      if (user){
+        navigation.navigate('ConfirmPhoneNumber', {
+            phoneNumber, firstName, otherName, selectedStage, idNumber, idPicURL
+        })
+      }
     } 
     catch(e){
       console.log('unable to sign up ', e);
@@ -71,12 +84,10 @@ const Register = ({navigation}) => {
   }
   
   const createBoda = async (data) => {
-    const {phoneNumber, firstName, otherName, idNumber} = data;
     uploadOneToCloudinary(stageIdCardPicFile)
-    .then(()=>registerUser(phoneNumber))
-    .then(()=>navigation.navigate('ConfirmPhoneNumber', {
-      phoneNumber, firstName, otherName, selectedStage, idNumber, idPicURL
-    }))
+    setBodaData(data)
+    // .then(()=>registerUser(phoneNumber))
+    // .then(()=>
   }
 
   return (

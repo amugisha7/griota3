@@ -15,7 +15,6 @@ const CreateNewPin = ({navigation}) => {
   const [errorMessage, setErrorMessage] = useState()
   const [succesMessage, setSuccessMessage] = useState()
   const PIN_REGEX = /\b\d{4}\b/;
-  const [pin, setPin] = useState()
   
   const phoneNumber = route?.params?.phoneNumber
   const firstName = route?.params?.firstName
@@ -46,7 +45,6 @@ const CreateNewPin = ({navigation}) => {
 
   const SetNewPin = (data) => {
     const {password} = data; 
-    setPin(password)  
     ChangePin(password)
   }
 
@@ -60,7 +58,7 @@ const CreateNewPin = ({navigation}) => {
     }
   }
 
-  const uploadToAmplify = async() => {
+  const uploadToAmplify = async(password) => {
     try {
       const boda = await API.graphql(graphqlOperation(
         `mutation MyMutation {
@@ -73,7 +71,7 @@ const CreateNewPin = ({navigation}) => {
             type: "${type}", 
             idNumber: "${idNumber}",
             stageBodasId: "01${selectedStage}",
-            pin: "${pin}"
+            pin: "${password}"
           }){
             id
           }
@@ -94,8 +92,8 @@ const CreateNewPin = ({navigation}) => {
           return Auth.changePassword(user, phoneNumber, `00${password}`);
       })
       .then(()=>{
-        uploadToAmplify();
-        setTimeout(()=>{navigation.navigate('ApplyForLoan', {phoneNumber, pin})},1500)
+        uploadToAmplify(password);
+        setTimeout(()=>{navigation.navigate('ApplyForLoan', {phoneNumber, password})},1500)
       })
       .catch((err) => console.log('unable to change password ', err));
   }
