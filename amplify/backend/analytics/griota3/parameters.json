@@ -1,0 +1,21 @@
+{
+    "appName": "griota3",
+    "roleName": "pinpointLambdaRole1d4a965c",
+    "cloudformationPolicyName": "cloudformationPolicy1d4a965c",
+    "cloudWatchPolicyName": "cloudWatchPolicy1d4a965c",
+    "pinpointPolicyName": "pinpointPolicy1d4a965c",
+    "authPolicyName": "pinpoint_amplify_1d4a965c",
+    "unauthPolicyName": "pinpoint_amplify_1d4a965c",
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "authRoleArn": {
+        "Fn::GetAtt": [
+            "AuthRole",
+            "Arn"
+        ]
+    }
+}

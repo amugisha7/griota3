@@ -7,7 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Amplify } from 'aws-amplify';
 import config from './src/aws-exports';
-import { View, Text, Dimensions } from 'react-native';
+import { View, Text, Dimensions, BackHandler } from 'react-native';
 import FormScreen from './src/screens/FormScreens/FormScreen';
 import Tester from './src/screens/Tester';
 import ResetPassword from './src/screens/ResetPassword/ResetPassword';
@@ -22,6 +22,11 @@ const Stack = createNativeStackNavigator();
 
 const screenWidth = Dimensions.get('window').width;
 console.log('Screen width:', screenWidth);
+
+BackHandler.addEventListener('hardwareBackPress', ()=> {
+  console.log('getting out')
+  BackHandler.exitApp()
+});
 
 const App= () => {
   

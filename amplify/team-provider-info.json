@@ -20,6 +20,21 @@
       },
       "storage": {
         "s3griota3storagecbdc8102": {}
+      },
+      "analytics": {
+        "griota3": {},
+        "Pinpoint": {
+          "Name": "griota3-dev",
+          "Id": "1f76916ac2fa4202975484cad9f689fa",
+          "Region": "ap-southeast-1"
+        }
+      },
+      "notifications": {
+        "Pinpoint": {
+          "Name": "griota3-dev",
+          "Id": "1f76916ac2fa4202975484cad9f689fa",
+          "Region": "ap-southeast-1"
+        }
       }
     }
   }

@@ -1,34 +1,47 @@
-import { View, Text, Image, StyleSheet} from 'react-native'
+import { View, Text, Image, StyleSheet, Linking} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Logo from '../../../assets/images/Griota_logo.png'
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { useForm } from 'react-hook-form';
-import {Auth} from 'aws-amplify'; 
+import {Auth, Notifications} from 'aws-amplify'; 
 import { useRoute } from '@react-navigation/native';
 import { griotaStyles } from '../../../assets/styles/style';
 import { adminUsers } from '../../Lists/adminUsers';
+import {checkPermissions} from '../../resources/requestPermissions'
+import DeepLinking from 'react-native-deep-linking';
 
 const SignInScreen = ({navigation}) => {
   
   const route = useRoute()
+// // SETTING UP A ROUTE FOR NOTIFICATIONS: 
+  DeepLinking.addRoute('/admin', (response) => {
+    navigation.navigate("AdminScreen");
+  });
+  DeepLinking.addRoute('/register', (response) => {
+    navigation.navigate("Register");
+  });
+  // evaluate every incoming URL
+  const handleOpenURL = (event) => {
+    DeepLinking.evaluateUrl(event.url);
+  }
+  // manage Linking event listener with useEffect
+  useEffect(() => {
+    Linking.addEventListener('url', handleOpenURL);
+  }, []);
 
   const [loginError, setLoginError] = useState()
-  // const [accountCreatedMessage, setAccountCreatedMessage] = useState(route?.params?.accountCreatedMessage)
-  // const [createdUserName, setCreatedUserName] = useState(route?.params?.createdUserName)
   const [status, setStatus] = useState('Sign In')
 
   useEffect(()=>{setLoginError(null)},[])
 
-  // useEffect(()=>{
-  //   setAccountCreatedMessage(route?.params?.accountCreatedMessage); 
-  //   setCreatedUserName(route?.params?.createdUserName);
-  //   createdUserName && setLoginError(null)
-  // }, [accountCreatedMessage, createdUserName])
+  useEffect(()=>{
+    
+    checkPermissions()
+  },[])
 
   const { control, handleSubmit} = useForm({
     defaultValues: {
-      // username: createdUserName ? createdUserName : '',
       password: '',
       username: ''
     }
