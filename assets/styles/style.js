@@ -51,4 +51,11 @@ export const griotaStyles = StyleSheet.create({
         fontSize: 12,
         marginHorizontal: 10
       },
+    successMessage: {
+        color: 'green',
+        fontSize: 16,
+        fontWeight: 500, 
+        marginHorizontal: 10,
+        marginVertical: 10
+      },
 })

@@ -1,40 +1,9 @@
 input AMPLIFY {
   globalAuthRule: AuthRule = {allow: public}
 } # FOR TESTING ONLY!
-type LoanApplication @model @auth(rules: [{allow: public}]) {
-  id: ID!
-  phoneNumber: String
-  salesLastWeek: String
-  salesBeforeLastWeek: String
-  businessActivity: String
-  selectedBusinessType: String
-  selectedBusinessLocation: String
-  businessAreaPicBlob: String
-  ownerInBusinessPicBlob: String
-  outsideOfBusinessPicBlob: String
-  durationInBsuiness: String
-  age: String
-  nationalIDFrontPicBlob: String
-  fullName: String
-  nationalIDNumber: String
-  nextOfKinName: String
-  nextOfKinRelationship: String
-  nextOfKinPhoneNumber: String
-  referee1Name: String
-  referee1PhoneNumber: String
-  referee1KnownPeriod: String
-  NINofReferee1: String
-  ref1NationalIDPic: String
-  referee2Name: String
-  referee2PhoneNumber: String
-  referee2KnownPeriod: String
-  NINofReferee2: String
-  ref2NationalIDPic: String
-}
-
 type Stage @model {
   id: ID!
-  name: String!
+  name: String
   address: String
   chairman: String
   chairmanPhoneNumber: String
@@ -46,10 +15,12 @@ type Boda @model {
   firstname: String
   othername: String
   phoneNumber: String
+  mobileMoneyName: String
   idNumber: String
   picOfStageId: String
   pin: String
   applications: [Application] @hasMany
+  loans: [Loan] @hasMany
   stage: Stage @belongsTo
   type: String
 }
@@ -58,13 +29,12 @@ type Application @model {
   boda: Boda @belongsTo
   date: String
   status: String
-  loan: Loan @hasOne
 }
 type Loan @model {
   id: ID!
-  principal: Float!
-  application: Application! @belongsTo
-  startDate: String!
+  principal: Float
+  boda: Boda @belongsTo
+  startDate: String
   duration: Int
   loanType: String
   payments: [Payment] @hasMany
@@ -73,7 +43,14 @@ type Loan @model {
 type Payment @model {
   id: ID!
   loan: Loan @belongsTo
-  amount: Float
-  date: String
+  paymentAmount: Float
+  paymentDate: String
   method: String
+  account: [Account] @manyToMany(relationName: "PaymentAccount")
+}
+type Account @model {
+  id: ID!
+  name: String
+  payments: [Payment] @manyToMany(relationName: "PaymentAccount")
+  openingBalance: Float
 }

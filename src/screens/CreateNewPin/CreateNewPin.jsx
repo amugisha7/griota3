@@ -21,15 +21,9 @@ const CreateNewPin = ({navigation}) => {
   const otherName = route?.params?.otherName
   const idNumber = route?.params?.idNumber
   const selectedStage = route?.params?.selectedStage
+  const mobileMoneyName = route?.params?.mobileMoneyName
   const stageIdCardPicFile = route?.params?.stageIdCardPicFile
   const type = 'boda';
-  
-  // const phoneNumber = '0774568769'
-  // const firstName = 'FirstBoda1'
-  // const otherName = 'OtherBoda1'
-  // const idNumber = '11aa1'
-  // const selectedStage = 'Bulindo' 
-  // const stageIdCardPicFile = '12345'
 
   useEffect(()=>{
     SigningIn()
@@ -71,7 +65,8 @@ const CreateNewPin = ({navigation}) => {
             type: "${type}", 
             idNumber: "${idNumber}",
             stageBodasId: "01${selectedStage}",
-            pin: "${password}"
+            pin: "${password}",
+            mobileMoneyName: "${mobileMoneyName}"
           }){
             id
           }

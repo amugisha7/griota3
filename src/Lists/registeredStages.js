@@ -1,3 +1,3 @@
-const registeredStages = ["Select from list", "Bulindo"];
+const registeredStages = ["Select from list", "Bukoole (Bulindo)"];
 
 export {registeredStages}

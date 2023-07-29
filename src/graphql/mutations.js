@@ -1,126 +1,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createLoanApplication = /* GraphQL */ `
-  mutation CreateLoanApplication(
-    $input: CreateLoanApplicationInput!
-    $condition: ModelLoanApplicationConditionInput
-  ) {
-    createLoanApplication(input: $input, condition: $condition) {
-      id
-      phoneNumber
-      salesLastWeek
-      salesBeforeLastWeek
-      businessActivity
-      selectedBusinessType
-      selectedBusinessLocation
-      businessAreaPicBlob
-      ownerInBusinessPicBlob
-      outsideOfBusinessPicBlob
-      durationInBsuiness
-      age
-      nationalIDFrontPicBlob
-      fullName
-      nationalIDNumber
-      nextOfKinName
-      nextOfKinRelationship
-      nextOfKinPhoneNumber
-      referee1Name
-      referee1PhoneNumber
-      referee1KnownPeriod
-      NINofReferee1
-      ref1NationalIDPic
-      referee2Name
-      referee2PhoneNumber
-      referee2KnownPeriod
-      NINofReferee2
-      ref2NationalIDPic
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const updateLoanApplication = /* GraphQL */ `
-  mutation UpdateLoanApplication(
-    $input: UpdateLoanApplicationInput!
-    $condition: ModelLoanApplicationConditionInput
-  ) {
-    updateLoanApplication(input: $input, condition: $condition) {
-      id
-      phoneNumber
-      salesLastWeek
-      salesBeforeLastWeek
-      businessActivity
-      selectedBusinessType
-      selectedBusinessLocation
-      businessAreaPicBlob
-      ownerInBusinessPicBlob
-      outsideOfBusinessPicBlob
-      durationInBsuiness
-      age
-      nationalIDFrontPicBlob
-      fullName
-      nationalIDNumber
-      nextOfKinName
-      nextOfKinRelationship
-      nextOfKinPhoneNumber
-      referee1Name
-      referee1PhoneNumber
-      referee1KnownPeriod
-      NINofReferee1
-      ref1NationalIDPic
-      referee2Name
-      referee2PhoneNumber
-      referee2KnownPeriod
-      NINofReferee2
-      ref2NationalIDPic
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const deleteLoanApplication = /* GraphQL */ `
-  mutation DeleteLoanApplication(
-    $input: DeleteLoanApplicationInput!
-    $condition: ModelLoanApplicationConditionInput
-  ) {
-    deleteLoanApplication(input: $input, condition: $condition) {
-      id
-      phoneNumber
-      salesLastWeek
-      salesBeforeLastWeek
-      businessActivity
-      selectedBusinessType
-      selectedBusinessLocation
-      businessAreaPicBlob
-      ownerInBusinessPicBlob
-      outsideOfBusinessPicBlob
-      durationInBsuiness
-      age
-      nationalIDFrontPicBlob
-      fullName
-      nationalIDNumber
-      nextOfKinName
-      nextOfKinRelationship
-      nextOfKinPhoneNumber
-      referee1Name
-      referee1PhoneNumber
-      referee1KnownPeriod
-      NINofReferee1
-      ref1NationalIDPic
-      referee2Name
-      referee2PhoneNumber
-      referee2KnownPeriod
-      NINofReferee2
-      ref2NationalIDPic
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
 export const createStage = /* GraphQL */ `
   mutation CreateStage(
     $input: CreateStageInput!
@@ -194,9 +74,15 @@ export const createBoda = /* GraphQL */ `
       firstname
       othername
       phoneNumber
+      mobileMoneyName
+      idNumber
       picOfStageId
       pin
       applications {
+        nextToken
+        __typename
+      }
+      loans {
         nextToken
         __typename
       }
@@ -228,9 +114,15 @@ export const updateBoda = /* GraphQL */ `
       firstname
       othername
       phoneNumber
+      mobileMoneyName
+      idNumber
       picOfStageId
       pin
       applications {
+        nextToken
+        __typename
+      }
+      loans {
         nextToken
         __typename
       }
@@ -262,9 +154,15 @@ export const deleteBoda = /* GraphQL */ `
       firstname
       othername
       phoneNumber
+      mobileMoneyName
+      idNumber
       picOfStageId
       pin
       applications {
+        nextToken
+        __typename
+      }
+      loans {
         nextToken
         __typename
       }
@@ -298,6 +196,8 @@ export const createApplication = /* GraphQL */ `
         firstname
         othername
         phoneNumber
+        mobileMoneyName
+        idNumber
         picOfStageId
         pin
         type
@@ -308,22 +208,9 @@ export const createApplication = /* GraphQL */ `
       }
       date
       status
-      loan {
-        id
-        principal
-        startDate
-        duration
-        loanType
-        status
-        createdAt
-        updatedAt
-        loanApplicationId
-        __typename
-      }
       createdAt
       updatedAt
       bodaApplicationsId
-      applicationLoanId
       __typename
     }
   }
@@ -340,6 +227,8 @@ export const updateApplication = /* GraphQL */ `
         firstname
         othername
         phoneNumber
+        mobileMoneyName
+        idNumber
         picOfStageId
         pin
         type
@@ -350,22 +239,9 @@ export const updateApplication = /* GraphQL */ `
       }
       date
       status
-      loan {
-        id
-        principal
-        startDate
-        duration
-        loanType
-        status
-        createdAt
-        updatedAt
-        loanApplicationId
-        __typename
-      }
       createdAt
       updatedAt
       bodaApplicationsId
-      applicationLoanId
       __typename
     }
   }
@@ -382,6 +258,8 @@ export const deleteApplication = /* GraphQL */ `
         firstname
         othername
         phoneNumber
+        mobileMoneyName
+        idNumber
         picOfStageId
         pin
         type
@@ -392,22 +270,9 @@ export const deleteApplication = /* GraphQL */ `
       }
       date
       status
-      loan {
-        id
-        principal
-        startDate
-        duration
-        loanType
-        status
-        createdAt
-        updatedAt
-        loanApplicationId
-        __typename
-      }
       createdAt
       updatedAt
       bodaApplicationsId
-      applicationLoanId
       __typename
     }
   }
@@ -420,14 +285,19 @@ export const createLoan = /* GraphQL */ `
     createLoan(input: $input, condition: $condition) {
       id
       principal
-      application {
+      boda {
         id
-        date
-        status
+        firstname
+        othername
+        phoneNumber
+        mobileMoneyName
+        idNumber
+        picOfStageId
+        pin
+        type
         createdAt
         updatedAt
-        bodaApplicationsId
-        applicationLoanId
+        stageBodasId
         __typename
       }
       startDate
@@ -440,7 +310,7 @@ export const createLoan = /* GraphQL */ `
       status
       createdAt
       updatedAt
-      loanApplicationId
+      bodaLoansId
       __typename
     }
   }
@@ -453,14 +323,19 @@ export const updateLoan = /* GraphQL */ `
     updateLoan(input: $input, condition: $condition) {
       id
       principal
-      application {
+      boda {
         id
-        date
-        status
+        firstname
+        othername
+        phoneNumber
+        mobileMoneyName
+        idNumber
+        picOfStageId
+        pin
+        type
         createdAt
         updatedAt
-        bodaApplicationsId
-        applicationLoanId
+        stageBodasId
         __typename
       }
       startDate
@@ -473,7 +348,7 @@ export const updateLoan = /* GraphQL */ `
       status
       createdAt
       updatedAt
-      loanApplicationId
+      bodaLoansId
       __typename
     }
   }
@@ -486,14 +361,19 @@ export const deleteLoan = /* GraphQL */ `
     deleteLoan(input: $input, condition: $condition) {
       id
       principal
-      application {
+      boda {
         id
-        date
-        status
+        firstname
+        othername
+        phoneNumber
+        mobileMoneyName
+        idNumber
+        picOfStageId
+        pin
+        type
         createdAt
         updatedAt
-        bodaApplicationsId
-        applicationLoanId
+        stageBodasId
         __typename
       }
       startDate
@@ -506,7 +386,7 @@ export const deleteLoan = /* GraphQL */ `
       status
       createdAt
       updatedAt
-      loanApplicationId
+      bodaLoansId
       __typename
     }
   }
@@ -527,12 +407,16 @@ export const createPayment = /* GraphQL */ `
         status
         createdAt
         updatedAt
-        loanApplicationId
+        bodaLoansId
         __typename
       }
-      amount
-      date
+      paymentAmount
+      paymentDate
       method
+      account {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       loanPaymentsId
@@ -556,12 +440,16 @@ export const updatePayment = /* GraphQL */ `
         status
         createdAt
         updatedAt
-        loanApplicationId
+        bodaLoansId
         __typename
       }
-      amount
-      date
+      paymentAmount
+      paymentDate
       method
+      account {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       loanPaymentsId
@@ -585,15 +473,175 @@ export const deletePayment = /* GraphQL */ `
         status
         createdAt
         updatedAt
-        loanApplicationId
+        bodaLoansId
         __typename
       }
-      amount
-      date
+      paymentAmount
+      paymentDate
       method
+      account {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       loanPaymentsId
+      __typename
+    }
+  }
+`;
+export const createAccount = /* GraphQL */ `
+  mutation CreateAccount(
+    $input: CreateAccountInput!
+    $condition: ModelAccountConditionInput
+  ) {
+    createAccount(input: $input, condition: $condition) {
+      id
+      name
+      payments {
+        nextToken
+        __typename
+      }
+      openingBalance
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateAccount = /* GraphQL */ `
+  mutation UpdateAccount(
+    $input: UpdateAccountInput!
+    $condition: ModelAccountConditionInput
+  ) {
+    updateAccount(input: $input, condition: $condition) {
+      id
+      name
+      payments {
+        nextToken
+        __typename
+      }
+      openingBalance
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteAccount = /* GraphQL */ `
+  mutation DeleteAccount(
+    $input: DeleteAccountInput!
+    $condition: ModelAccountConditionInput
+  ) {
+    deleteAccount(input: $input, condition: $condition) {
+      id
+      name
+      payments {
+        nextToken
+        __typename
+      }
+      openingBalance
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createPaymentAccount = /* GraphQL */ `
+  mutation CreatePaymentAccount(
+    $input: CreatePaymentAccountInput!
+    $condition: ModelPaymentAccountConditionInput
+  ) {
+    createPaymentAccount(input: $input, condition: $condition) {
+      id
+      paymentId
+      accountId
+      payment {
+        id
+        paymentAmount
+        paymentDate
+        method
+        createdAt
+        updatedAt
+        loanPaymentsId
+        __typename
+      }
+      account {
+        id
+        name
+        openingBalance
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updatePaymentAccount = /* GraphQL */ `
+  mutation UpdatePaymentAccount(
+    $input: UpdatePaymentAccountInput!
+    $condition: ModelPaymentAccountConditionInput
+  ) {
+    updatePaymentAccount(input: $input, condition: $condition) {
+      id
+      paymentId
+      accountId
+      payment {
+        id
+        paymentAmount
+        paymentDate
+        method
+        createdAt
+        updatedAt
+        loanPaymentsId
+        __typename
+      }
+      account {
+        id
+        name
+        openingBalance
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deletePaymentAccount = /* GraphQL */ `
+  mutation DeletePaymentAccount(
+    $input: DeletePaymentAccountInput!
+    $condition: ModelPaymentAccountConditionInput
+  ) {
+    deletePaymentAccount(input: $input, condition: $condition) {
+      id
+      paymentId
+      accountId
+      payment {
+        id
+        paymentAmount
+        paymentDate
+        method
+        createdAt
+        updatedAt
+        loanPaymentsId
+        __typename
+      }
+      account {
+        id
+        name
+        openingBalance
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
       __typename
     }
   }

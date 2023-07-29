@@ -5,10 +5,10 @@ import CustomDropDown from '../../components/CustomDropDown/CustomDropDown';
 import CustomImageUpload from "../../components/CustomImageUpload/CustomImageUpload";
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
+import CheckBox from '@react-native-community/checkbox';
 import { useForm } from 'react-hook-form';
-import {Auth} from 'aws-amplify'; 
+import {Auth, API, graphqlOperation} from 'aws-amplify'; 
 import { griotaStyles } from '../../../assets/styles/style';
-import { registeredStages } from '../../Lists/registeredStages';
 
 const Register = ({navigation}) => {
   
@@ -17,6 +17,12 @@ const Register = ({navigation}) => {
   const [stageIdCardPicFile, setStageIdCardPicFile] = useState()
   const [idPicURL, setIdPicURL] =useState()
   const [bodaData, setBodaData] = useState()
+  const [declaration, setDeclaration] = useState(true)
+  const [stagesList, setStagesList] = useState()
+
+  useEffect(()=>{
+    getStages()
+  },[])
   
   useEffect(()=>{
     if(idPicURL && bodaData) {
@@ -24,12 +30,36 @@ const Register = ({navigation}) => {
     }
   },[idPicURL])
 
+  const getStages = async() => {
+    try {
+        const stages = await API.graphql(graphqlOperation(
+        `query MyQuery {
+            listStages {
+              items {
+                name
+                address
+              }
+            }
+          }`
+        ))
+        if(stages) {
+            const listOfStages = stages.data.listStages.items.map(item => `${item.name} (${item.address})`)
+            setStagesList(listOfStages)
+        }
+    }
+    catch(e)
+    {
+        console.log('unable to retrieve boda details ', e)
+    }
+  }
+
   const { control, handleSubmit, watch  } = useForm({
     defaultValues: {
       phoneNumber: '',
       firstName: '',
       otherName: '',
-      idNumber: ''
+      idNumber: '',
+      mobileMoneyName: ''
     }
   });
 
@@ -70,11 +100,11 @@ const Register = ({navigation}) => {
 
   const registerUser = async() =>{
     try{
-      const {phoneNumber, firstName, otherName, idNumber} = bodaData
+      const {phoneNumber, firstName, otherName, idNumber, mobileMoneyName} = bodaData
       const {user} = await Auth.signUp(`+256${phoneNumber.slice(1)}`, phoneNumber)
       if (user){
         navigation.navigate('ConfirmPhoneNumber', {
-            phoneNumber, firstName, otherName, selectedStage, idNumber, idPicURL
+            phoneNumber, firstName, otherName, selectedStage, idNumber, idPicURL, mobileMoneyName
         })
       }
     } 
@@ -97,6 +127,24 @@ const Register = ({navigation}) => {
           <Text style={styles.title}>Create an Account</Text>
           {errorMessage && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>{errorMessage}</Text>}
           <CustomInput
+            name='firstName'
+            mylabel='Enter your first name'
+            control={control}
+            placeholder=''
+            rules={{
+              required: "This field is required",
+            }}
+          />
+          <CustomInput
+            name='otherName'
+            mylabel='Enter your other names'
+            control={control}
+            placeholder=''
+            rules={{
+              required: "This field is required",
+            }}
+          />
+          <CustomInput
             name='phoneNumber'
             placeholder='Phone Number (07xxxxxxxx)'
             mylabel='Enter the Phone Number you will use to receive loans and make payment'
@@ -110,42 +158,44 @@ const Register = ({navigation}) => {
             }}
             type={'tel'}
           />
+          <View style={{flex: 1, flexDirection: 'row', marginBottom: 5}}>
+            <CheckBox
+              disabled={false}
+              value={declaration}
+              onValueChange={(newValue) => setDeclaration(newValue)}
+            />
+            <Text style={[griotaStyles.text, {textAlign: 'left'}]}>The Mobile Money Name is the same as my name</Text>
+          </View>
+          <View style={{flex: 1, flexDirection: 'row', marginBottom: 10 }}>
+            <View style={{display: declaration?'none':'flex'}}>
+              <CustomInput
+                name='mobileMoneyName'
+                mylabel='If the mobile money name is different from your name, enter it here'
+                control={control}
+                placeholder='Mobile Money Name'
+                rules={{
+                  required: "This field is required",
+                }}
+              />
+            </View>
+          </View>
           <CustomDropDown
-              items={registeredStages}
+              items={stagesList ? stagesList : ['list Loading... PLEASE WAIT']}
               setSelectedItem={setSelectedStage} 
               mylabel={'Select Your Stage'}
-              //Bulindo is equal to 01Bulindo in Amplify
-            />
-            <CustomInput
-              name='firstName'
-              mylabel='Enter your first name'
-              control={control}
-              placeholder=''
-              rules={{
-                required: "This field is required",
-              }}
-            />
-            <CustomInput
-              name='otherName'
-              mylabel='Enter your other names'
-              control={control}
-              placeholder=''
-              rules={{
-                required: "This field is required",
-              }}
-            />
-            <CustomInput
-              name='idNumber'
-              mylabel='Enter your Stage ID as shown on your stage card'
-              control={control}
-              placeholder=''
-              rules={{
-                required: "This field is required",
-              }}
-            />
-            <CustomImageUpload
-                mylabel={'Upload picture of your Stage Card'}
-                setBlobValue={setStageIdCardPicFile}/>
+          />
+          <CustomInput
+            name='idNumber'
+            mylabel='Enter your Stage ID as shown on your stage card'
+            control={control}
+            placeholder=''
+            rules={{
+              required: "This field is required",
+            }}
+          />
+          <CustomImageUpload
+              mylabel={'Upload picture of your Stage Card'}
+              setBlobValue={setStageIdCardPicFile}/>
           {selectedStage === 'Select from list' ?
             <Text style={[griotaStyles.errors, {marginVertical: 20}]}>Please select a stage to proceed</Text> : 
             <CustomButton onPress={handleSubmit(createBoda)} buttonFunction={'Register'}/>}

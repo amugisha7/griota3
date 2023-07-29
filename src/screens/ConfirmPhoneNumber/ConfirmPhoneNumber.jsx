@@ -18,6 +18,7 @@ const ConfirmPhoneNumber = ({navigation}) => {
   const idNumber = route?.params?.idNumber
   const selectedStage = route?.params?.selectedStage
   const stageIdCardPicFile = route?.params?.idPicURL
+  const mobileMoneyName = route?.params?.mobileMoneyName
 
   const { control, handleSubmit } = useForm({
     defaultValues: {
@@ -30,7 +31,7 @@ const ConfirmPhoneNumber = ({navigation}) => {
     try{
       await Auth.confirmSignUp(`+256${phoneNumber.slice(1)}`, code);
       navigation.navigate('CreateNewPin', {
-        phoneNumber, firstName, otherName, selectedStage, idNumber, stageIdCardPicFile
+        phoneNumber, firstName, otherName, selectedStage, idNumber, stageIdCardPicFile, mobileMoneyName
       })
     }
     catch(e){

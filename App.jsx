@@ -15,6 +15,9 @@ import AdminScreen from './src/screens/AdminScreen/AdminScreen';
 import ApplicationReceived from './src/screens/ApplicationReceived/ApplicationReceived';
 import CreateNewPin from './src/screens/CreateNewPin/CreateNewPin';
 import ApplyForLoan from './src/screens/ApplyForLoan/ApplyForLoan';
+import AddPayment from './src/screens/AdminScreen/Payments/AddPyament';
+import CreateStage from './src/screens/AdminScreen/Stages/CreateStage';
+import CreateLoan from './src/screens/AdminScreen/Loans/CreateLoan';
 
 Amplify.configure(config)
 
@@ -46,10 +49,12 @@ const App= () => {
            <Stack.Screen name='ApplicationReceived' component={ApplicationReceived} />
            <Stack.Screen name='CreateNewPin' component={CreateNewPin} />
            <Stack.Screen name='ApplyForLoan' component={ApplyForLoan} />
+           <Stack.Screen name='AdminScreen/AddPayment' component={AddPayment} />
+           <Stack.Screen name='AdminScreen/CreateStage' component={CreateStage} />
+           <Stack.Screen name='AdminScreen/CreateLoan' component={CreateLoan} />
 
        </Stack.Navigator>
      </NavigationContainer>
-    
     
   )  
 }

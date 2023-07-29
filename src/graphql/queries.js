@@ -1,92 +1,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getLoanApplication = /* GraphQL */ `
-  query GetLoanApplication($id: ID!) {
-    getLoanApplication(id: $id) {
-      id
-      phoneNumber
-      salesLastWeek
-      salesBeforeLastWeek
-      businessActivity
-      selectedBusinessType
-      selectedBusinessLocation
-      businessAreaPicBlob
-      ownerInBusinessPicBlob
-      outsideOfBusinessPicBlob
-      durationInBsuiness
-      age
-      nationalIDFrontPicBlob
-      fullName
-      nationalIDNumber
-      nextOfKinName
-      nextOfKinRelationship
-      nextOfKinPhoneNumber
-      referee1Name
-      referee1PhoneNumber
-      referee1KnownPeriod
-      NINofReferee1
-      ref1NationalIDPic
-      referee2Name
-      referee2PhoneNumber
-      referee2KnownPeriod
-      NINofReferee2
-      ref2NationalIDPic
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const listLoanApplications = /* GraphQL */ `
-  query ListLoanApplications(
-    $filter: ModelLoanApplicationFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listLoanApplications(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        phoneNumber
-        salesLastWeek
-        salesBeforeLastWeek
-        businessActivity
-        selectedBusinessType
-        selectedBusinessLocation
-        businessAreaPicBlob
-        ownerInBusinessPicBlob
-        outsideOfBusinessPicBlob
-        durationInBsuiness
-        age
-        nationalIDFrontPicBlob
-        fullName
-        nationalIDNumber
-        nextOfKinName
-        nextOfKinRelationship
-        nextOfKinPhoneNumber
-        referee1Name
-        referee1PhoneNumber
-        referee1KnownPeriod
-        NINofReferee1
-        ref1NationalIDPic
-        referee2Name
-        referee2PhoneNumber
-        referee2KnownPeriod
-        NINofReferee2
-        ref2NationalIDPic
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
 export const getStage = /* GraphQL */ `
   query GetStage($id: ID!) {
     getStage(id: $id) {
@@ -134,9 +48,15 @@ export const getBoda = /* GraphQL */ `
       firstname
       othername
       phoneNumber
+      mobileMoneyName
+      idNumber
       picOfStageId
       pin
       applications {
+        nextToken
+        __typename
+      }
+      loans {
         nextToken
         __typename
       }
@@ -170,6 +90,8 @@ export const listBodas = /* GraphQL */ `
         firstname
         othername
         phoneNumber
+        mobileMoneyName
+        idNumber
         picOfStageId
         pin
         type
@@ -192,6 +114,8 @@ export const getApplication = /* GraphQL */ `
         firstname
         othername
         phoneNumber
+        mobileMoneyName
+        idNumber
         picOfStageId
         pin
         type
@@ -202,22 +126,9 @@ export const getApplication = /* GraphQL */ `
       }
       date
       status
-      loan {
-        id
-        principal
-        startDate
-        duration
-        loanType
-        status
-        createdAt
-        updatedAt
-        loanApplicationId
-        __typename
-      }
       createdAt
       updatedAt
       bodaApplicationsId
-      applicationLoanId
       __typename
     }
   }
@@ -236,7 +147,6 @@ export const listApplications = /* GraphQL */ `
         createdAt
         updatedAt
         bodaApplicationsId
-        applicationLoanId
         __typename
       }
       nextToken
@@ -249,14 +159,19 @@ export const getLoan = /* GraphQL */ `
     getLoan(id: $id) {
       id
       principal
-      application {
+      boda {
         id
-        date
-        status
+        firstname
+        othername
+        phoneNumber
+        mobileMoneyName
+        idNumber
+        picOfStageId
+        pin
+        type
         createdAt
         updatedAt
-        bodaApplicationsId
-        applicationLoanId
+        stageBodasId
         __typename
       }
       startDate
@@ -269,7 +184,7 @@ export const getLoan = /* GraphQL */ `
       status
       createdAt
       updatedAt
-      loanApplicationId
+      bodaLoansId
       __typename
     }
   }
@@ -290,7 +205,7 @@ export const listLoans = /* GraphQL */ `
         status
         createdAt
         updatedAt
-        loanApplicationId
+        bodaLoansId
         __typename
       }
       nextToken
@@ -311,12 +226,16 @@ export const getPayment = /* GraphQL */ `
         status
         createdAt
         updatedAt
-        loanApplicationId
+        bodaLoansId
         __typename
       }
-      amount
-      date
+      paymentAmount
+      paymentDate
       method
+      account {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       loanPaymentsId
@@ -333,12 +252,154 @@ export const listPayments = /* GraphQL */ `
     listPayments(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        amount
-        date
+        paymentAmount
+        paymentDate
         method
         createdAt
         updatedAt
         loanPaymentsId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getAccount = /* GraphQL */ `
+  query GetAccount($id: ID!) {
+    getAccount(id: $id) {
+      id
+      name
+      payments {
+        nextToken
+        __typename
+      }
+      openingBalance
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listAccounts = /* GraphQL */ `
+  query ListAccounts(
+    $filter: ModelAccountFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAccounts(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        openingBalance
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getPaymentAccount = /* GraphQL */ `
+  query GetPaymentAccount($id: ID!) {
+    getPaymentAccount(id: $id) {
+      id
+      paymentId
+      accountId
+      payment {
+        id
+        paymentAmount
+        paymentDate
+        method
+        createdAt
+        updatedAt
+        loanPaymentsId
+        __typename
+      }
+      account {
+        id
+        name
+        openingBalance
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listPaymentAccounts = /* GraphQL */ `
+  query ListPaymentAccounts(
+    $filter: ModelPaymentAccountFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPaymentAccounts(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        paymentId
+        accountId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const paymentAccountsByPaymentId = /* GraphQL */ `
+  query PaymentAccountsByPaymentId(
+    $paymentId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelPaymentAccountFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    paymentAccountsByPaymentId(
+      paymentId: $paymentId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        paymentId
+        accountId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const paymentAccountsByAccountId = /* GraphQL */ `
+  query PaymentAccountsByAccountId(
+    $accountId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelPaymentAccountFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    paymentAccountsByAccountId(
+      accountId: $accountId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        paymentId
+        accountId
+        createdAt
+        updatedAt
         __typename
       }
       nextToken

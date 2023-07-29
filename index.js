@@ -25,7 +25,6 @@ const RootComponent = () => {
   const [connected, setConnected] = useState()
   const [tokenReceived, setTokenReceived] = useState()
   const [adminRoute, setAdminRoute] = useState()
-  const [ready, setReady] = useState()
   
   //CHECKING INTERNET CONNECTIVITY
   useEffect(()=>{
@@ -35,24 +34,24 @@ const RootComponent = () => {
   },[connected])
 
   //GETTING THE NOTIFICATION TOKEN. 
-  const myTokenReceivedHandler = (token) => {
-    console.log('Token in Index', token); 
-    token && setTokenReceived(token)
-  };
-  useEffect(()=>{
-    const listener = Notifications.Push.onTokenReceived(myTokenReceivedHandler);
-    listener.handleEvent(); 
-    setReady(true) 
-    // listener.remove(); // Remember to remove the listener when it is no longer needed
-  },[ready])
+  // const myTokenReceivedHandler = (token) => {
+  //   console.log('Token in Index', token); 
+  //   token && setTokenReceived(token)
+  // };
+  // useEffect(()=>{
+  //   const listener = Notifications.Push.onTokenReceived(myTokenReceivedHandler);
+  //   listener.handleEvent(); 
+  //   setReady(true) 
+  //   // listener.remove(); // Remember to remove the listener when it is no longer needed
+  // },[ready])
 
   const TokenContext = createContext()
 
   return (
     <TokenContext.Provider value={{tokenReceived, adminRoute}}>
       {!connected && <NotConnected />}
-      {!tokenReceived && connected && <Text>Loading</Text>}
-      {ready && connected && <App adminRoute={{adminRoute}}/>}
+      {/* {!tokenReceived && connected && <Text>Loading</Text>} */}
+      {connected && <App adminRoute={{adminRoute}}/>}
     </TokenContext.Provider>
   )
   
