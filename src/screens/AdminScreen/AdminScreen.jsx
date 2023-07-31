@@ -16,8 +16,8 @@ const AdminScreen = ({navigation}) => {
     navigation.navigate('AdminScreen/CreateLoan')
   }
 
-  const viewLoans = async()=>{
-    
+  const getLoanStatement = async()=>{
+    navigation.navigate('LoanStatementAdmin')
   }
 
   return (
@@ -26,7 +26,7 @@ const AdminScreen = ({navigation}) => {
       <Button onPress={createStage} title='Create Stage'></Button>
       <Button onPress={createLoan} title='Create Loan'></Button>
       <Button onPress={addPayment} title='Add Payment'></Button>
-      <Button onPress={viewLoans} title='View Loans'></Button>
+      <Button onPress={getLoanStatement} title='Loan Statements'></Button>
     </View>
   )
 }

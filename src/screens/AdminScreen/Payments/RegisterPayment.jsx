@@ -5,26 +5,37 @@ import CustomButton from '../../../components/CustomButton/CustomButton';
 import { useForm } from 'react-hook-form';
 import CustomInput from '../../../components/CustomInput/CustomInput';
 import { API, graphqlOperation } from "aws-amplify";
+import DatePickerComponent from '../../../components/DatePicker';
 
-const RegisterPayment = ({ firstName, otherName, stage, stageAddress, mobileMoneyName }) => {
+const RegisterPayment = ({ firstName, otherName, stage, stageAddress, mobileMoneyName, setDone, loanId }) => {
 
   const NUMBER_REGEX = /^\d+$/
   const [status, setStatus] = useState('Register Payment')
-  const [bodaLoanStatement, setBodaLoanStatement] = useState()
+  const [paymentDate, setPaymentDate] = useState()
 
   const makePayment = async(paymentAmount)=>{
     try {
-      const paymentThenStatement = await API.graphql(graphqlOperation(
-        ``
+      const newPayment = await API.graphql(graphqlOperation(
+        `mutation MyMutation {
+          createPayment(input: {
+            paymentDate: "${paymentDate}", 
+            paymentAmount: ${paymentAmount}, 
+            loanPaymentsId: "${loanId}"}) 
+          {
+            id
+          }
+        }`
       ))
-      if(paymentThenStatement){
+      if(newPayment){
         //create push notification to admin of the application details
-        console.log('Boda statement: ', paymentThenStatement)
-        setBodaLoanStatement(paymentThenStatement)
+        setStatus("Payment Successful!")
+        setTimeout(()=>setStatus("Register Another Payment"), 2000)
+        console.log('Payment Details: ', newPayment)
+        // setDone(newPayment)
       }
     }
     catch(e){
-      setErrorMessage(e)
+      console.log("Error making payment", e)
     }
   }
 
@@ -35,7 +46,7 @@ const RegisterPayment = ({ firstName, otherName, stage, stageAddress, mobileMone
   });
 
   const registerPaymentAmount = (data)=>{
-    setStatus('Retrieving Loan Details');
+    setStatus('Registering Payment...');
     const {paymentAmount } = data; 
     makePayment(paymentAmount)
   }
@@ -62,7 +73,12 @@ const RegisterPayment = ({ firstName, otherName, stage, stageAddress, mobileMone
               },
             }}
           />
+          <DatePickerComponent setTheDate={setPaymentDate} dateLabel={'Payment Date'}
+            dateButtonText={'Change Payment Date'}/>
           <CustomButton onPress={handleSubmit(registerPaymentAmount)} buttonFunction={status} />
+          {status === "Register Another Payment" && <Text 
+            onPress={()=>setDone('done')} 
+            style={{marginVertical: 10, color: 'red'}}>Exit</Text>}
         </View>
       </View>
   )

@@ -36,7 +36,6 @@ const SignInScreen = ({navigation}) => {
   useEffect(()=>{setLoginError(null)},[])
 
   useEffect(()=>{
-    
     checkPermissions()
   },[])
 
@@ -60,7 +59,7 @@ const SignInScreen = ({navigation}) => {
       const user = await Auth.signIn(`+256${username.slice(1)}`, `00${password}`)
       user.attributes.phone_number === adminUsers.Admin1.PhoneNumber
       ? navigation.navigate('AdminScreen')
-      : navigation.navigate('ApplyForLoan', {phoneNumber, pin})
+      : navigation.navigate('WelcomeScreen', {phoneNumber, pin})
     }
     catch(e){
       setLoginError(e.message)

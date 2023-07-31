@@ -5,9 +5,8 @@ import CustomButton from '../../../components/CustomButton/CustomButton';
 import { useForm } from 'react-hook-form';
 import CustomInput from '../../../components/CustomInput/CustomInput';
 import { API, graphqlOperation } from "aws-amplify";
-import RegisterPayment from './RegisterPayment';
 
-const AddPayment = ({navigation}) => {
+const LoanStatementAdmin = ({navigation}) => {
 
   const PHONE_REGEX = /^07\d{8}$/
   const [status, setStatus] = useState('Get Boda Info')
@@ -20,8 +19,8 @@ const AddPayment = ({navigation}) => {
   const [done, setDone] = useState()
 
   useEffect(()=>{
-    done && setTimeout(()=> navigation.navigate('AdminScreen'), 1000)
-  },[done])
+    done && setTimeout(()=> navigation.navigate('LoanStatementAdmin', {loanId}), 3000)
+   },[done])
 
   const getBodaDetails = async(data)=>{
     setStatus("Please Wait...")
@@ -89,17 +88,15 @@ const AddPayment = ({navigation}) => {
             type={'tel'}
           />
           <CustomButton onPress={handleSubmit(getBodaDetails)} buttonFunction={status} />
-          {
+          {/* {
             firstName && <RegisterPayment
               firstName={firstName} otherName={otherName} loanId={loanId} setDone={setDone}
               stage={stage} stageAddress={stageAddress} mobileMoneyName={mobileMoneyName}/>
-          }
+          } */}
         </View>
       </View>
     </ScrollView>
   )
 }
 
-export default AddPayment
-
-const styles = StyleSheet.create({})
+export default LoanStatementAdmin

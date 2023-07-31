@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react';
 import { griotaStyles } from '../../../assets/styles/style';
 import CheckBox from '@react-native-community/checkbox';
@@ -61,10 +61,6 @@ const ApplyForLoan = ({navigation}) => {
     }
   }
 
-  useEffect(()=>{
-    phoneNumber && getBodaDetails()
-  },[phoneNumber])
-
   const { control, handleSubmit, reset} = useForm({
     defaultValues: {
       pinCode: '',
@@ -89,7 +85,8 @@ const ApplyForLoan = ({navigation}) => {
       }
     }
     catch(e){
-      setErrorMessage(e)
+      setErrorMessage('ERROR: Please contact Support')
+      setTimeout(()=> navigation.navigate('SignIn'), 3000)
     }
   }
 
@@ -108,6 +105,7 @@ const ApplyForLoan = ({navigation}) => {
   }
 
   return (
+    <ScrollView>
       <View style={{padding: 22}}>
         {!firstName ? <Text style={griotaStyles.title}>Loading...</Text> :
         <View>
@@ -166,12 +164,13 @@ const ApplyForLoan = ({navigation}) => {
                   }}
                 />
               <CustomButton onPress={handleSubmit(SubmitApplication)} buttonFunction={status} />
-              {pinCodeTest && pinCodeTest !== pin && 
-                <Text style={griotaStyles.errors}>Invalid Pin, Retry</Text>}
+              {errorMessage &&
+                <Text style={griotaStyles.errors}>{errorMessage}</Text>}
           </View>}
         </View>
             }
       </View>
+    </ScrollView>
   )
 }
 
