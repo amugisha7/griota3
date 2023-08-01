@@ -1,13 +1,13 @@
 import { StyleSheet, Text, View, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react';
-import { griotaStyles } from '../../../assets/styles/style';
-import CustomButton from '../../components/CustomButton/CustomButton';
+import { griotaStyles } from '../../../../assets/styles/style';
+import CustomButton from '../../../components/CustomButton/CustomButton';
 import { useRoute } from '@react-navigation/native';
 import { API, graphqlOperation } from "aws-amplify";
-import { formatStatement, convertDateFormat, getDateDifferenceInDays } from '../../resources/formatStatement';
+import { formatStatement, convertDateFormat, getDateDifferenceInDays } from '../../../resources/formatStatement';
 import { Table, Row, Rows } from 'react-native-reanimated-table';
 
-const CheckLoanBalance = ({navigation}) => {
+const CheckLoanBalanceAdmin = ({navigation}) => {
 
   const route = useRoute()
   const [firstName, setFirstName] = useState()
@@ -72,7 +72,7 @@ const CheckLoanBalance = ({navigation}) => {
   }
 
   const returnToWelcome = ()=> {
-    navigation.navigate("WelcomeScreen")
+    navigation.navigate("LoanStatementAdmin")
   }
 
   const tableHead = ['DATE', 'PAYMENTS', 'BALANCE']
@@ -106,7 +106,7 @@ const CheckLoanBalance = ({navigation}) => {
               Loan Balance: {(principal*1.2)-payments[1]}/- </Text>
             <Text style={[griotaStyles.text, {textAlign: 'left'}]}>Days Since Start: {getDateDifferenceInDays(startDate)} </Text>
             <Text style={[griotaStyles.text, {textAlign: 'left', color: 'green', fontSize: 14}]}>
-              Amount that should have been paid so far: {
+              Expected Total Payment: {
               Math.round(getDateDifferenceInDays(startDate) *1.2* principal/30)
               }/- </Text>
             {getDateDifferenceInDays(startDate) > 1 && <Text style={[griotaStyles.text, {textAlign: 'left', color: 'red', fontSize: 14}]}>
@@ -122,7 +122,7 @@ const CheckLoanBalance = ({navigation}) => {
   )
 }
 
-export default CheckLoanBalance
+export default CheckLoanBalanceAdmin
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
