@@ -11,7 +11,7 @@ import { adminUsers } from '../../Lists/adminUsers';
 import {checkPermissions} from '../../resources/requestPermissions'
 import DeepLinking from 'react-native-deep-linking';
 
-const SignInScreen = ({navigation}) => {
+const SignInThenBalance = ({navigation}) => {
   
   const route = useRoute()
 // // SETTING UP A ROUTE FOR NOTIFICATIONS: 
@@ -46,10 +46,6 @@ const SignInScreen = ({navigation}) => {
     }
   });
 
-  const Registering = () => navigation.navigate('Register')
-
-  const ForgotPasswordPressed = () => {navigation.navigate('ForgotPassword')}
-
   const SigningIn = async (data) => {
     setStatus('Signing In...')
     const {username, password} = data
@@ -59,10 +55,11 @@ const SignInScreen = ({navigation}) => {
       const user = await Auth.signIn(`+256${username.slice(1)}`, `00${password}`)
       user.attributes.phone_number === adminUsers.Admin1.PhoneNumber
       ? navigation.navigate('AdminScreen')
-      : navigation.navigate('WelcomeScreen', {phoneNumber, pin})
+      : navigation.navigate('CheckLoanBalance', {phoneNumber, pin})
     }
     catch(e){
-      setLoginError(e.message)
+      setLoginError('Error. Please contact support')
+      setTimeout(()=> navigation.navigate('WelcomeScreen'), 3000)    
     }
     finally{
       setStatus("Sign In")
@@ -75,9 +72,9 @@ const SignInScreen = ({navigation}) => {
 
   return (
       <View style={styles.container }>
-        <Image source={Logo} style={styles.logo} resizeMode='contain'/>
+        <Text style={griotaStyles.title}>Sign In to Check Loan Balance</Text>
         
-        { loginError && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>ERROR: {loginError}</Text>}
+        { loginError && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>{loginError}</Text>}
         
         {/* {accountCreatedMessage &&  <Text style={{color: 'green', marginVertical: 20}}>{accountCreatedMessage}</Text>} */}
         <CustomInput 
@@ -118,30 +115,29 @@ const SignInScreen = ({navigation}) => {
         <CustomButton onPress={handleSubmit(SigningIn)} buttonFunction={status} />
 
         {/* <Text style={[styles.link, {marginTop: 20, marginBottom: 20}]} onPress={ForgotPasswordPressed}>Forgot Password</Text> */}
-        <View style={{marginTop: 20}}>
-          <Text>Don't yet have an account?</Text>
-        </View>
-        <View style={{width: '50%'}}>
-          <CustomButton onPress={Registering} buttonFunction={'Register'} type='SECONDARY'/>
+        
+        <View style={{width: '50%', marginTop: 30}}>
+          <CustomButton onPress={()=>navigation.navigate("WelcomeScreen")} buttonFunction={'Go Back'} type='SECONDARY'/>
         </View>
         
       </View>
     
   )
 }
-export default SignInScreen
+export default SignInThenBalance
 
 const styles = StyleSheet.create({
     
     container: {
       flex: 1,
       alignItems: 'center',
-      justifyContent: 'center',
+      // justifyContent: 'center',
       borderColor: 'black',
       borderWidth: 2,
       width: '100%',
       paddingLeft: 20,
       paddingRight: 20,
+      paddingTop: 22
     },
     logo: {
         width: 100,

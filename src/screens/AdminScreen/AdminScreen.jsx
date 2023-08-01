@@ -17,7 +17,7 @@ const AdminScreen = ({navigation}) => {
   }
 
   const getLoanStatement = async()=>{
-    navigation.navigate('LoanStatementAdmin')
+    // navigation.navigate('LoanStatementAdmin')
   }
 
   return (

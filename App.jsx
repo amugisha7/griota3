@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import SignInScreen from './src/screens/SignInScreen/SignInScreen';
+import SignInThenApply from './src/screens/SignInScreen/SignInThenApply';
+import SignInThenBalance from './src/screens/SignInScreen/SignInThenBalance';
 import Register from './src/screens/RegisterScreen/Register';
 import ConfirmPhoneNumber from './src/screens/ConfirmPhoneNumber/ConfirmPhoneNumber';
 import ForgotPassword from './src/screens/ForgotPassword/ForgotPassword';
@@ -20,6 +21,8 @@ import CreateStage from './src/screens/AdminScreen/Stages/CreateStage';
 import CreateLoan from './src/screens/AdminScreen/Loans/CreateLoan';
 import LoanStatementAdmin from './src/screens/AdminScreen/Loans/LoanStatementAdmin'
 import WelcomeScreen from './src/screens/WelcomeScreen/WelcomeScreen'
+import PaymentInstructions from './src/screens/WelcomeScreen/PaymentInstructions'
+import ContactUs from './src/screens/WelcomeScreen/ContactUs'
 import CheckLoanBalance from './src/screens/CheckLoanBalance/CheckLoanBalance'
 
 Amplify.configure(config)
@@ -29,19 +32,19 @@ const Stack = createNativeStackNavigator();
 const screenWidth = Dimensions.get('window').width;
 console.log('Screen width:', screenWidth);
 
-BackHandler.addEventListener('hardwareBackPress', ()=> {
-  console.log('getting out')
-  BackHandler.exitApp()
-});
+// BackHandler.addEventListener('hardwareBackPress', ()=> {
+//   BackHandler.exitApp()
+// });
 
 const App= () => {
   
   return (
     
      <NavigationContainer>
-       <Stack.Navigator initialRouteName="SignIn" screenOptions={{headerShown: false}}>
+       <Stack.Navigator initialRouteName="WelcomeScreen" screenOptions={{headerShown: false}}>
         
-           <Stack.Screen name='SignIn' component={SignInScreen} />
+           <Stack.Screen name='SignInThenApply' component={SignInThenApply} />
+           <Stack.Screen name='SignInThenBalance' component={SignInThenBalance} />
            <Stack.Screen name='Register' component={Register} />
            <Stack.Screen name='ForgotPassword' component={ForgotPassword} />
            <Stack.Screen name='ConfirmPhoneNumber' component={ConfirmPhoneNumber} />
@@ -53,6 +56,8 @@ const App= () => {
            <Stack.Screen name='CreateNewPin' component={CreateNewPin} />
            <Stack.Screen name='ApplyForLoan' component={ApplyForLoan} />
            <Stack.Screen name='WelcomeScreen' component={WelcomeScreen} />
+           <Stack.Screen name='ContactUs' component={ContactUs} />
+           <Stack.Screen name='PaymentInstructions' component={PaymentInstructions} />
            <Stack.Screen name='CheckLoanBalance' component={CheckLoanBalance} />
            <Stack.Screen name='AdminScreen/AddPayment' component={AddPayment} />
            <Stack.Screen name='AdminScreen/CreateStage' component={CreateStage} />

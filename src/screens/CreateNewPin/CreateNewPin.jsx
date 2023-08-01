@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, Alert } from 'react-native'
+import { View, Text, Image, StyleSheet, Alert, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Logo from '../../../assets/images/Griota_logo.png';
 import CustomInput from '../../components/CustomInput/CustomInput';
@@ -14,6 +14,9 @@ const CreateNewPin = ({navigation}) => {
   const route = useRoute()
   const [errorMessage, setErrorMessage] = useState()
   const [succesMessage, setSuccessMessage] = useState()
+  const [status, setStatus] = useState('Set New PIN Code')
+  const [ready, setReady] = useState()
+
   const PIN_REGEX = /\b\d{4}\b/;
   
   const phoneNumber = route?.params?.phoneNumber
@@ -39,13 +42,14 @@ const CreateNewPin = ({navigation}) => {
 
   const SetNewPin = (data) => {
     const {password} = data; 
+    setStatus('Please Wait...')
     ChangePin(password)
   }
 
   const SigningIn = async() => {
     try { 
       const signedInUser = await Auth.signIn(`+256${phoneNumber.slice(1)}`, phoneNumber)
-      console.log('user in ', signedInUser)
+      signedInUser && setReady(signedInUser)
     }
     catch(e){
       console.log('couldnt sign in' ,e )
@@ -64,7 +68,7 @@ const CreateNewPin = ({navigation}) => {
             picOfStageId: "${stageIdCardPicFile}", 
             type: "${type}", 
             idNumber: "${idNumber}",
-            stageBodasId: "01${selectedStage}",
+            stageBodasId: "${selectedStage}",
             pin: "${password}",
             mobileMoneyName: "${mobileMoneyName}"
           }){
@@ -73,7 +77,11 @@ const CreateNewPin = ({navigation}) => {
         }`
       ))
       console.log('boda created: ', boda)
-      if(boda) {setSuccessMessage('PIN CHANGE SUCCESSFUL');}
+      if(boda) {
+        setSuccessMessage('PIN CHANGE SUCCESSFUL');
+        setStatus('Set New PIN Code')
+        setTimeout(()=>{navigation.navigate('ApplyForLoan', {phoneNumber, password})},1500)
+      }
     }
     catch(e)
     {
@@ -88,55 +96,55 @@ const CreateNewPin = ({navigation}) => {
       })
       .then(()=>{
         uploadToAmplify(password);
-        setTimeout(()=>{navigation.navigate('ApplyForLoan', {phoneNumber, password})},1500)
       })
       .catch((err) => console.log('unable to change password ', err));
   }
 
   return (
-      <View style={styles.container }>
-        <Image source={Logo} style={styles.logo}/>
+      <ScrollView>
+        <View style={styles.container }>
+          <Image source={Logo} style={styles.logo}/>
         
-        {errorMessage && <Text style={[griotaStyles.errors, {marginVertical: 20}]}> {errorMessage} </Text>}
-        {succesMessage &&  <Text style={{color: 'green', marginVertical: 20}}> {succesMessage} </Text>}
-
-        <Text style={styles.title}>You Phone Number has been Verified.</Text>
-        <Text style={styles.title}>Please set a New 4-Digit PIN Code.</Text>
-        <CustomInput
-            name='password'
-            placeholder={''}
-            control={control}
-            mylabel={'Create a 4-digit PIN Code'}
-            secureTextEntry={true}
-            rules={{
-              required: "This field is required",
-              minLength: {
-                value: 4,
-                message: "Too short"
-              },
-              maxLength: {
-                value: 4,
-                message: "Only 4 digits allowed"
-              },
-              pattern: {
-                value: PIN_REGEX,
-                message: 'Must be 4-digit Number'
-              },
-            }}
-          />
+          {errorMessage && <Text style={[griotaStyles.errors, {marginVertical: 20}]}> {errorMessage} </Text>}
+          {succesMessage &&  <Text style={{color: 'green', marginVertical: 20}}> {succesMessage} </Text>}
+          <Text style={styles.title}>You Phone Number has been Verified.</Text>
+          <Text style={styles.title}>Please set a New 4-Digit PIN Code.</Text>
           <CustomInput
-            name='passwordCheck'
-            placeholder={'Confirm PIN Code'}
-            control={control}
-            secureTextEntry={true}
-            rules={{
-              required: "This field is required",
-              validate: value => pwd===value || 'PINs do not match',
-            }}
-          />
-          
-        <CustomButton onPress={handleSubmit(SetNewPin)} buttonFunction={'Set New PIN Code'}/>        
-      </View>
+              name='password'
+              placeholder={''}
+              control={control}
+              mylabel={'Create a 4-digit PIN Code'}
+              secureTextEntry={true}
+              rules={{
+                required: "This field is required",
+                minLength: {
+                  value: 4,
+                  message: "Too short"
+                },
+                maxLength: {
+                  value: 4,
+                  message: "Only 4 digits allowed"
+                },
+                pattern: {
+                  value: PIN_REGEX,
+                  message: 'Must be 4-digit Number'
+                },
+              }}
+            />
+            <CustomInput
+              name='passwordCheck'
+              placeholder={'Confirm PIN Code'}
+              control={control}
+              secureTextEntry={true}
+              rules={{
+                required: "This field is required",
+                validate: value => pwd===value || 'PINs do not match',
+              }}
+            />
+        
+          <CustomButton onPress={handleSubmit(SetNewPin)} buttonFunction={status}/>
+        </View>
+      </ScrollView>
     
   )
 }
@@ -148,8 +156,6 @@ const styles = StyleSheet.create({
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      borderColor: 'black',
-      borderWidth: 2,
       width: '100%',
       paddingLeft: 20,
       paddingRight: 20,

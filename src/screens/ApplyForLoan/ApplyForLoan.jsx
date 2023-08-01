@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, BackHandler } from 'react-native'
 import React, { useEffect, useState } from 'react';
 import { griotaStyles } from '../../../assets/styles/style';
 import CheckBox from '@react-native-community/checkbox';
@@ -23,6 +23,10 @@ const ApplyForLoan = ({navigation}) => {
   const [pinCodeTest, setPinCodeTest] = useState()
   const [amplifyPin, setAmplifyPin] = useState()
   const PIN_REGEX = /\b\d{4}\b/;
+
+  BackHandler.addEventListener('hardwareBackPress', ()=> {
+    navigation.navigate('WelcomeScreen')
+  });
 
   const phoneNumber = route?.params?.phoneNumber
   const pin = route?.params?.password

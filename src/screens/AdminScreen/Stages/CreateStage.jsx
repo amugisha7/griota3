@@ -23,7 +23,8 @@ const CreateStage = ({navigation}) => {
                 address: "${stageLocation}", 
                 chairman: "${chairman}", 
                 chairmanPhoneNumber: "${phoneNumber}", 
-                name: "${stageName}"
+                name: "${stageName} (${stageLocation})"
+                id: "${stageName} (${stageLocation})"
             }) {
               name
               address
@@ -86,7 +87,7 @@ const CreateStage = ({navigation}) => {
               <CustomInput
                 name='phoneNumber'
                 placeholder='Phone Number (07xxxxxxxx)'
-                mylabel='Enter the Phone Number you will use to receive loans and make payment'
+                mylabel='Enter the Phone Number of the Chairman of the Stage'
                 control={control}
                 rules={{
                   required: "This field is required",

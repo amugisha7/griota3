@@ -19,6 +19,8 @@ const Register = ({navigation}) => {
   const [bodaData, setBodaData] = useState()
   const [declaration, setDeclaration] = useState(true)
   const [stagesList, setStagesList] = useState()
+  const [status, setStatus] = useState('Register')
+  const [displayCheck, setDisplayCheck] = useState()
 
   useEffect(()=>{
     getStages()
@@ -30,6 +32,11 @@ const Register = ({navigation}) => {
     }
   },[idPicURL])
 
+  useEffect(()=>{
+    selectedStage === 'Select from list' || selectedStage === undefined ? setDisplayCheck(false) : setDisplayCheck(true);
+    console.log('Stage: ', selectedStage)
+  },[selectedStage])
+
   const getStages = async() => {
     try {
         const stages = await API.graphql(graphqlOperation(
@@ -37,19 +44,21 @@ const Register = ({navigation}) => {
             listStages {
               items {
                 name
-                address
               }
             }
           }`
         ))
         if(stages) {
-            const listOfStages = stages.data.listStages.items.map(item => `${item.name} (${item.address})`)
+            const listOfStages = stages.data.listStages.items.map(item => `${item.name}`)
+            listOfStages.unshift('Select from list')
             setStagesList(listOfStages)
         }
     }
     catch(e)
     {
-        console.log('unable to retrieve boda details ', e)
+      setErrorMessage('Error. Please contact support')
+      setTimeout(()=> navigation.navigate('WelcomeScreen'), 3000)
+      console.log(e)
     }
   }
 
@@ -59,7 +68,7 @@ const Register = ({navigation}) => {
       firstName: '',
       otherName: '',
       idNumber: '',
-      mobileMoneyName: ''
+      mmName: ''
     }
   });
 
@@ -95,25 +104,38 @@ const Register = ({navigation}) => {
       // console.log('cloudinary resp: ', data.secure_url)
       setIdPicURL(data.secure_url)
     })
-    .catch(e =>console.log('cloudinary error: ', e))
+    .catch(e =>{
+      console.log('cloudinary error: ', e)
+      setErrorMessage('Error. Please contact support')
+      setTimeout(()=> navigation.navigate('WelcomeScreen'), 3000)
+    })
   }
 
   const registerUser = async() =>{
     try{
-      const {phoneNumber, firstName, otherName, idNumber, mobileMoneyName} = bodaData
+      const {phoneNumber, firstName, otherName, idNumber, mmName} = bodaData
+      let mobileMoneyName;
+      if(mmName === '')
+        {mobileMoneyName = `${firstName} ${otherName}`}
+      else{
+        mobileMoneyName = mmName;
+      }
       const {user} = await Auth.signUp(`+256${phoneNumber.slice(1)}`, phoneNumber)
       if (user){
+        setStatus("Register")
         navigation.navigate('ConfirmPhoneNumber', {
             phoneNumber, firstName, otherName, selectedStage, idNumber, idPicURL, mobileMoneyName
         })
       }
     } 
     catch(e){
-      console.log('unable to sign up ', e);
+      setErrorMessage('Error. Please contact support')
+      setTimeout(()=> navigation.navigate('WelcomeScreen'), 3000)    
     }
   }
   
   const createBoda = async (data) => {
+    setStatus('Registering...')
     uploadOneToCloudinary(stageIdCardPicFile)
     setBodaData(data)
     // .then(()=>registerUser(phoneNumber))
@@ -169,13 +191,10 @@ const Register = ({navigation}) => {
           <View style={{flex: 1, flexDirection: 'row', marginBottom: 10 }}>
             <View style={{display: declaration?'none':'flex'}}>
               <CustomInput
-                name='mobileMoneyName'
+                name='mmName'
                 mylabel='If the mobile money name is different from your name, enter it here'
                 control={control}
-                placeholder='Mobile Money Name'
-                rules={{
-                  required: "This field is required",
-                }}
+                placeholder='Mobile Money Name'                
               />
             </View>
           </View>
@@ -186,7 +205,7 @@ const Register = ({navigation}) => {
           />
           <CustomInput
             name='idNumber'
-            mylabel='Enter your Stage ID as shown on your stage card'
+            mylabel='Enter your Stage ID as shown on your stage card (You may also use the NIN on your National ID)'
             control={control}
             placeholder=''
             rules={{
@@ -194,11 +213,14 @@ const Register = ({navigation}) => {
             }}
           />
           <CustomImageUpload
-              mylabel={'Upload picture of your Stage Card'}
+              mylabel={'Upload picture of your Stage Card (You may upload picture of National ID instead)'}
               setBlobValue={setStageIdCardPicFile}/>
-          {selectedStage === 'Select from list' ?
-            <Text style={[griotaStyles.errors, {marginVertical: 20}]}>Please select a stage to proceed</Text> : 
-            <CustomButton onPress={handleSubmit(createBoda)} buttonFunction={'Register'}/>}
+          <View style={{display: displayCheck ? 'none' : 'flex'}}>
+            <Text style={[griotaStyles.errors, {marginBottom: 40}]}>Please select a Stage</Text>  
+          </View>
+          <View style={{display: displayCheck ? 'flex' : 'none'}}>
+            <CustomButton onPress={handleSubmit(createBoda)} buttonFunction={status}/>
+          </View>
           <Text style={{fontSize: 12}}>By registering you accept the{' '}
             <Text style={styles.link} onPress={goToTermsOfUse}>Terms of Use{' '}</Text>and {' '}
             <Text style={styles.link} onPress={goToPrivacyPolicy}>Privacy Policy</Text>
@@ -223,8 +245,6 @@ const styles = StyleSheet.create({
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      borderColor: 'black',
-      borderWidth: 2,
       width: '100%',
       paddingLeft: 20,
       paddingRight: 20,

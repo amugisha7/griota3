@@ -68,11 +68,12 @@ const CheckLoanBalance = ({navigation}) => {
     catch(e)
     {
       setErrorMessage('ERROR: Please contact Support')
-      setTimeout(()=> navigation.navigate('SignIn'), 3000)
+      setTimeout(()=> navigation.navigate('WelcomeScreen'), 3000)
+      console.log('Error getting boda details', e)
     }
   }
 
-  const returnToWelcome = ()=> navigation.navigate("SignIn")
+  const returnToWelcome = ()=> navigation.navigate("WelcomeScreen")
 
   const tableHead = ['DATE', 'PAYMENTS', 'BALANCE']
 
@@ -86,7 +87,7 @@ const CheckLoanBalance = ({navigation}) => {
           <Text style={griotaStyles.label}>Borrower Details:</Text>
           <View style={{display: 'flex', flexDirection: 'column', marginBottom: 10}}>
             <Text style={[griotaStyles.text, {textAlign: 'left'}]}>Name: {firstName} {otherName}. </Text>
-            <Text style={[griotaStyles.text, {textAlign: 'left'}]}>Stage: {`${stage} (${stageAddress})`} </Text>
+            <Text style={[griotaStyles.text, {textAlign: 'left'}]}>Stage: {stage} </Text>
           </View>
           <Text style={griotaStyles.label}>Loan Details:</Text>
           <View style={{display: 'flex', flexDirection: 'column', marginBottom: 10}}>

@@ -5,7 +5,6 @@ import { BackHandler } from "react-native";
 const checkPermissions = async()=>{
 
   const status = await Notifications.Push.getPermissionStatus();
-  console.log("perm: ", status)
   if (status === 'GRANTED') {
     // no further action is required, user has already granted permissions
     return;

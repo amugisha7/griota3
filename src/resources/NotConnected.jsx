@@ -6,6 +6,7 @@ const NotConnected = () => {
     return (
       <View style={{
           justifyContent: 'center',
+          padding: 30
       }}>
         <Text style={{
           fontSize: 24,
