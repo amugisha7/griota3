@@ -50,6 +50,7 @@ const Register = ({navigation}) => {
         ))
         if(stages) {
             const listOfStages = stages.data.listStages.items.map(item => `${item.name}`)
+            listOfStages.sort()
             listOfStages.unshift('Select from list')
             setStagesList(listOfStages)
         }

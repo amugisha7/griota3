@@ -4,7 +4,7 @@ import { griotaStyles } from '../../../assets/styles/style';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { useRoute } from '@react-navigation/native';
 import { API, graphqlOperation } from "aws-amplify";
-import { formatStatement, convertDateFormat, getDateDifferenceInDays } from '../../resources/formatStatement';
+import { formatStatement, convertDateFormat, getDateDifferenceInDays, getDaysSinceStart } from '../../resources/formatStatement';
 import { Table, Row, Rows } from 'react-native-reanimated-table';
 
 const CheckLoanBalance = ({navigation}) => {
@@ -104,7 +104,7 @@ const CheckLoanBalance = ({navigation}) => {
           <View style={{display: 'flex', flexDirection: 'column', marginBottom: 20, }}>
             <Text style={[griotaStyles.text, {textAlign: 'left', fontWeight: 500}]}>
               Loan Balance: {(principal*1.2)-payments[1]}/- </Text>
-            <Text style={[griotaStyles.text, {textAlign: 'left'}]}>Days Since Start: {getDateDifferenceInDays(startDate)} </Text>
+            <Text style={[griotaStyles.text, {textAlign: 'left'}]}>Days Since Start: {getDaysSinceStart(startDate)} </Text>
             <Text style={[griotaStyles.text, {textAlign: 'left', color: 'green', fontSize: 14}]}>
               Amount that should have been paid so far: {
               Math.round(getDateDifferenceInDays(startDate) *1.2* principal/30)
@@ -119,7 +119,7 @@ const CheckLoanBalance = ({navigation}) => {
         }
       </View>
     </ScrollView>
-  )
+  ) 
 }
 
 export default CheckLoanBalance

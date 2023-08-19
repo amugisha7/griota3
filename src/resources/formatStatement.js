@@ -1,3 +1,4 @@
+import { startTransition } from "react";
 
 const formatStatement = (payments, startDate, principal) => {
   const endDate = new Date(startDate);
@@ -22,6 +23,19 @@ const formatStatement = (payments, startDate, principal) => {
 
     currentBalance -= paymentAmount;
     dataArray.push([formattedDate, paymentAmount, currentBalance]);
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+  // Add more dates if loan is past due date. 
+  const today = new Date();
+  while (currentDate <= today){
+    const formattedDate = formatDate(currentDate);
+    const paymentItem = payments.find(item => item.paymentDate === formattedDate)
+
+    if(paymentItem){
+      let paymentAmount = paymentItem.paymentAmount; 
+      currentBalance -= paymentAmount
+      dataArray.push([formattedDate, paymentAmount, currentBalance])
+    }
     currentDate.setDate(currentDate.getDate() + 1);
   }
 
@@ -56,14 +70,29 @@ const convertDateFormat = (dateString) => {
   return formattedDate;
 };
 
-const getDateDifferenceInDays = (pastDate) => {
+// const getDateDifferenceInDays = (startDate) => {
+//   const endDate = new Date(startDate);
+//   endDate.setDate(endDate.getDate() + 30);
+//   const oldDate =  convertDateFormat(startDate)
+//   const past = new Date(oldDate.slice(0,-1));
+//   const timeDifferenceInMilliseconds = endDate.getTime() - past.getTime();
+//   const differenceInDays = Math.floor(timeDifferenceInMilliseconds / (1000 * 60 * 60 * 24));
+
+//   return differenceInDays;
+// };
+const getDaysSinceStart = (startDate) => {
   const today = new Date();
-  const oldDate =  convertDateFormat(pastDate)
+  const oldDate =  convertDateFormat(startDate)
   const past = new Date(oldDate.slice(0,-1));
   const timeDifferenceInMilliseconds = today.getTime() - past.getTime();
   const differenceInDays = Math.floor(timeDifferenceInMilliseconds / (1000 * 60 * 60 * 24));
-
+  
   return differenceInDays;
-};
 
-export {formatStatement, convertDateFormat, getDateDifferenceInDays}
+}
+const getDateDifferenceInDays = (startDate) =>{
+  const count = getDaysSinceStart(startDate)
+  return count<=30 ? count : 30
+}
+
+export {formatStatement, convertDateFormat, getDateDifferenceInDays, getDaysSinceStart}
