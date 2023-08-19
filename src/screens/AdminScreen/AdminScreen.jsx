@@ -24,13 +24,18 @@ const AdminScreen = ({navigation}) => {
     navigation.navigate('AdminScreen/SelectStageToView')
   }
 
+  const viewApplications = async()=>{
+    navigation.navigate('AdminScreen/SelectApplicationDate')
+  }
+
   return (
     <ScrollView>
       <View style={{gap: 20, flexDirection: 'column', padding: 22}}>
         <Text style={griotaStyles.title}>AdminScreen</Text>
         <Button onPress={createStage} title='Create Stage'></Button>
-        <Button onPress={createLoan} title='Create Loan'></Button>
         <Button onPress={addPayment} title='Add Payment'></Button>
+        <Button onPress={viewApplications} title='View Applications'></Button>
+        <Button onPress={createLoan} title='Create Loan'></Button>
         <Button onPress={getLoanStatement} title='Loan Statements'></Button>
         <Button onPress={veiwBorrowers} title='View Borrowers'></Button>
       </View>

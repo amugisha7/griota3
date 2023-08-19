@@ -72,10 +72,11 @@ const ApplyForLoan = ({navigation}) => {
   });
 
   const registerApplication = async()=>{
+    const today = new Date().toDateString()
     try {
       const application = await API.graphql(graphqlOperation(
         `mutation MyMutation2 {
-          createApplication(input: {status: "new", bodaApplicationsId: "${phoneNumber}"}) {
+          createApplication(input: {date: "${today}", status: "new", bodaApplicationsId: "${phoneNumber}"}) {
             createdAt
             boda {
               id

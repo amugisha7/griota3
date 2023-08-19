@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, Linking} from 'react-native'
+import { View, Text, Image, StyleSheet, Linking, ScrollView} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Logo from '../../../assets/images/Griota_logo.png'
 import CustomInput from '../../components/CustomInput/CustomInput';
@@ -73,53 +73,55 @@ const SignInScreen = ({navigation}) => {
   const PIN_REGEX = /\b\d{4}\b/;
 
   return (
-      <View style={styles.container }>
-        <View>
-          <Text style={griotaStyles.label}>Are You a New User?</Text>
-        </View>
-        <View style={{width: '60%', marginBottom: 60}}>
-          <CustomButton onPress={Registering} buttonFunction={'Register New Account'} type='PRIMARY'/>
-        </View>
-        <Text style={griotaStyles.label}>Already registered?</Text>
-        <Text style={griotaStyles.title}>Sign In to Apply for a Loan</Text>
-        { loginError && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>{loginError}</Text>}
-        <CustomInput 
-          name='username' 
-          placeholder='Phone Number (07xxxxxxxx)' 
-          control={control}
-          rules={{
-            required: "This field is required", 
-            pattern: {
-              value: PHONE_REGEX,
-              message: 'Invalid Phone Number (use format 07xxxxxxxx)'
-            },
-          }}
-          type={'tel'}
-        />
+      <ScrollView>
+        <View style={styles.container }>
+          <View>
+            <Text style={griotaStyles.label}>Are You a New User?</Text>
+          </View>
+          <View style={{width: '60%', marginBottom: 60}}>
+            <CustomButton onPress={Registering} buttonFunction={'Register New Account'} type='PRIMARY'/>
+          </View>
+          <Text style={griotaStyles.label}>Already registered?</Text>
+          <Text style={griotaStyles.title}>Sign In to Apply for a Loan</Text>
+          { loginError && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>{loginError}</Text>}
+          <CustomInput
+            name='username'
+            placeholder='Phone Number (07xxxxxxxx)'
+            control={control}
+            rules={{
+              required: "This field is required",
+              pattern: {
+                value: PHONE_REGEX,
+                message: 'Invalid Phone Number (use format 07xxxxxxxx)'
+              },
+            }}
+            type={'tel'}
+          />
         
-        <CustomInput 
-          name='password'
-          placeholder={'PIN Code'} 
-          secureTextEntry={true}
-          control={control}
-          rules={{
-            required: "This field is required",
-            minLength: {
-              value: 4,
-              message: "Too short"
-            },
-            maxLength: {
-              value: 4,
-              message: "Only 4 digits allowed"
-            },
-            pattern: {
-              value: PIN_REGEX,
-              message: 'Must be 4-digit Number'
-            },
-          }}
-        />
-        <CustomButton onPress={handleSubmit(SigningIn)} buttonFunction={status} />
-      </View>
+          <CustomInput
+            name='password'
+            placeholder={'PIN Code'}
+            secureTextEntry={true}
+            control={control}
+            rules={{
+              required: "This field is required",
+              minLength: {
+                value: 4,
+                message: "Too short"
+              },
+              maxLength: {
+                value: 4,
+                message: "Only 4 digits allowed"
+              },
+              pattern: {
+                value: PIN_REGEX,
+                message: 'Must be 4-digit Number'
+              },
+            }}
+          />
+          <CustomButton onPress={handleSubmit(SigningIn)} buttonFunction={status} />
+        </View>
+      </ScrollView>
     
   )
 }

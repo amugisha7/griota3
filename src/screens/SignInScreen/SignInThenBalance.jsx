@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, Linking} from 'react-native'
+import { View, Text, Image, StyleSheet, Linking, ScrollView} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Logo from '../../../assets/images/Griota_logo.png'
 import CustomInput from '../../components/CustomInput/CustomInput';
@@ -71,56 +71,57 @@ const SignInThenBalance = ({navigation}) => {
   const PIN_REGEX = /\b\d{4}\b/;
 
   return (
-      <View style={styles.container }>
-        <Text style={griotaStyles.title}>Sign In to Check Loan Balance</Text>
+      <ScrollView>
+        <View style={styles.container }>
+          <Text style={griotaStyles.title}>Sign In to Check Loan Balance</Text>
         
-        { loginError && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>{loginError}</Text>}
+          { loginError && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>{loginError}</Text>}
         
-        {/* {accountCreatedMessage &&  <Text style={{color: 'green', marginVertical: 20}}>{accountCreatedMessage}</Text>} */}
-        <CustomInput 
-          name='username' 
-          placeholder='Phone Number (07xxxxxxxx)' 
-          control={control}
-          rules={{
-            required: "This field is required", 
-            pattern: {
-              value: PHONE_REGEX,
-              message: 'Invalid Phone Number (use format 07xxxxxxxx)'
-            },
-          }}
-          type={'tel'}
-        />
+          {/* {accountCreatedMessage &&  <Text style={{color: 'green', marginVertical: 20}}>{accountCreatedMessage}</Text>} */}
+          <CustomInput
+            name='username'
+            placeholder='Phone Number (07xxxxxxxx)'
+            control={control}
+            rules={{
+              required: "This field is required",
+              pattern: {
+                value: PHONE_REGEX,
+                message: 'Invalid Phone Number (use format 07xxxxxxxx)'
+              },
+            }}
+            type={'tel'}
+          />
         
-        <CustomInput 
-          name='password'
-          placeholder={'PIN Code'} 
-          secureTextEntry={true}
-          control={control}
-          rules={{
-            required: "This field is required",
-            minLength: {
-              value: 4,
-              message: "Too short"
-            },
-            maxLength: {
-              value: 4,
-              message: "Only 4 digits allowed"
-            },
-            pattern: {
-              value: PIN_REGEX,
-              message: 'Must be 4-digit Number'
-            },
-          }}
-        />
-        <CustomButton onPress={handleSubmit(SigningIn)} buttonFunction={status} />
-
-        {/* <Text style={[styles.link, {marginTop: 20, marginBottom: 20}]} onPress={ForgotPasswordPressed}>Forgot Password</Text> */}
+          <CustomInput
+            name='password'
+            placeholder={'PIN Code'}
+            secureTextEntry={true}
+            control={control}
+            rules={{
+              required: "This field is required",
+              minLength: {
+                value: 4,
+                message: "Too short"
+              },
+              maxLength: {
+                value: 4,
+                message: "Only 4 digits allowed"
+              },
+              pattern: {
+                value: PIN_REGEX,
+                message: 'Must be 4-digit Number'
+              },
+            }}
+          />
+          <CustomButton onPress={handleSubmit(SigningIn)} buttonFunction={status} />
+          {/* <Text style={[styles.link, {marginTop: 20, marginBottom: 20}]} onPress={ForgotPasswordPressed}>Forgot Password</Text> */}
         
-        <View style={{width: '50%', marginTop: 30}}>
-          <CustomButton onPress={()=>navigation.navigate("WelcomeScreen")} buttonFunction={'Go Back'} type='SECONDARY'/>
+          <View style={{width: '50%', marginTop: 30}}>
+            <CustomButton onPress={()=>navigation.navigate("WelcomeScreen")} buttonFunction={'Go Back'} type='SECONDARY'/>
+          </View>
+        
         </View>
-        
-      </View>
+      </ScrollView>
     
   )
 }
