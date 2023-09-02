@@ -17,9 +17,50 @@ const CheckLoanBalance = ({navigation}) => {
   const [principal, setPrincipal] = useState()
   const [payments, setPayments] = useState()
   const [errorMessage, setErrorMessage] = useState()
+  const [dateString, setDateString] = useState()
+  const [nextDateString, setNextDateString] = useState()
 
   const phoneNumber = route?.params?.phoneNumber
-  
+
+  useEffect(() => {
+    const currentDateTime = new Date();
+    const currentHour = currentDateTime.getHours();
+
+    // Define an array of weekday names
+    const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+    // Check if the current time is past 9 AM
+    if (currentHour >= 9) {
+      // If it's past 9 AM, set the date string to "Day DD-MMM" of the current day
+      const day = currentDateTime.getDate();
+      const month = currentDateTime.toLocaleString('default', { month: 'short' });
+      const weekday = weekdays[currentDateTime.getDay()];
+      const formattedDate = `9am ${weekday} ${day}-${month}`;
+      setDateString(formattedDate);
+      const nextDay = new Date(currentDateTime)
+      nextDay.setDate(currentDateTime.getDate() + 1);
+      const nextday = nextDay.getDate();
+      const nextmonth = nextDay.toLocaleString('default', { month: 'short' });
+      const nextweekday = weekdays[nextDay.getDay()];
+      const nextFormattedDate = `9am ${nextweekday} ${nextday}-${nextmonth}`;
+      setNextDateString(nextFormattedDate)
+    } else {
+      // If it's before 9 AM, set the date string to "Day DD-MMM" of the previous day
+      const previousDay = new Date(currentDateTime);
+      previousDay.setDate(currentDateTime.getDate() - 1);
+      const day = previousDay.getDate();
+      const month = previousDay.toLocaleString('default', { month: 'short' });
+      const weekday = weekdays[previousDay.getDay()];
+      const formattedDate = `9am ${weekday} ${day}-${month}`;
+      setDateString(formattedDate);
+      const nowday = currentDateTime.getDate();
+      const nowmonth = currentDateTime.toLocaleString('default', { month: 'short' });
+      const nowweekday = weekdays[currentDateTime.getDay()];
+      const nowformattedDate = `9am ${nowweekday} ${nowday}-${nowmonth}`;
+      setNextDateString(nowformattedDate)
+    }
+  }, []);
+
   useEffect(()=>{
     getBodaDetails()
   },[])
@@ -84,6 +125,8 @@ const CheckLoanBalance = ({navigation}) => {
         <View>
           {errorMessage && <Text style={griotaStyles.title}>{errorMessage}</Text>}
           <Text style={griotaStyles.title}>Loan Statement</Text>
+          <Text style={{color: 'red'}}>Last updated at: {dateString}</Text>
+          <Text style={{color: 'green'}}>Next update: {nextDateString}</Text>
           <Text style={griotaStyles.label}>Borrower Details:</Text>
           <View style={{display: 'flex', flexDirection: 'column', marginBottom: 10}}>
             <Text style={[griotaStyles.text, {textAlign: 'left'}]}>Name: {firstName} {otherName}. </Text>

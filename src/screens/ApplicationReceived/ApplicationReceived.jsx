@@ -8,7 +8,7 @@ const ApplicationReceived = ({navigation}) => {
   return (
     <View style={{padding: 20}}>
         <Text style={griotaStyles.title}>Application Received</Text>
-        <Text style={[griotaStyles.text, {fontWeight: 600}]}> Our team will contact you within 2 hours as soon as a decision has been made. </Text>
+        <Text style={[griotaStyles.text, {fontWeight: 600}]}> Our team will contact you within 2 to 4 hours as soon as a decision has been made. </Text>
         <Text style={griotaStyles.text}> {`Our working hours are 8am to 5pm, Monday to Friday.`} </Text>
         <CustomButton onPress={()=>{
           navigation.navigate('WelcomeScreen');

@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { griotaStyles } from '../../../../assets/styles/style';
 import CustomButton from '../../../components/CustomButton/CustomButton';
 import { useForm } from 'react-hook-form';
@@ -12,6 +12,11 @@ const RegisterPayment = ({ firstName, otherName, stage, stageAddress, mobileMone
   const NUMBER_REGEX = /^\d+$/
   const [status, setStatus] = useState('Register Payment')
   const [paymentDate, setPaymentDate] = useState()
+  const [paymentReceived, setPaymentReceived] = useState()
+
+  useEffect(()=>{
+    setPaymentReceived(false)
+  },[loanId])
 
   const makePayment = async(paymentAmount)=>{
     try {
@@ -29,6 +34,7 @@ const RegisterPayment = ({ firstName, otherName, stage, stageAddress, mobileMone
       if(newPayment){
         //create push notification to admin of the application details
         setStatus("Payment Successful!")
+        setPaymentReceived(true)
         setTimeout(()=>setStatus("Register Another Payment"), 2000)
         console.log('Payment Details: ', newPayment)
         // setDone(newPayment)
@@ -36,6 +42,7 @@ const RegisterPayment = ({ firstName, otherName, stage, stageAddress, mobileMone
     }
     catch(e){
       console.log("Error making payment", e)
+      setStatus("PAYMENT FAILED")
     }
   }
 
@@ -53,11 +60,13 @@ const RegisterPayment = ({ firstName, otherName, stage, stageAddress, mobileMone
 
   return (
       <View style={{padding: 22}}>
+        {paymentReceived && 
+        <Text style={{color: '#007700', marginBottom: 20}}>Payment by {firstName+" "+otherName} Successful</Text>}
         <View>
           <Text style={griotaStyles.title}>Payment Details</Text>
         </View>
         <View>
-          <Text style={griotaStyles.text}>Client Name: {firstName+''+otherName}</Text>
+          <Text style={griotaStyles.text}>Client Name: {firstName+' '+otherName}</Text>
           <Text style={griotaStyles.text}>Mobile Money Name: {mobileMoneyName}</Text>
           <Text style={griotaStyles.text}>Stage Name: {`${stage} (${stageAddress})`}</Text>
           <CustomInput

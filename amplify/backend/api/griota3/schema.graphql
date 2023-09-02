@@ -16,8 +16,10 @@ type Boda @model {
   othername: String
   phoneNumber: String
   mobileMoneyName: String
-  idNumber: String
+  stageIdNumber: String
+  nationalIdNumber: String
   picOfStageId: String
+  picOfNationalId: String
   pin: String
   applications: [Application] @hasMany
   loans: [Loan] @hasMany

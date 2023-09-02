@@ -15,7 +15,9 @@ const Register = ({navigation}) => {
   const [errorMessage, setErrorMessage] = useState()
   const [selectedStage, setSelectedStage] = useState()
   const [stageIdCardPicFile, setStageIdCardPicFile] = useState()
-  const [idPicURL, setIdPicURL] =useState()
+  const [nationalIdPicFile, setNationalIdPicFile] = useState()
+  const [stageIdPicURL, setStageIdPicURL] =useState()
+  const [nationalIdPicURL, setNationalIdPicURL] =useState()
   const [bodaData, setBodaData] = useState()
   const [declaration, setDeclaration] = useState(true)
   const [stagesList, setStagesList] = useState()
@@ -27,10 +29,10 @@ const Register = ({navigation}) => {
   },[])
   
   useEffect(()=>{
-    if(idPicURL && bodaData) {
+    if(stageIdPicURL && bodaData && nationalIdPicURL) {
       registerUser()
     }
-  },[idPicURL])
+  },[nationalIdPicURL])
 
   useEffect(()=>{
     selectedStage === 'Select from list' || selectedStage === undefined ? setDisplayCheck(false) : setDisplayCheck(true);
@@ -59,7 +61,7 @@ const Register = ({navigation}) => {
     {
       setErrorMessage('Error. Please contact support')
       setTimeout(()=> navigation.navigate('WelcomeScreen'), 3000)
-      console.log(e)
+      console.log(e) 
     }
   }
 
@@ -68,7 +70,8 @@ const Register = ({navigation}) => {
       phoneNumber: '',
       firstName: '',
       otherName: '',
-      idNumber: '',
+      stageIdNumber: '',
+      nationalIdNumber: '',
       mmName: ''
     }
   });
@@ -91,7 +94,7 @@ const Register = ({navigation}) => {
 
   const goToSignIn = () => {navigation.navigate('SignIn')}
   
-  const uploadOneToCloudinary = async (file)=>{
+  const uploadStageIdToCloudinary = async (file)=>{
     const formData = new FormData();
     let base64Img = `data:image/jpg;base64,${file.assets[0].base64}`
     formData.append("upload_preset", "lagiua2k")
@@ -103,10 +106,30 @@ const Register = ({navigation}) => {
     .then(async r => {
       let data = await r.json()
       // console.log('cloudinary resp: ', data.secure_url)
-      setIdPicURL(data.secure_url)
+      setStageIdPicURL(data.secure_url)
     })
     .catch(e =>{
-      console.log('cloudinary error: ', e)
+      console.log('Error uploading StageID: ', e)
+      setErrorMessage('Error. Please contact support')
+      setTimeout(()=> navigation.navigate('WelcomeScreen'), 3000)
+    })
+  }
+  const uploadNationalIdToCloudinary = async (file)=>{
+    const formData = new FormData();
+    let base64Img = `data:image/jpg;base64,${file.assets[0].base64}`
+    formData.append("upload_preset", "lagiua2k")
+    formData.append("file", base64Img);
+    fetch('https://api.cloudinary.com/v1_1/djtx8rz4q/upload', {
+      body: formData,
+      method: "POST", 
+    })
+    .then(async r => {
+      let data = await r.json()
+      // console.log('cloudinary resp: ', data.secure_url)
+      setNationalIdPicURL(data.secure_url)
+    })
+    .catch(e =>{
+      console.log('Error uploading NationalID: ', e)
       setErrorMessage('Error. Please contact support')
       setTimeout(()=> navigation.navigate('WelcomeScreen'), 3000)
     })
@@ -114,7 +137,7 @@ const Register = ({navigation}) => {
 
   const registerUser = async() =>{
     try{
-      const {phoneNumber, firstName, otherName, idNumber, mmName} = bodaData
+      const {phoneNumber, firstName, otherName, stageIdNumber, nationalIdNumber, mmName} = bodaData
       let mobileMoneyName;
       if(mmName === '')
         {mobileMoneyName = `${firstName} ${otherName}`}
@@ -125,11 +148,13 @@ const Register = ({navigation}) => {
       if (user){
         setStatus("Register")
         navigation.navigate('ConfirmPhoneNumber', {
-            phoneNumber, firstName, otherName, selectedStage, idNumber, idPicURL, mobileMoneyName
+            phoneNumber, firstName, otherName, selectedStage, stageIdNumber, nationalIdNumber, 
+            stageIdPicURL, mobileMoneyName, nationalIdPicURL
         })
       }
     } 
     catch(e){
+      console.log('Error creating User: ', e)
       setErrorMessage('Error. Please contact support')
       setTimeout(()=> navigation.navigate('WelcomeScreen'), 3000)    
     }
@@ -137,8 +162,9 @@ const Register = ({navigation}) => {
   
   const createBoda = async (data) => {
     setStatus('Registering...')
-    uploadOneToCloudinary(stageIdCardPicFile)
     setBodaData(data)
+    uploadStageIdToCloudinary(stageIdCardPicFile)
+    uploadNationalIdToCloudinary(nationalIdPicFile)
     // .then(()=>registerUser(phoneNumber))
     // .then(()=>
   }
@@ -205,8 +231,8 @@ const Register = ({navigation}) => {
               mylabel={'Select Your Stage'}
           />
           <CustomInput
-            name='idNumber'
-            mylabel='Enter your Stage ID as shown on your stage card (You may also use the NIN on your National ID)'
+            name='stageIdNumber'
+            mylabel='Enter your Stage ID as shown on your stage card'
             control={control}
             placeholder=''
             rules={{
@@ -214,24 +240,43 @@ const Register = ({navigation}) => {
             }}
           />
           <CustomImageUpload
-              mylabel={'Upload picture of your Stage Card (You may upload picture of National ID instead)'}
+              mylabel={'Upload picture of your Stage Card'}
               setBlobValue={setStageIdCardPicFile}/>
+          <CustomInput
+            name='nationalIdNumber'
+            mylabel='Enter your National ID Number (NIN)'
+            control={control}
+            placeholder=''
+            rules={{
+              required: "This field is required",
+            }}
+          />
+          <CustomImageUpload
+              mylabel={'Upload picture of your National ID'}
+              setBlobValue={setNationalIdPicFile}/>
           <View style={{display: displayCheck ? 'none' : 'flex'}}>
             <Text style={[griotaStyles.errors, {marginBottom: 40}]}>Please select a Stage</Text>  
           </View>
-          <View style={{display: displayCheck ? 'flex' : 'none'}}>
-            <CustomButton onPress={handleSubmit(createBoda)} buttonFunction={status}/>
-          </View>
-          <Text style={{fontSize: 12}}>By registering you accept the{' '}
-            <Text style={styles.link} onPress={goToTermsOfUse}>Terms of Use{' '}</Text>and {' '}
-            <Text style={styles.link} onPress={goToPrivacyPolicy}>Privacy Policy</Text>
-          </Text>
-          <View style={{marginTop: 20}}>
-            <Text>Already have an account?</Text>
-          </View>
-          <View style={{width: '50%'}}>
-            <CustomButton onPress={goToSignIn} buttonFunction={'Sign In'} type='SECONDARY'/>
-          </View>
+          {!stageIdCardPicFile && !nationalIdPicFile &&
+            <View style={{marginBottom: 10}}>
+              <Text style={{color: 'red', marginBottom: 20}}>PLEASE PROVIDE ALL THE DETAILS</Text>
+            </View>}
+          {stageIdCardPicFile && nationalIdPicFile && 
+          <View>
+            <View style={{display: displayCheck ? 'flex' : 'none'}}>
+              <CustomButton onPress={handleSubmit(createBoda)} buttonFunction={status}/>
+            </View>
+            <Text style={{fontSize: 12}}>By registering you accept the{' '}
+              <Text style={styles.link} onPress={goToTermsOfUse}>Terms of Use{' '}</Text>and {' '}
+              <Text style={styles.link} onPress={goToPrivacyPolicy}>Privacy Policy</Text>
+            </Text>
+            <View style={{marginTop: 20}}>
+              <Text>Already have an account?</Text>
+            </View>
+            <View style={{width: '50%'}}>
+              <CustomButton onPress={goToSignIn} buttonFunction={'Sign In'} type='SECONDARY'/>
+            </View>
+          </View>}
         
         </View>
       </ScrollView>

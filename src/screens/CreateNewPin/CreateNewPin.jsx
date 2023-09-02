@@ -22,10 +22,12 @@ const CreateNewPin = ({navigation}) => {
   const phoneNumber = route?.params?.phoneNumber
   const firstName = route?.params?.firstName
   const otherName = route?.params?.otherName
-  const idNumber = route?.params?.idNumber
+  const stageIdNumber = route?.params?.stageIdNumber
+  const nationalIdNumber = route?.params?.nationalIdNumber
   const selectedStage = route?.params?.selectedStage
   const mobileMoneyName = route?.params?.mobileMoneyName
-  const stageIdCardPicFile = route?.params?.stageIdCardPicFile
+  const stageIdPicURL = route?.params?.stageIdPicURL
+  const nationalIdPicURL = route?.params?.nationalIdPicURL
   const type = 'boda';
 
   useEffect(()=>{
@@ -65,12 +67,14 @@ const CreateNewPin = ({navigation}) => {
             firstname: "${firstName}", 
             othername: "${otherName}", 
             phoneNumber: "${phoneNumber}", 
-            picOfStageId: "${stageIdCardPicFile}", 
+            picOfStageId: "${stageIdPicURL}", 
             type: "${type}", 
-            idNumber: "${idNumber}",
+            stageIdNumber: "${stageIdNumber}",
             stageBodasId: "${selectedStage}",
             pin: "${password}",
             mobileMoneyName: "${mobileMoneyName}"
+            nationalIdNumber: "${nationalIdNumber}"
+            picOfNationalId: "${nationalIdPicURL}"
           }){
             id
           }
@@ -85,7 +89,7 @@ const CreateNewPin = ({navigation}) => {
     }
     catch(e)
     {
-      console.log('failed to create boda: ', e)
+      console.log('failed to create boda: ', e) 
     }
   }
 

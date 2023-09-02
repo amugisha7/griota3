@@ -75,8 +75,10 @@ export const createBoda = /* GraphQL */ `
       othername
       phoneNumber
       mobileMoneyName
-      idNumber
+      stageIdNumber
+      nationalIdNumber
       picOfStageId
+      picOfNationalId
       pin
       applications {
         nextToken
@@ -115,8 +117,10 @@ export const updateBoda = /* GraphQL */ `
       othername
       phoneNumber
       mobileMoneyName
-      idNumber
+      stageIdNumber
+      nationalIdNumber
       picOfStageId
+      picOfNationalId
       pin
       applications {
         nextToken
@@ -155,8 +159,10 @@ export const deleteBoda = /* GraphQL */ `
       othername
       phoneNumber
       mobileMoneyName
-      idNumber
+      stageIdNumber
+      nationalIdNumber
       picOfStageId
+      picOfNationalId
       pin
       applications {
         nextToken
@@ -197,8 +203,10 @@ export const createApplication = /* GraphQL */ `
         othername
         phoneNumber
         mobileMoneyName
-        idNumber
+        stageIdNumber
+        nationalIdNumber
         picOfStageId
+        picOfNationalId
         pin
         type
         createdAt
@@ -228,8 +236,10 @@ export const updateApplication = /* GraphQL */ `
         othername
         phoneNumber
         mobileMoneyName
-        idNumber
+        stageIdNumber
+        nationalIdNumber
         picOfStageId
+        picOfNationalId
         pin
         type
         createdAt
@@ -259,8 +269,10 @@ export const deleteApplication = /* GraphQL */ `
         othername
         phoneNumber
         mobileMoneyName
-        idNumber
+        stageIdNumber
+        nationalIdNumber
         picOfStageId
+        picOfNationalId
         pin
         type
         createdAt
@@ -291,8 +303,10 @@ export const createLoan = /* GraphQL */ `
         othername
         phoneNumber
         mobileMoneyName
-        idNumber
+        stageIdNumber
+        nationalIdNumber
         picOfStageId
+        picOfNationalId
         pin
         type
         createdAt
@@ -329,8 +343,10 @@ export const updateLoan = /* GraphQL */ `
         othername
         phoneNumber
         mobileMoneyName
-        idNumber
+        stageIdNumber
+        nationalIdNumber
         picOfStageId
+        picOfNationalId
         pin
         type
         createdAt
@@ -367,8 +383,10 @@ export const deleteLoan = /* GraphQL */ `
         othername
         phoneNumber
         mobileMoneyName
-        idNumber
+        stageIdNumber
+        nationalIdNumber
         picOfStageId
+        picOfNationalId
         pin
         type
         createdAt

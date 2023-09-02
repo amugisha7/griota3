@@ -49,8 +49,10 @@ export const getBoda = /* GraphQL */ `
       othername
       phoneNumber
       mobileMoneyName
-      idNumber
+      stageIdNumber
+      nationalIdNumber
       picOfStageId
+      picOfNationalId
       pin
       applications {
         nextToken
@@ -91,8 +93,10 @@ export const listBodas = /* GraphQL */ `
         othername
         phoneNumber
         mobileMoneyName
-        idNumber
+        stageIdNumber
+        nationalIdNumber
         picOfStageId
+        picOfNationalId
         pin
         type
         createdAt
@@ -115,8 +119,10 @@ export const getApplication = /* GraphQL */ `
         othername
         phoneNumber
         mobileMoneyName
-        idNumber
+        stageIdNumber
+        nationalIdNumber
         picOfStageId
+        picOfNationalId
         pin
         type
         createdAt
@@ -165,8 +171,10 @@ export const getLoan = /* GraphQL */ `
         othername
         phoneNumber
         mobileMoneyName
-        idNumber
+        stageIdNumber
+        nationalIdNumber
         picOfStageId
+        picOfNationalId
         pin
         type
         createdAt

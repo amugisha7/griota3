@@ -17,9 +17,11 @@ const ConfirmPhoneNumber = ({navigation}) => {
   const phoneNumber = route?.params?.phoneNumber
   const firstName = route?.params?.firstName
   const otherName = route?.params?.otherName
-  const idNumber = route?.params?.idNumber
+  const stageIdNumber = route?.params?.stageIdNumber
+  const nationalIdNumber = route?.params?.nationalIdNumber
   const selectedStage = route?.params?.selectedStage
-  const stageIdCardPicFile = route?.params?.idPicURL
+  const stageIdPicURL = route?.params?.stageIdPicURL
+  const nationalIdPicURL = route?.params?.nationalIdPicURL
   const mobileMoneyName = route?.params?.mobileMoneyName
 
   const { control, handleSubmit } = useForm({
@@ -37,7 +39,8 @@ const ConfirmPhoneNumber = ({navigation}) => {
       {
         setStatus("Confirm Phone Number")
         navigation.navigate('CreateNewPin', {
-          phoneNumber, firstName, otherName, selectedStage, idNumber, stageIdCardPicFile, mobileMoneyName
+          phoneNumber, firstName, otherName, selectedStage, stageIdNumber, stageIdPicURL, 
+          mobileMoneyName, nationalIdNumber, nationalIdPicURL
         })
       }
     }

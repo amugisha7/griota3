@@ -46,7 +46,7 @@ const ApplyForLoan = ({navigation}) => {
               name
             }
             othername
-            idNumber
+            stageIdNumber
             pin
           }
         }`
@@ -55,7 +55,7 @@ const ApplyForLoan = ({navigation}) => {
         setFirstName(boda.data.getBoda.firstname)
         setOtherName(boda.data.getBoda.othername)
         setStage(boda.data.getBoda.stage.name)
-        setIdNumber(boda.data.getBoda.idNumber)
+        setIdNumber(boda.data.getBoda.stageIdNumber)
         setAmplifyPin(boda.data.getBoda.pin)
       }
     }
