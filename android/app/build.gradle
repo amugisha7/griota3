@@ -100,8 +100,8 @@ android {
         // minSdkVersion rootProject.ext.minSdkVersion
         minSdkVersion 24
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3
-        versionName "2.1"
+        versionCode 4
+        versionName "2.2"
     }
 
     splits {
@@ -157,6 +157,7 @@ dependencies {
     implementation("com.facebook.react:react-android")
     implementation 'com.google.firebase:firebase-analytics:17.3.0'
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.0.0")
+    implementation project(':react-native-immediate-phone-call')
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
     debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {

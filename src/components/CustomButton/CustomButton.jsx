@@ -30,10 +30,17 @@ const styles = StyleSheet.create({
     },
     container_SECONDARY: {
         backgroundColor: '#F2F2F2',
-              
     },
     container_DISABLED: {
         backgroundColor: '#bcbcbc'
+    },
+    container_MTN: {
+      backgroundColor: '#ffcc00',
+      elevation: 5,
+    },
+    container_AIRTEL: {
+      backgroundColor: '#E40001',
+      elevation: 5,
     },
     text: {
         fontWeight: '600',
@@ -42,6 +49,14 @@ const styles = StyleSheet.create({
     text_SECONDARY: {
         color: '#3D00FF',
         fontWeight: 600,
+    },
+    text_MTN: {
+      color: '#000000',
+      fontWeight: 600
+    },
+    text_AIRTEL: {
+      color: '#FFFFFF',
+      fontWeight: 600
     },
 
   })
