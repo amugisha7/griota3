@@ -18,6 +18,8 @@ const AddPayment = ({navigation}) => {
   const [mobileMoneyName, setMobileMoneyName] = useState()
   const [loanId, setLoanId] = useState()
   const [done, setDone] = useState()
+  const [points, setPoints] = useState()
+  const [bodaId, setBodaId] = useState()
 
   useEffect(()=>{
     done && setTimeout(()=> navigation.navigate('AdminScreen'), 1000)
@@ -33,6 +35,7 @@ const AddPayment = ({navigation}) => {
             firstname
             othername
             mobileMoneyName
+            points
             stage {
               name
               address
@@ -47,9 +50,11 @@ const AddPayment = ({navigation}) => {
       ))
       if(bodaLoanDetails) {
         setStatus("Get Boda Info")
+        setBodaId(phoneNumber)
         setLoanId(bodaLoanDetails.data.getBoda.loans.items[0].id)
         setFirstName(bodaLoanDetails.data.getBoda.firstname)
         setOtherName(bodaLoanDetails.data.getBoda.othername)
+        setPoints(bodaLoanDetails.data.getBoda.points)
         setStage(bodaLoanDetails.data.getBoda.stage.name)
         setStageAddress(bodaLoanDetails.data.getBoda.stage.address)
         setMobileMoneyName(bodaLoanDetails.data.getBoda.mobileMoneyName ? 
@@ -92,7 +97,8 @@ const AddPayment = ({navigation}) => {
           {
             firstName && <RegisterPayment
               firstName={firstName} otherName={otherName} loanId={loanId} setDone={setDone}
-              stage={stage} stageAddress={stageAddress} mobileMoneyName={mobileMoneyName}/>
+              stage={stage} stageAddress={stageAddress} mobileMoneyName={mobileMoneyName}
+              points={points} bodaId={bodaId}/>
           }
         </View>
       </View>

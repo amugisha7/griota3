@@ -1,16 +1,29 @@
-import { View, Text, Image, StyleSheet, Alert, ScrollView } from 'react-native'
+import { View, Text, Image, StyleSheet, Alert, ScrollView, Pressable, TextInput } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import Logo from '../../../assets/images/Griota_logo.png';
 import CustomDropDown from '../../components/CustomDropDown/CustomDropDown';
 import CustomImageUpload from "../../components/CustomImageUpload/CustomImageUpload";
-import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
-import CheckBox from '@react-native-community/checkbox';
-import { useForm } from 'react-hook-form';
 import {Auth, API, graphqlOperation} from 'aws-amplify'; 
 import { griotaStyles } from '../../../assets/styles/style';
+import CustomNumberInput from '../../components/CustomNumberInput';
+import RadioButtons from '../../components/RadioButtons';
+import * as Progress from 'react-native-progress';
+import NavButton from '../../components/NavButton';
 
-const Register = ({navigation}) => {
+const NewTextInput = ({text, onChangeText, label})=>{
+  return (
+    <View style={griotaStyles.container}>
+      <Text style={griotaStyles.label}>{label}</Text>
+      <TextInput 
+        style={styles.textInput}
+        onChangeText={onChangeText}
+        value={text}
+      />
+    </View>
+  )
+}
+
+const Register = ({navigation, route}) => {
   
   const [errorMessage, setErrorMessage] = useState()
   const [selectedStage, setSelectedStage] = useState()
@@ -18,26 +31,29 @@ const Register = ({navigation}) => {
   const [nationalIdPicFile, setNationalIdPicFile] = useState()
   const [stageIdPicURL, setStageIdPicURL] =useState()
   const [nationalIdPicURL, setNationalIdPicURL] =useState()
-  const [bodaData, setBodaData] = useState()
-  const [declaration, setDeclaration] = useState(true)
+  const [noInName, setNoInName] = useState(1)
   const [stagesList, setStagesList] = useState()
-  const [status, setStatus] = useState('Register')
-  const [displayCheck, setDisplayCheck] = useState()
-
+  const [status, setStatus] = useState('REGISTER')
+  const [page, setPage] = useState(1)
+  const {division} = route.params; 
+  //new states
+  const [firstName, seFirstName] = useState('')
+  const [otherName, seOtherName] = useState('')
+  const [phoneNumber, setPhoneNumber] = useState(0o70)
+  const [nationalIdNumber, setNationalIdNumber] = useState()
+  const [mmName, setMmName] = useState()
+  
   useEffect(()=>{
     getStages()
   },[])
-  
-  useEffect(()=>{
-    if(stageIdPicURL && bodaData && nationalIdPicURL) {
-      registerUser()
-    }
-  },[nationalIdPicURL])
 
   useEffect(()=>{
-    selectedStage === 'Select from list' || selectedStage === undefined ? setDisplayCheck(false) : setDisplayCheck(true);
-    console.log('Stage: ', selectedStage)
-  },[selectedStage])
+    stageIdPicURL && uploadNationalIdToCloudinary(nationalIdPicFile)
+  }, [stageIdPicURL])
+  
+  useEffect(()=>{
+    nationalIdPicURL && registerUser()
+  }, [nationalIdPicURL])
 
   const getStages = async() => {
     try {
@@ -64,17 +80,6 @@ const Register = ({navigation}) => {
       console.log(e) 
     }
   }
-
-  const { control, handleSubmit, watch  } = useForm({
-    defaultValues: {
-      phoneNumber: '',
-      firstName: '',
-      otherName: '',
-      stageIdNumber: '',
-      nationalIdNumber: '',
-      mmName: ''
-    }
-  });
 
   const PHONE_REGEX = /^07\d{8}$/
 
@@ -105,9 +110,8 @@ const Register = ({navigation}) => {
     })
     .then(async r => {
       let data = await r.json()
-      // console.log('cloudinary resp: ', data.secure_url)
       setStageIdPicURL(data.secure_url)
-    })
+    }) 
     .catch(e =>{
       console.log('Error uploading StageID: ', e)
       setErrorMessage('Error. Please contact support')
@@ -125,8 +129,8 @@ const Register = ({navigation}) => {
     })
     .then(async r => {
       let data = await r.json()
-      // console.log('cloudinary resp: ', data.secure_url)
       setNationalIdPicURL(data.secure_url)
+      registerUser()
     })
     .catch(e =>{
       console.log('Error uploading NationalID: ', e)
@@ -137,19 +141,13 @@ const Register = ({navigation}) => {
 
   const registerUser = async() =>{
     try{
-      const {phoneNumber, firstName, otherName, stageIdNumber, nationalIdNumber, mmName} = bodaData
-      let mobileMoneyName;
-      if(mmName === '')
-        {mobileMoneyName = `${firstName} ${otherName}`}
-      else{
-        mobileMoneyName = mmName;
-      }
+      const mobileMoneyName = mmName || `${firstName} ${otherName}`
       const {user} = await Auth.signUp(`+256${phoneNumber.slice(1)}`, phoneNumber)
       if (user){
-        setStatus("Register")
+        setStatus("REGISTER")
         navigation.navigate('ConfirmPhoneNumber', {
-            phoneNumber, firstName, otherName, selectedStage, stageIdNumber, nationalIdNumber, 
-            stageIdPicURL, mobileMoneyName, nationalIdPicURL
+          phoneNumber, firstName, otherName, selectedStage, nationalIdNumber, 
+          stageIdPicURL, mobileMoneyName, nationalIdPicURL
         })
       }
     } 
@@ -160,124 +158,134 @@ const Register = ({navigation}) => {
     }
   }
   
-  const createBoda = async (data) => {
+  const createBoda = () => {
     setStatus('Registering...')
-    setBodaData(data)
     uploadStageIdToCloudinary(stageIdCardPicFile)
-    uploadNationalIdToCloudinary(nationalIdPicFile)
-    // .then(()=>registerUser(phoneNumber))
-    // .then(()=>
   }
+  const increment = () => setPage(p => p+1)
+  const decrement = () => setPage(p => p-1)
+  const backButtonColor = '#00A9FF'
 
   return (
       <ScrollView>
         <View style={styles.container }>
-          <Image source={Logo} style={styles.logo}/>
-          <Text style={styles.title}>Create an Account</Text>
-          {errorMessage && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>{errorMessage}</Text>}
-          <CustomInput
-            name='firstName'
-            mylabel='Enter your first name'
-            control={control}
-            placeholder=''
-            rules={{
-              required: "This field is required",
-            }}
-          />
-          <CustomInput
-            name='otherName'
-            mylabel='Enter your other names'
-            control={control}
-            placeholder=''
-            rules={{
-              required: "This field is required",
-            }}
-          />
-          <CustomInput
-            name='phoneNumber'
-            placeholder='Phone Number (07xxxxxxxx)'
-            mylabel='Enter the Phone Number you will use to receive loans and make payment'
-            control={control}
-            rules={{
-              required: "This field is required",
-              pattern: {
-                value: PHONE_REGEX,
-                message: 'Invalid Phone Number (use format 07xxxxxxxx)'
-              },
-            }}
-            type={'tel'}
-          />
-          <View style={{flex: 1, flexDirection: 'row', marginBottom: 5}}>
-            <CheckBox
-              disabled={false}
-              value={declaration}
-              onValueChange={(newValue) => setDeclaration(newValue)}
-            />
-            <Text style={[griotaStyles.text, {textAlign: 'left'}]}>The Mobile Money Name is the same as my name</Text>
+          <View style={{width: '100%', marginBottom: 40, alignItems: 'center'}}>
+            <Progress.Bar progress={page/5.01} width={300} color={'blue'}/>
           </View>
-          <View style={{flex: 1, flexDirection: 'row', marginBottom: 10 }}>
-            <View style={{display: declaration?'none':'flex'}}>
-              <CustomInput
-                name='mmName'
-                mylabel='If the mobile money name is different from your name, enter it here'
-                control={control}
-                placeholder='Mobile Money Name'                
+          {errorMessage && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>{errorMessage}</Text>}
+    {/*page 1 stage name*/}      
+          <View style={{display: page === 1 ? 'flex': 'none', width: '100%'}}>
+            <Text style={griotaStyles.title}>Select Your Stage</Text>
+            <CustomDropDown
+                items={stagesList ? stagesList : ['list Loading... PLEASE WAIT']}
+                setSelectedItem={setSelectedStage}
+                mylabel={`Which Stage in ${division} Division are you registered at?`}
+            />
+            <View style={styles.navContainer}>
+              <NavButton buttonText={'BACK'}  buttonChange={() => navigation.navigate('SelectDivision')} 
+                buttonColor={backButtonColor} buttonDisabled={false}
+              />
+              <NavButton buttonText={'NEXT'}  buttonChange={increment} 
+                buttonColor={selectedStage === 'Select from list' || selectedStage === undefined ? 'grey' : 'blue'}
+                buttonDisabled={selectedStage === 'Select from list' || selectedStage === undefined ? true : false}
               />
             </View>
           </View>
-          <CustomDropDown
-              items={stagesList ? stagesList : ['list Loading... PLEASE WAIT']}
-              setSelectedItem={setSelectedStage} 
-              mylabel={'Select Your Stage'}
-          />
-          <CustomInput
-            name='stageIdNumber'
-            mylabel='Enter your Stage ID as shown on your stage card'
-            control={control}
-            placeholder=''
-            rules={{
-              required: "This field is required",
-            }}
-          />
-          <CustomImageUpload
-              mylabel={'Upload picture of your Stage Card'}
-              setBlobValue={setStageIdCardPicFile}/>
-          <CustomInput
-            name='nationalIdNumber'
-            mylabel='Enter your National ID Number (NIN)'
-            control={control}
-            placeholder=''
-            rules={{
-              required: "This field is required",
-            }}
-          />
-          <CustomImageUpload
-              mylabel={'Upload picture of your National ID'}
-              setBlobValue={setNationalIdPicFile}/>
-          <View style={{display: displayCheck ? 'none' : 'flex'}}>
-            <Text style={[griotaStyles.errors, {marginBottom: 40}]}>Please select a Stage</Text>  
+      {/*page 2 Name*/}
+          <View style={{display: page === 2 ? 'flex': 'none', width: '100%'}}>
+            <Text style={griotaStyles.title}>What is Your Name?</Text>
+            <NewTextInput text={firstName} onChangeText={seFirstName} label={'First Name'}/>
+            <NewTextInput text={otherName} onChangeText={seOtherName} label={'Last Name'}/>
+            <View style={styles.navContainer}>
+              <NavButton buttonText={'BACK'}  buttonChange={decrement} 
+                buttonColor={backButtonColor} buttonDisabled={false}
+              />
+              <NavButton buttonText={'NEXT'}  buttonChange={increment} 
+                buttonColor={firstName === '' || otherName === '' || !firstName || !otherName  ? 'grey' : 'blue'}
+                buttonDisabled={firstName === '' || otherName === '' || !firstName || !otherName ? true : false}
+              />
+            </View>
           </View>
-          {!stageIdCardPicFile && !nationalIdPicFile &&
-            <View style={{marginBottom: 10}}>
-              <Text style={{color: 'red', marginBottom: 20}}>PLEASE PROVIDE ALL THE DETAILS</Text>
-            </View>}
-          {stageIdCardPicFile && nationalIdPicFile && 
-          <View>
-            <View style={{display: displayCheck ? 'flex' : 'none'}}>
-              <CustomButton onPress={handleSubmit(createBoda)} buttonFunction={status}/>
-            </View>
-            <Text style={{fontSize: 12}}>By registering you accept the{' '}
-              <Text style={styles.link} onPress={goToTermsOfUse}>Terms of Use{' '}</Text>and {' '}
-              <Text style={styles.link} onPress={goToPrivacyPolicy}>Privacy Policy</Text>
+      {/* page 3 for Phone Number */}
+          <View style={{display: page === 3 ? 'flex': 'none', width: '100%'}}>
+            <Text style={griotaStyles.title}>Phone Number</Text>
+            <CustomNumberInput handleChange={setPhoneNumber} numberOfInputs={10}
+              label={'Enter the Phone Number you will use to receive money and make payment'}
+            />
+            {!PHONE_REGEX.test(phoneNumber) && String(phoneNumber).length === 10 && <Text style={griotaStyles.errors}>Invalid Phone Number</Text>}
+            <Text style={[griotaStyles.label, {textAlign: 'left', marginTop: 40}]}>
+              Is this Phone Number registered in your name?
             </Text>
-            <View style={{marginTop: 20}}>
-              <Text>Already have an account?</Text>
+            <RadioButtons options={[{id: 1, label: 'YES', value: true}, 
+              {id: 2, label: 'NO', value: false} ]} setChosen={setNoInName}/>
+            <View style={{flex: 1, flexDirection: 'row', marginBottom: 10 }}>
+              <View style={{display: noInName === 1 ?'none':'flex'}}>
+                <NewTextInput 
+                  label={'What name is this phone number registered in?'}
+                  text={mmName} 
+                  onChangeText={setMmName}/>
+              </View>
             </View>
-            <View style={{width: '50%'}}>
-              <CustomButton onPress={goToSignIn} buttonFunction={'Sign In'} type='SECONDARY'/>
+            <View style={styles.navContainer}>
+              <NavButton buttonText={'BACK'}  buttonChange={decrement} 
+                buttonColor={backButtonColor} buttonDisabled={false}
+              />
+              <NavButton buttonText={'NEXT'}  buttonChange={increment} 
+                buttonColor={!PHONE_REGEX.test(phoneNumber) || (noInName === 2 && !mmName)  
+                  ? 'grey' : 'blue'}
+                buttonDisabled={!PHONE_REGEX.test(phoneNumber) || (noInName === 2 && !mmName)
+                  ? true : false}
+              />
             </View>
-          </View>}
-        
+          </View>
+      {/* page 4 for the Stage Card */}
+          <View style={{display: page === 4 ? 'flex': 'none', width: '100%'}}>
+            <Text style={griotaStyles.title}>Stage Card</Text>
+            <CustomImageUpload
+                mylabel={'Upload picture of your Stage Card (or picture of the receipt for payment of the Stage Card)'}
+                setBlobValue={setStageIdCardPicFile}/>
+            <View style={styles.navContainer}>
+              <NavButton buttonText={'BACK'}  buttonChange={decrement} 
+                buttonColor={backButtonColor} buttonDisabled={false}
+              />
+              <NavButton buttonText={'NEXT'}  buttonChange={increment} 
+                buttonColor={!stageIdCardPicFile  ? 'grey' : 'blue'}
+                buttonDisabled={!stageIdCardPicFile ? true : false}
+              />
+            </View>
+          </View>
+      {/* page 5 for the national Id and submission. */}
+          <View style={{display: page === 5 ? 'flex': 'none', width: '100%'}}>
+            <Text style={griotaStyles.title}>Register</Text>
+            <NewTextInput 
+              label={'Enter your National ID Number (NIN)'}
+              text={nationalIdNumber} 
+              onChangeText={setNationalIdNumber}/>
+            <CustomImageUpload
+                mylabel={'Upload picture of your National ID'}
+                setBlobValue={setNationalIdPicFile}/>
+            <View style={styles.navContainer}>
+              <NavButton buttonText={'BACK'}  buttonChange={decrement} 
+                buttonColor={backButtonColor} buttonDisabled={false}
+              />
+              <NavButton buttonText={status}  buttonChange={createBoda} 
+                buttonColor={!nationalIdPicFile || !nationalIdNumber || status === 'Registering...'
+                  ? 'grey' : 'blue'}
+                buttonDisabled={!nationalIdPicFile || !nationalIdNumber || status === 'Registering...'
+                  ? true : false}
+              />
+            </View>
+            <View>
+              <Text style={{fontSize: 12}}>By registering you accept the{' '}
+                <Text style={styles.link} onPress={goToTermsOfUse}>Terms of Use{' '}</Text>and {' '}
+                <Text style={styles.link} onPress={goToPrivacyPolicy}>Privacy Policy</Text>
+              </Text>
+              <View style={{marginTop: 40, alignItems: 'center'}}>
+                <Text>Already have an account?</Text>
+                <CustomButton onPress={goToSignIn} buttonFunction={'Sign In'} type='SECONDARY'/>
+              </View>
+            </View>
+          </View>
         </View>
       </ScrollView>
     
@@ -294,12 +302,24 @@ const styles = StyleSheet.create({
       width: '100%',
       paddingLeft: 20,
       paddingRight: 20,
-      width: '100%',
-      // maxWidth: '600px',
+      paddingTop: 20
     },
     logo: {
       width: 100,
       height: 100
+    },
+    navContainer: {
+      display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', 
+      width: '100%', marginVertical: 40
+    },
+    textInput: {
+      color: 'darkblue',
+      padding: 10,
+      borderColor: 'gray',
+      borderWidth: 1,
+      backgroundColor: 'white',
+      minHeight: 30,
+      justifyContent: 'flex-start',
     },
     title: {
         fontSize: 24,
@@ -307,6 +327,9 @@ const styles = StyleSheet.create({
     },
     link: {
       color: 'blue',
+    },
+    pressable: {
+      width: '40%', alignItems: 'center', padding: 15, 
     }
     
 })

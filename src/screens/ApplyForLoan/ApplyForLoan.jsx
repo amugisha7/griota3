@@ -1,39 +1,34 @@
 import { StyleSheet, Text, View, ScrollView, BackHandler } from 'react-native'
 import React, { useEffect, useState } from 'react';
 import { griotaStyles } from '../../../assets/styles/style';
-import CheckBox from '@react-native-community/checkbox';
-import CustomButton from '../../components/CustomButton/CustomButton';
-import { useForm } from 'react-hook-form';
-import CustomInput from '../../components/CustomInput/CustomInput'
 import { useRoute } from '@react-navigation/native';
 import { API, graphqlOperation } from "aws-amplify";
+import LoanOfferCard from '../../components/LoanOfferCard';
 
 const ApplyForLoan = ({navigation}) => {
 
   const route = useRoute()
-  const[stageSecurity, setStageSecurity] = useState(false)
-  const[application, setApplication] = useState(false)
-  const[paymentCommitment, setPaymentCommitment] = useState(false)
-  const [status, setStatus] = useState('Submit Application')
-  const [errorMessage, setErrorMessage] = useState()
   const [firstName, setFirstName] = useState()
   const [otherName, setOtherName] = useState()
   const [stage, setStage] = useState()
-  const [idNumber, setIdNumber] = useState()
-  const [pinCodeTest, setPinCodeTest] = useState()
-  const [amplifyPin, setAmplifyPin] = useState()
-  const PIN_REGEX = /\b\d{4}\b/;
+  const [nationalIdPic, setNationalIdPic] = useState()
+  const [points, setPoints] = useState(0)
+  const [loanOffers, setLoanOffers] = useState()
+  const [loanAmount, setLoanAmount] = useState()
+  const [instalment, setInstalment] = useState()
+  const [loanDuration, setLoanDuration] = useState()
+  const [commitments, setCommitments] = useState()
 
   BackHandler.addEventListener('hardwareBackPress', ()=> {
     navigation.navigate('WelcomeScreen')
   });
 
   const phoneNumber = route?.params?.phoneNumber
-  const pin = route?.params?.password
-  
+
   useEffect(()=>{
-    console.log(phoneNumber)
     getBodaDetails()
+    //remove next line
+    // getLoanOffers()
   },[])
 
   const getBodaDetails = async()=>{
@@ -46,8 +41,8 @@ const ApplyForLoan = ({navigation}) => {
               name
             }
             othername
-            stageIdNumber
-            pin
+            picOfNationalId
+            points
           }
         }`
       ))
@@ -55,8 +50,9 @@ const ApplyForLoan = ({navigation}) => {
         setFirstName(boda.data.getBoda.firstname)
         setOtherName(boda.data.getBoda.othername)
         setStage(boda.data.getBoda.stage.name)
-        setIdNumber(boda.data.getBoda.stageIdNumber)
-        setAmplifyPin(boda.data.getBoda.pin)
+        setNationalIdPic(boda.data.getBoda.picOfNationalId)
+        setPoints(boda.data.getBoda.points)
+        getLoanOffers()
       }
     }
     catch(e)
@@ -64,116 +60,95 @@ const ApplyForLoan = ({navigation}) => {
       console.log('unable to retrieve boda details ', e)
     }
   }
-
-  const { control, handleSubmit, reset} = useForm({
-    defaultValues: {
-      pinCode: '',
-    }
-  });
-
-  const registerApplication = async()=>{
-    const today = new Date().toDateString()
+  const getLoanOffers = async()=>{
     try {
-      const application = await API.graphql(graphqlOperation(
-        `mutation MyMutation2 {
-          createApplication(input: {date: "${today}", status: "new", bodaApplicationsId: "${phoneNumber}"}) {
-            createdAt
-            boda {
-              id
+      const savedLoanOffers = await API.graphql(graphqlOperation(
+        `query MyQuery {
+          listLoanOffers {
+            items {
+              instalment
+              loanAmount
+              loanDurationDays
             }
           }
         }`
       ))
-      if(application){
-        //create push notification to admin of the application details
-        console.log('Application Made', application)
+      if(savedLoanOffers) {
+        setLoanOffers(savedLoanOffers.data.listLoanOffers.items);
+        getCommitments()
+        //remove the following line
+        // points === undefined && setPoints(700)
       }
     }
-    catch(e){
-      setErrorMessage('ERROR: Please contact Support')
-      setTimeout(()=> navigation.navigate('SignIn'), 3000)
+    catch(e)
+    {
+      console.log('unable to get loan offers ', e)
     }
   }
 
-  const SubmitApplication = (data)=>{
-    setStatus('Submitting');
-    const {pinCode } = data; 
-    setPinCodeTest(pinCode)
-    if (pinCode === pin || pinCode === amplifyPin){
-        registerApplication()
-        .then(()=>navigation.navigate('ApplicationReceived'))
-        .then(()=>setStatus('Submit Application'))
-    }else{
-      setStatus('Submit')
-      reset({pinCode: ''})
+  const getCommitments = async()=> {
+    try {
+      const commitmentArray = await API.graphql(graphqlOperation(
+        `query MyQuery {
+          listCommitments {
+            items {
+              statement
+            }
+          }
+        }`
+      ))
+      if(commitmentArray) {
+        setCommitments(commitmentArray.data.listCommitments.items);        
+      }
     }
+    catch(e)
+    {
+      console.log('unable to get commitments ', e)
+    }
+  }
+
+  const applyForLoan = () => {
+    navigation.navigate('ConfirmApplication', {loanAmount, loanDuration, commitments, 
+      instalment, firstName, otherName, stage, nationalIdPic, phoneNumber});
   }
 
   return (
     <ScrollView>
-      <View style={{padding: 22}}>
-        {!firstName ? <Text style={griotaStyles.title}>Loading...</Text> :
+      <View style={{padding: 22, paddingBottom: 60}}>
+        {!commitments ? <Text style={griotaStyles.title}>Loading...</Text> :
         <View>
-          <Text style={griotaStyles.title}>Apply for a Loan</Text>
-          <Text style={griotaStyles.label}>Application</Text>
-          <View style={{display: 'flex', flexDirection: 'column', marginBottom: 10}}>
-            <Text style={[griotaStyles.text, {textAlign: 'left'}]}>My name is {firstName} {otherName}. </Text>
-            <Text style={[griotaStyles.text, {textAlign: 'left'}]}>I ride a Boda-Boda at stage {stage} </Text>
-            <Text style={[griotaStyles.text, {textAlign: 'left'}]}>My Stage ID number is: {idNumber}. </Text>
-          </View>
-          <View style={{display: 'flex', flexDirection: 'row', marginBottom: 10}}>
-            <CheckBox
-                disabled={false}
-                value={application}
-                onValueChange={(newValue) => setApplication(newValue)}
-            />
-            <Text style={[griotaStyles.text, {textAlign: 'left'}]}> I hereby Apply for a Loan of UGX 100,000</Text>
-          </View>
-          <View style={{display: 'flex', flexDirection: 'row', marginBottom: 10}}>
-            <CheckBox
-                disabled={false}
-                value={paymentCommitment}
-                onValueChange={(newValue) => setPaymentCommitment(newValue)}
-            />
-            <Text style={[griotaStyles.text, {textAlign: 'left'}]}>I commit to pay back 4,000 per day for the next 30 days.</Text>
-          </View>
-          <View style={{display: 'flex',  flexDirection: 'row', marginBottom: 10}}>
-            <CheckBox
-                disabled={false}
-                value={stageSecurity}
-                onValueChange={(newValue) => setStageSecurity(newValue)}
-            />
-            <Text style={[griotaStyles.text, {textAlign: 'left'}]}>I agree that my stage position may be sold to clear the loan if I fail to pay. </Text>
-          </View>
-          {(stageSecurity && application && paymentCommitment) && <View>
-              <CustomInput
-                  name='pinCode'
-                  placeholder={'PIN Code'}
-                  secureTextEntry={true}
-                  control={control}
-                  mylabel="Enter Your PIN Code"
-                  rules={{
-                    required: "PIN Code required",
-                    minLength: {
-                      value: 4,
-                      message: "Too short"
-                    },
-                    maxLength: {
-                      value: 4,
-                      message: "Only 4 digits allowed"
-                    },
-                    pattern: {
-                      value: PIN_REGEX,
-                      message: 'Must be 4-digit Number'
-                    },
+          <Text style={griotaStyles.title}>Select a Loan</Text>
+          <Text style={[griotaStyles.label, {color: 'green', alignSelf: 'center'}]}> 
+            {`Hi ${firstName}, you have ${points.toLocaleString('en-US')} Points.`}
+          </Text>
+      {/*Loan Offers*/}
+          {loanOffers.map((offer, i)=> {return (
+              <View key={i} style={{display: 'flex'}}>
+                <LoanOfferCard amount={offer.loanAmount} duration={offer.loanDurationDays}
+                  disabled={offer.loanAmount/100 > points} instalment={offer.instalment}
+                  pointsNeeded={offer.loanAmount/100} applyForLoan={applyForLoan}
+                  selected={loanAmount === offer.loanAmount} 
+                  onPress={()=>{
+                    setLoanAmount(offer.loanAmount)
+                    setLoanDuration(offer.loanDurationDays)
+                    setInstalment(offer.instalment)
                   }}
                 />
-              <CustomButton onPress={handleSubmit(SubmitApplication)} buttonFunction={status} />
-              {errorMessage &&
-                <Text style={griotaStyles.errors}>{errorMessage}</Text>}
-          </View>}
-        </View>
-            }
+              </View>
+          )})}
+      {/*how to get more points*/}
+          <View style={{display: 'flex', flexDirection: 'column', marginVertical: 10}}>
+            <Text style={[griotaStyles.label, {textAlign: 'left'}]}>
+              How to get more Points: </Text>
+            <Text style={[griotaStyles.text, {textAlign: 'left'}]}>
+             - Pay your loan on time to get more points. </Text>
+            <Text style={[griotaStyles.text, {textAlign: 'left'}]}>
+             - Late payments lead to loss of points. </Text>
+            <Text style={[griotaStyles.text, {textAlign: 'left'}]}>
+             - Paying on time gives you bonus points. </Text>
+          </View>
+
+        </View> }
       </View>
     </ScrollView>
   )

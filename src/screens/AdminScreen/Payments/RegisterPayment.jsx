@@ -7,7 +7,8 @@ import CustomInput from '../../../components/CustomInput/CustomInput';
 import { API, graphqlOperation } from "aws-amplify";
 import DatePickerComponent from '../../../components/DatePicker';
 
-const RegisterPayment = ({ firstName, otherName, stage, stageAddress, mobileMoneyName, setDone, loanId }) => {
+const RegisterPayment = ({ firstName, otherName, stage, stageAddress, 
+  points, mobileMoneyName, setDone, loanId, bodaId }) => {
 
   const NUMBER_REGEX = /^\d+$/
   const [status, setStatus] = useState('Register Payment')
@@ -17,6 +18,32 @@ const RegisterPayment = ({ firstName, otherName, stage, stageAddress, mobileMone
   useEffect(()=>{
     setPaymentReceived(false)
   },[loanId])
+
+  const updatePoints = async(paymentAmount)=>{
+    const newPoints = points + (paymentAmount / 100)
+    try {
+      const pointsUpdated = await API.graphql(graphqlOperation(
+        `mutation MyMutation {
+          updateBoda(input: {
+            id: "${bodaId}", 
+            points: ${newPoints}
+          }) {
+            points
+          }
+        }`
+      ))
+      if(pointsUpdated) {
+        //create push notification to admin of the application details
+        setStatus("Payment Successful!")
+        setTimeout(()=>setStatus("Register Another Payment"), 2000)
+      }
+    }
+    catch(e){
+      console.log("Error updating points", e)
+      setStatus("POINTS UPDATE FAILED")
+      setTimeout(()=>setStatus("Register Another Payment"), 2000)
+    }
+  }
 
   const makePayment = async(paymentAmount)=>{
     try {
@@ -33,11 +60,9 @@ const RegisterPayment = ({ firstName, otherName, stage, stageAddress, mobileMone
       ))
       if(newPayment){
         //create push notification to admin of the application details
-        setStatus("Payment Successful!")
+        setStatus("Updating Points...")
+        updatePoints(paymentAmount)
         setPaymentReceived(true)
-        setTimeout(()=>setStatus("Register Another Payment"), 2000)
-        console.log('Payment Details: ', newPayment)
-        // setDone(newPayment)
       }
     }
     catch(e){
@@ -61,7 +86,8 @@ const RegisterPayment = ({ firstName, otherName, stage, stageAddress, mobileMone
   return (
       <View style={{padding: 22}}>
         {paymentReceived && 
-        <Text style={{color: '#007700', marginBottom: 20}}>Payment by {firstName+" "+otherName} Successful</Text>}
+        <Text style={{color: '#007700', marginBottom: 20}}>
+          Payment by {firstName+" "+otherName} Successful</Text>}
         <View>
           <Text style={griotaStyles.title}>Payment Details</Text>
         </View>

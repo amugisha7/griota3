@@ -1,17 +1,13 @@
 import { StyleSheet, Text, View, Image, Button, ScrollView } from 'react-native'
 import React, {  } from 'react'
 import { griotaStyles } from '../../../assets/styles/style'
-import { useRoute } from '@react-navigation/native';
 import Logo from '../../../assets/images/Griota_logo.png'
 
 const WelcomeScreen = ({navigation}) => {
 
-  const route = useRoute()
-  const phoneNumber = route?.params?.phoneNumber
-  const pin = route?.params?.password
-
   const applyForLoan = () =>{
     navigation.navigate('SignInThenApply')
+    // navigation.navigate('ApplyForLoan') // remove this
   }
   
   const checkLoanBalance = () =>{

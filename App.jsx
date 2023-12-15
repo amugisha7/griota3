@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import SignInThenApply from './src/screens/SignInScreen/SignInThenApply';
 import SignInThenBalance from './src/screens/SignInScreen/SignInThenBalance';
 import Register from './src/screens/RegisterScreen/Register';
+import SelectDivision from './src/screens/RegisterScreen/SelectDivision';
 import ConfirmPhoneNumber from './src/screens/ConfirmPhoneNumber/ConfirmPhoneNumber';
 import ForgotPassword from './src/screens/ForgotPassword/ForgotPassword';
 import { NavigationContainer } from '@react-navigation/native';
@@ -28,6 +29,7 @@ import CheckLoanBalanceAdmin from './src/screens/AdminScreen/Loans/CheckLoanBala
 import ViewBorrowers from './src/screens/AdminScreen/Borrowers/ViewBorrowers';
 import SelectStageToView from './src/screens/AdminScreen/Borrowers/SelectStageToView';
 import SelectApplicationDate from './src/screens/AdminScreen/Applications/SelectApplicationDate';
+import ConfirmApplication from './src/screens/ConfirmApplication/ConfirmApplication';
 
 Amplify.configure(config)
 
@@ -50,6 +52,7 @@ const App= () => {
            <Stack.Screen name='SignInThenApply' component={SignInThenApply} />
            <Stack.Screen name='SignInThenBalance' component={SignInThenBalance} />
            <Stack.Screen name='Register' component={Register} />
+           <Stack.Screen name='SelectDivision' component={SelectDivision} />
            <Stack.Screen name='ForgotPassword' component={ForgotPassword} />
            <Stack.Screen name='ConfirmPhoneNumber' component={ConfirmPhoneNumber} />
            <Stack.Screen name='FormScreen' component={FormScreen} />
@@ -59,6 +62,7 @@ const App= () => {
            <Stack.Screen name='ApplicationReceived' component={ApplicationReceived} />
            <Stack.Screen name='CreateNewPin' component={CreateNewPin} />
            <Stack.Screen name='ApplyForLoan' component={ApplyForLoan} />
+           <Stack.Screen name='ConfirmApplication' component={ConfirmApplication} />
            <Stack.Screen name='WelcomeScreen' component={WelcomeScreen} />
            <Stack.Screen name='ContactUs' component={ContactUs} />
            <Stack.Screen name='PaymentInstructions' component={PaymentInstructions} />

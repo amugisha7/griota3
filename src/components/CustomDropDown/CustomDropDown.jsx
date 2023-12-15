@@ -16,7 +16,7 @@ const CustomDropDown = ({items, selectedItem, setSelectedItem, required, mylabel
   return (
     <View style={griotaStyles.container}>
       {mylabel && <Text style={griotaStyles.label}>{mylabel}</Text>}
-      <View style={{backgroundColor: 'white', marginHorizontal: 10}}>
+      <View style={{backgroundColor: 'white', }}>
         <Picker
           style={styles.picker}
           selectedValue={option}

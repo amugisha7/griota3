@@ -1,12 +1,40 @@
 input AMPLIFY {
   globalAuthRule: AuthRule = {allow: public}
 } # FOR TESTING ONLY!
+type Division @model {
+  id: ID!
+  name: String
+  district: String
+  chairman: String
+  chairmanPhoneNumber: String
+  viceChairman: String
+  viceChairmanPhoneNumber: String
+  stageGroups: [StageGroup] @hasMany
+}
+
+type LoanOffers @model {
+  id: ID!
+  loanAmount: Float
+  loanDurationDays: Int
+  instalment: Float
+}
+
+type StageGroup @model {
+  id: ID!
+  name: String
+  division: Division @belongsTo
+  stages: [Stage] @hasMany
+}
+
 type Stage @model {
   id: ID!
   name: String
   address: String
   chairman: String
   chairmanPhoneNumber: String
+  viceChairman: String
+  viceChairmanPhoneNumber: String
+  stageGroup: StageGroup @belongsTo
   bodas: [Boda] @hasMany
 }
 
@@ -25,12 +53,17 @@ type Boda @model {
   loans: [Loan] @hasMany
   stage: Stage @belongsTo
   type: String
+  creditRank: String
+  points: Float
 }
 type Application @model {
   id: ID!
   boda: Boda @belongsTo
   date: String
   status: String
+  loanAmount: Int
+  loanInstalment: Int
+  loanDurationDays: Int
 }
 type Loan @model {
   id: ID!
@@ -39,6 +72,7 @@ type Loan @model {
   startDate: String
   duration: Int
   loanType: String
+  interestRate: Float
   payments: [Payment] @hasMany
   status: String
 }
@@ -55,4 +89,15 @@ type Account @model {
   name: String
   payments: [Payment] @manyToMany(relationName: "PaymentAccount")
   openingBalance: Float
+}
+type Adminstrator @model {
+  id: ID!
+  phoneNumber: String
+  firstName: String
+  othrName: String
+  pin: String
+}
+type Commitment @model {
+  id: ID!
+  statement: String
 }

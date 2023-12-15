@@ -1,6 +1,132 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const getDivision = /* GraphQL */ `
+  query GetDivision($id: ID!) {
+    getDivision(id: $id) {
+      id
+      name
+      district
+      chairman
+      chairmanPhoneNumber
+      viceChairman
+      viceChairmanPhoneNumber
+      stageGroups {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listDivisions = /* GraphQL */ `
+  query ListDivisions(
+    $filter: ModelDivisionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listDivisions(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        district
+        chairman
+        chairmanPhoneNumber
+        viceChairman
+        viceChairmanPhoneNumber
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getLoanOffers = /* GraphQL */ `
+  query GetLoanOffers($id: ID!) {
+    getLoanOffers(id: $id) {
+      id
+      loanAmount
+      loanDurationDays
+      instalment
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listLoanOffers = /* GraphQL */ `
+  query ListLoanOffers(
+    $filter: ModelLoanOffersFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listLoanOffers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        loanAmount
+        loanDurationDays
+        instalment
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getStageGroup = /* GraphQL */ `
+  query GetStageGroup($id: ID!) {
+    getStageGroup(id: $id) {
+      id
+      name
+      division {
+        id
+        name
+        district
+        chairman
+        chairmanPhoneNumber
+        viceChairman
+        viceChairmanPhoneNumber
+        createdAt
+        updatedAt
+        __typename
+      }
+      stages {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      divisionStageGroupsId
+      __typename
+    }
+  }
+`;
+export const listStageGroups = /* GraphQL */ `
+  query ListStageGroups(
+    $filter: ModelStageGroupFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listStageGroups(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        createdAt
+        updatedAt
+        divisionStageGroupsId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getStage = /* GraphQL */ `
   query GetStage($id: ID!) {
     getStage(id: $id) {
@@ -9,12 +135,23 @@ export const getStage = /* GraphQL */ `
       address
       chairman
       chairmanPhoneNumber
+      viceChairman
+      viceChairmanPhoneNumber
+      stageGroup {
+        id
+        name
+        createdAt
+        updatedAt
+        divisionStageGroupsId
+        __typename
+      }
       bodas {
         nextToken
         __typename
       }
       createdAt
       updatedAt
+      stageGroupStagesId
       __typename
     }
   }
@@ -32,8 +169,11 @@ export const listStages = /* GraphQL */ `
         address
         chairman
         chairmanPhoneNumber
+        viceChairman
+        viceChairmanPhoneNumber
         createdAt
         updatedAt
+        stageGroupStagesId
         __typename
       }
       nextToken
@@ -68,11 +208,16 @@ export const getBoda = /* GraphQL */ `
         address
         chairman
         chairmanPhoneNumber
+        viceChairman
+        viceChairmanPhoneNumber
         createdAt
         updatedAt
+        stageGroupStagesId
         __typename
       }
       type
+      creditRank
+      points
       createdAt
       updatedAt
       stageBodasId
@@ -99,6 +244,8 @@ export const listBodas = /* GraphQL */ `
         picOfNationalId
         pin
         type
+        creditRank
+        points
         createdAt
         updatedAt
         stageBodasId
@@ -125,6 +272,8 @@ export const getApplication = /* GraphQL */ `
         picOfNationalId
         pin
         type
+        creditRank
+        points
         createdAt
         updatedAt
         stageBodasId
@@ -132,6 +281,9 @@ export const getApplication = /* GraphQL */ `
       }
       date
       status
+      loanAmount
+      loanInstalment
+      loanDurationDays
       createdAt
       updatedAt
       bodaApplicationsId
@@ -150,6 +302,9 @@ export const listApplications = /* GraphQL */ `
         id
         date
         status
+        loanAmount
+        loanInstalment
+        loanDurationDays
         createdAt
         updatedAt
         bodaApplicationsId
@@ -177,6 +332,8 @@ export const getLoan = /* GraphQL */ `
         picOfNationalId
         pin
         type
+        creditRank
+        points
         createdAt
         updatedAt
         stageBodasId
@@ -185,6 +342,7 @@ export const getLoan = /* GraphQL */ `
       startDate
       duration
       loanType
+      interestRate
       payments {
         nextToken
         __typename
@@ -210,6 +368,7 @@ export const listLoans = /* GraphQL */ `
         startDate
         duration
         loanType
+        interestRate
         status
         createdAt
         updatedAt
@@ -231,6 +390,7 @@ export const getPayment = /* GraphQL */ `
         startDate
         duration
         loanType
+        interestRate
         status
         createdAt
         updatedAt
@@ -300,6 +460,72 @@ export const listAccounts = /* GraphQL */ `
         id
         name
         openingBalance
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getAdminstrator = /* GraphQL */ `
+  query GetAdminstrator($id: ID!) {
+    getAdminstrator(id: $id) {
+      id
+      phoneNumber
+      firstName
+      othrName
+      pin
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listAdminstrators = /* GraphQL */ `
+  query ListAdminstrators(
+    $filter: ModelAdminstratorFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAdminstrators(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        phoneNumber
+        firstName
+        othrName
+        pin
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getCommitment = /* GraphQL */ `
+  query GetCommitment($id: ID!) {
+    getCommitment(id: $id) {
+      id
+      statement
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listCommitments = /* GraphQL */ `
+  query ListCommitments(
+    $filter: ModelCommitmentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCommitments(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        statement
         createdAt
         updatedAt
         __typename

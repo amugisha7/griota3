@@ -1,28 +1,25 @@
 import { View, Text, Image, StyleSheet, Alert, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import Logo from '../../../assets/images/Griota_logo.png';
-import CustomInput from '../../components/CustomInput/CustomInput';
-import CustomButton from '../../components/CustomButton/CustomButton';
-import { useForm } from 'react-hook-form';
 import { Auth } from 'aws-amplify';
 import { useRoute } from '@react-navigation/native';
 import { API, graphqlOperation } from "aws-amplify";
 import { griotaStyles } from '../../../assets/styles/style';
+import CustomNumberInput from '../../components/CustomNumberInput';
+import NewCustomButton from '../../components/NewCustomButton';
 
 const CreateNewPin = ({navigation}) => {
 
   const route = useRoute()
   const [errorMessage, setErrorMessage] = useState()
   const [succesMessage, setSuccessMessage] = useState()
-  const [status, setStatus] = useState('Set New PIN Code')
+  const [status, setStatus] = useState('Register PIN')
   const [ready, setReady] = useState()
+  const [code1, setCode1] = useState()
+  const [code2, setCode2] = useState()
 
-  const PIN_REGEX = /\b\d{4}\b/;
-  
   const phoneNumber = route?.params?.phoneNumber
   const firstName = route?.params?.firstName
   const otherName = route?.params?.otherName
-  const stageIdNumber = route?.params?.stageIdNumber
   const nationalIdNumber = route?.params?.nationalIdNumber
   const selectedStage = route?.params?.selectedStage
   const mobileMoneyName = route?.params?.mobileMoneyName
@@ -34,20 +31,6 @@ const CreateNewPin = ({navigation}) => {
     SigningIn()
   },[])
   
-  const { control, handleSubmit, watch  } = useForm({
-    defaultValues: {
-      password: '',
-      passwordCheck: '',
-    }
-  });
-  const pwd = watch('password'); 
-
-  const SetNewPin = (data) => {
-    const {password} = data; 
-    setStatus('Please Wait...')
-    ChangePin(password)
-  }
-
   const SigningIn = async() => {
     try { 
       const signedInUser = await Auth.signIn(`+256${phoneNumber.slice(1)}`, phoneNumber)
@@ -69,21 +52,19 @@ const CreateNewPin = ({navigation}) => {
             phoneNumber: "${phoneNumber}", 
             picOfStageId: "${stageIdPicURL}", 
             type: "${type}", 
-            stageIdNumber: "${stageIdNumber}",
             stageBodasId: "${selectedStage}",
             pin: "${password}",
             mobileMoneyName: "${mobileMoneyName}"
             nationalIdNumber: "${nationalIdNumber}"
             picOfNationalId: "${nationalIdPicURL}"
+            points: 850
           }){
             id
           }
         }`
       ))
-      console.log('boda created: ', boda)
       if(boda) {
         setSuccessMessage('PIN CHANGE SUCCESSFUL');
-        setStatus('Set New PIN Code')
         setTimeout(()=>{navigation.navigate('ApplyForLoan', {phoneNumber, password})},1500)
       }
     }
@@ -93,7 +74,9 @@ const CreateNewPin = ({navigation}) => {
     }
   }
 
-  const ChangePin = (password)=>{
+  const ChangePin = ()=>{
+    setStatus('Please Wait...')
+    const password = code1
     Auth.currentAuthenticatedUser()
       .then((user) => {
           return Auth.changePassword(user, phoneNumber, `00${password}`);
@@ -107,46 +90,25 @@ const CreateNewPin = ({navigation}) => {
   return (
       <ScrollView>
         <View style={styles.container }>
-          <Image source={Logo} style={styles.logo}/>
-        
+          <Text style={griotaStyles.title}>Create New PIN</Text>
+          {!ready && <Text style={griotaStyles.label}>Loading...</Text>}
           {errorMessage && <Text style={[griotaStyles.errors, {marginVertical: 20}]}> {errorMessage} </Text>}
           {succesMessage &&  <Text style={{color: 'green', marginVertical: 20}}> {succesMessage} </Text>}
-          <Text style={styles.title}>You Phone Number has been Verified.</Text>
-          <Text style={styles.title}>Please set a New 4-Digit PIN Code.</Text>
-          <CustomInput
-              name='password'
-              placeholder={''}
-              control={control}
-              mylabel={'Create a 4-digit PIN Code'}
-              secureTextEntry={true}
-              rules={{
-                required: "This field is required",
-                minLength: {
-                  value: 4,
-                  message: "Too short"
-                },
-                maxLength: {
-                  value: 4,
-                  message: "Only 4 digits allowed"
-                },
-                pattern: {
-                  value: PIN_REGEX,
-                  message: 'Must be 4-digit Number'
-                },
-              }}
-            />
-            <CustomInput
-              name='passwordCheck'
-              placeholder={'Confirm PIN Code'}
-              control={control}
-              secureTextEntry={true}
-              rules={{
-                required: "This field is required",
-                validate: value => pwd===value || 'PINs do not match',
-              }}
-            />
-        
-          <CustomButton onPress={handleSubmit(SetNewPin)} buttonFunction={status}/>
+          {ready && <View style={{width: '100%', alignItems: 'center'}}>
+            <Text style={griotaStyles.label}>You Phone Number has been Verified.</Text>
+            <Text style={griotaStyles.label}>Please set a New 4-Digit PIN Code.</Text>
+            <View style={{width: 200, alignItems: 'center', marginTop: -60, marginBottom: 20}}>
+              <CustomNumberInput handleChange={setCode1} numberOfInputs={4} />
+            </View>
+            <Text style={griotaStyles.label}>Confirm PIN Code.</Text>
+            <View style={{width: 200, alignItems: 'center', marginTop: -60, marginBottom: 40}}>
+              <CustomNumberInput handleChange={setCode2} numberOfInputs={4} />
+            </View>
+            {String(code2).length === 4 && (code1 !== code2)  &&
+              <Text style={[griotaStyles.errors, {marginVertical: 20}]}> PINs must be the same! </Text>}
+            <NewCustomButton onPress={ChangePin} buttonText={status}
+              disabled={status !== 'Register PIN' || code1 !== code2 || String(code1).length !== 4}/>
+          </View>}
         </View>
       </ScrollView>
     
@@ -161,8 +123,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
       width: '100%',
-      paddingLeft: 20,
-      paddingRight: 20,
+      padding: 20,
       width: '100%',
       // maxWidth: '600px',
     },

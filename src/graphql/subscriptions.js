@@ -1,6 +1,201 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onCreateDivision = /* GraphQL */ `
+  subscription OnCreateDivision($filter: ModelSubscriptionDivisionFilterInput) {
+    onCreateDivision(filter: $filter) {
+      id
+      name
+      district
+      chairman
+      chairmanPhoneNumber
+      viceChairman
+      viceChairmanPhoneNumber
+      stageGroups {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateDivision = /* GraphQL */ `
+  subscription OnUpdateDivision($filter: ModelSubscriptionDivisionFilterInput) {
+    onUpdateDivision(filter: $filter) {
+      id
+      name
+      district
+      chairman
+      chairmanPhoneNumber
+      viceChairman
+      viceChairmanPhoneNumber
+      stageGroups {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteDivision = /* GraphQL */ `
+  subscription OnDeleteDivision($filter: ModelSubscriptionDivisionFilterInput) {
+    onDeleteDivision(filter: $filter) {
+      id
+      name
+      district
+      chairman
+      chairmanPhoneNumber
+      viceChairman
+      viceChairmanPhoneNumber
+      stageGroups {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateLoanOffers = /* GraphQL */ `
+  subscription OnCreateLoanOffers(
+    $filter: ModelSubscriptionLoanOffersFilterInput
+  ) {
+    onCreateLoanOffers(filter: $filter) {
+      id
+      loanAmount
+      loanDurationDays
+      instalment
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateLoanOffers = /* GraphQL */ `
+  subscription OnUpdateLoanOffers(
+    $filter: ModelSubscriptionLoanOffersFilterInput
+  ) {
+    onUpdateLoanOffers(filter: $filter) {
+      id
+      loanAmount
+      loanDurationDays
+      instalment
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteLoanOffers = /* GraphQL */ `
+  subscription OnDeleteLoanOffers(
+    $filter: ModelSubscriptionLoanOffersFilterInput
+  ) {
+    onDeleteLoanOffers(filter: $filter) {
+      id
+      loanAmount
+      loanDurationDays
+      instalment
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateStageGroup = /* GraphQL */ `
+  subscription OnCreateStageGroup(
+    $filter: ModelSubscriptionStageGroupFilterInput
+  ) {
+    onCreateStageGroup(filter: $filter) {
+      id
+      name
+      division {
+        id
+        name
+        district
+        chairman
+        chairmanPhoneNumber
+        viceChairman
+        viceChairmanPhoneNumber
+        createdAt
+        updatedAt
+        __typename
+      }
+      stages {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      divisionStageGroupsId
+      __typename
+    }
+  }
+`;
+export const onUpdateStageGroup = /* GraphQL */ `
+  subscription OnUpdateStageGroup(
+    $filter: ModelSubscriptionStageGroupFilterInput
+  ) {
+    onUpdateStageGroup(filter: $filter) {
+      id
+      name
+      division {
+        id
+        name
+        district
+        chairman
+        chairmanPhoneNumber
+        viceChairman
+        viceChairmanPhoneNumber
+        createdAt
+        updatedAt
+        __typename
+      }
+      stages {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      divisionStageGroupsId
+      __typename
+    }
+  }
+`;
+export const onDeleteStageGroup = /* GraphQL */ `
+  subscription OnDeleteStageGroup(
+    $filter: ModelSubscriptionStageGroupFilterInput
+  ) {
+    onDeleteStageGroup(filter: $filter) {
+      id
+      name
+      division {
+        id
+        name
+        district
+        chairman
+        chairmanPhoneNumber
+        viceChairman
+        viceChairmanPhoneNumber
+        createdAt
+        updatedAt
+        __typename
+      }
+      stages {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      divisionStageGroupsId
+      __typename
+    }
+  }
+`;
 export const onCreateStage = /* GraphQL */ `
   subscription OnCreateStage($filter: ModelSubscriptionStageFilterInput) {
     onCreateStage(filter: $filter) {
@@ -9,12 +204,23 @@ export const onCreateStage = /* GraphQL */ `
       address
       chairman
       chairmanPhoneNumber
+      viceChairman
+      viceChairmanPhoneNumber
+      stageGroup {
+        id
+        name
+        createdAt
+        updatedAt
+        divisionStageGroupsId
+        __typename
+      }
       bodas {
         nextToken
         __typename
       }
       createdAt
       updatedAt
+      stageGroupStagesId
       __typename
     }
   }
@@ -27,12 +233,23 @@ export const onUpdateStage = /* GraphQL */ `
       address
       chairman
       chairmanPhoneNumber
+      viceChairman
+      viceChairmanPhoneNumber
+      stageGroup {
+        id
+        name
+        createdAt
+        updatedAt
+        divisionStageGroupsId
+        __typename
+      }
       bodas {
         nextToken
         __typename
       }
       createdAt
       updatedAt
+      stageGroupStagesId
       __typename
     }
   }
@@ -45,12 +262,23 @@ export const onDeleteStage = /* GraphQL */ `
       address
       chairman
       chairmanPhoneNumber
+      viceChairman
+      viceChairmanPhoneNumber
+      stageGroup {
+        id
+        name
+        createdAt
+        updatedAt
+        divisionStageGroupsId
+        __typename
+      }
       bodas {
         nextToken
         __typename
       }
       createdAt
       updatedAt
+      stageGroupStagesId
       __typename
     }
   }
@@ -82,11 +310,16 @@ export const onCreateBoda = /* GraphQL */ `
         address
         chairman
         chairmanPhoneNumber
+        viceChairman
+        viceChairmanPhoneNumber
         createdAt
         updatedAt
+        stageGroupStagesId
         __typename
       }
       type
+      creditRank
+      points
       createdAt
       updatedAt
       stageBodasId
@@ -121,11 +354,16 @@ export const onUpdateBoda = /* GraphQL */ `
         address
         chairman
         chairmanPhoneNumber
+        viceChairman
+        viceChairmanPhoneNumber
         createdAt
         updatedAt
+        stageGroupStagesId
         __typename
       }
       type
+      creditRank
+      points
       createdAt
       updatedAt
       stageBodasId
@@ -160,11 +398,16 @@ export const onDeleteBoda = /* GraphQL */ `
         address
         chairman
         chairmanPhoneNumber
+        viceChairman
+        viceChairmanPhoneNumber
         createdAt
         updatedAt
+        stageGroupStagesId
         __typename
       }
       type
+      creditRank
+      points
       createdAt
       updatedAt
       stageBodasId
@@ -190,6 +433,8 @@ export const onCreateApplication = /* GraphQL */ `
         picOfNationalId
         pin
         type
+        creditRank
+        points
         createdAt
         updatedAt
         stageBodasId
@@ -197,6 +442,9 @@ export const onCreateApplication = /* GraphQL */ `
       }
       date
       status
+      loanAmount
+      loanInstalment
+      loanDurationDays
       createdAt
       updatedAt
       bodaApplicationsId
@@ -222,6 +470,8 @@ export const onUpdateApplication = /* GraphQL */ `
         picOfNationalId
         pin
         type
+        creditRank
+        points
         createdAt
         updatedAt
         stageBodasId
@@ -229,6 +479,9 @@ export const onUpdateApplication = /* GraphQL */ `
       }
       date
       status
+      loanAmount
+      loanInstalment
+      loanDurationDays
       createdAt
       updatedAt
       bodaApplicationsId
@@ -254,6 +507,8 @@ export const onDeleteApplication = /* GraphQL */ `
         picOfNationalId
         pin
         type
+        creditRank
+        points
         createdAt
         updatedAt
         stageBodasId
@@ -261,6 +516,9 @@ export const onDeleteApplication = /* GraphQL */ `
       }
       date
       status
+      loanAmount
+      loanInstalment
+      loanDurationDays
       createdAt
       updatedAt
       bodaApplicationsId
@@ -285,6 +543,8 @@ export const onCreateLoan = /* GraphQL */ `
         picOfNationalId
         pin
         type
+        creditRank
+        points
         createdAt
         updatedAt
         stageBodasId
@@ -293,6 +553,7 @@ export const onCreateLoan = /* GraphQL */ `
       startDate
       duration
       loanType
+      interestRate
       payments {
         nextToken
         __typename
@@ -322,6 +583,8 @@ export const onUpdateLoan = /* GraphQL */ `
         picOfNationalId
         pin
         type
+        creditRank
+        points
         createdAt
         updatedAt
         stageBodasId
@@ -330,6 +593,7 @@ export const onUpdateLoan = /* GraphQL */ `
       startDate
       duration
       loanType
+      interestRate
       payments {
         nextToken
         __typename
@@ -359,6 +623,8 @@ export const onDeleteLoan = /* GraphQL */ `
         picOfNationalId
         pin
         type
+        creditRank
+        points
         createdAt
         updatedAt
         stageBodasId
@@ -367,6 +633,7 @@ export const onDeleteLoan = /* GraphQL */ `
       startDate
       duration
       loanType
+      interestRate
       payments {
         nextToken
         __typename
@@ -389,6 +656,7 @@ export const onCreatePayment = /* GraphQL */ `
         startDate
         duration
         loanType
+        interestRate
         status
         createdAt
         updatedAt
@@ -419,6 +687,7 @@ export const onUpdatePayment = /* GraphQL */ `
         startDate
         duration
         loanType
+        interestRate
         status
         createdAt
         updatedAt
@@ -449,6 +718,7 @@ export const onDeletePayment = /* GraphQL */ `
         startDate
         duration
         loanType
+        interestRate
         status
         createdAt
         updatedAt
@@ -511,6 +781,93 @@ export const onDeleteAccount = /* GraphQL */ `
         __typename
       }
       openingBalance
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateAdminstrator = /* GraphQL */ `
+  subscription OnCreateAdminstrator(
+    $filter: ModelSubscriptionAdminstratorFilterInput
+  ) {
+    onCreateAdminstrator(filter: $filter) {
+      id
+      phoneNumber
+      firstName
+      othrName
+      pin
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateAdminstrator = /* GraphQL */ `
+  subscription OnUpdateAdminstrator(
+    $filter: ModelSubscriptionAdminstratorFilterInput
+  ) {
+    onUpdateAdminstrator(filter: $filter) {
+      id
+      phoneNumber
+      firstName
+      othrName
+      pin
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteAdminstrator = /* GraphQL */ `
+  subscription OnDeleteAdminstrator(
+    $filter: ModelSubscriptionAdminstratorFilterInput
+  ) {
+    onDeleteAdminstrator(filter: $filter) {
+      id
+      phoneNumber
+      firstName
+      othrName
+      pin
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateCommitment = /* GraphQL */ `
+  subscription OnCreateCommitment(
+    $filter: ModelSubscriptionCommitmentFilterInput
+  ) {
+    onCreateCommitment(filter: $filter) {
+      id
+      statement
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateCommitment = /* GraphQL */ `
+  subscription OnUpdateCommitment(
+    $filter: ModelSubscriptionCommitmentFilterInput
+  ) {
+    onUpdateCommitment(filter: $filter) {
+      id
+      statement
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteCommitment = /* GraphQL */ `
+  subscription OnDeleteCommitment(
+    $filter: ModelSubscriptionCommitmentFilterInput
+  ) {
+    onDeleteCommitment(filter: $filter) {
+      id
+      statement
       createdAt
       updatedAt
       __typename

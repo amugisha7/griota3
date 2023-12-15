@@ -4,7 +4,8 @@ import { griotaStyles } from '../../../assets/styles/style';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { useRoute } from '@react-navigation/native';
 import { API, graphqlOperation } from "aws-amplify";
-import { formatStatement, convertDateFormat, getDateDifferenceInDays, getDaysSinceStart } from '../../resources/formatStatement';
+import { formatStatement, convertDateFormat, getDateDifferenceInDays, 
+  getDaysSinceStart } from '../../resources/formatStatement';
 import { Table, Row, Rows } from 'react-native-reanimated-table';
 
 const CheckLoanBalance = ({navigation}) => {
@@ -19,6 +20,7 @@ const CheckLoanBalance = ({navigation}) => {
   const [errorMessage, setErrorMessage] = useState()
   const [dateString, setDateString] = useState()
   const [nextDateString, setNextDateString] = useState()
+  const [points, setPoints] = useState()
 
   const phoneNumber = route?.params?.phoneNumber
 
@@ -72,6 +74,7 @@ const CheckLoanBalance = ({navigation}) => {
           getBoda(id: "${phoneNumber}") {
             firstname
             othername
+            points
             stage {
               name
             }
@@ -93,6 +96,7 @@ const CheckLoanBalance = ({navigation}) => {
       if(boda) {
         setFirstName(boda.data.getBoda.firstname)
         setOtherName(boda.data.getBoda.othername)
+        setPoints(boda.data.getBoda.points)
         setStage(boda.data.getBoda.stage.name)
         setStartDate(boda.data.getBoda.loans.items[0].startDate)
         setPrincipal(boda.data.getBoda.loans.items[0].principal)
@@ -103,7 +107,7 @@ const CheckLoanBalance = ({navigation}) => {
           boda.data.getBoda.loans.items[0].principal
         ))
       }
-    }
+    } 
     catch(e)
     {
       setErrorMessage('ERROR: Please contact Support')
@@ -116,7 +120,7 @@ const CheckLoanBalance = ({navigation}) => {
     navigation.navigate("WelcomeScreen")
   }
 
-  const tableHead = ['DATE', 'PAYMENTS', 'BALANCE']
+  const tableHead = ['DATE', 'PAYMENTS', 'BALANCE', 'POINTS']
 
   return (
     <ScrollView>
@@ -132,6 +136,7 @@ const CheckLoanBalance = ({navigation}) => {
             <Text style={[griotaStyles.text, {textAlign: 'left'}]}>Name: {firstName} {otherName}. </Text>
             <Text style={[griotaStyles.text, {textAlign: 'left'}]}>Phone Number: {phoneNumber} </Text>
             <Text style={[griotaStyles.text, {textAlign: 'left'}]}>Stage: {stage} </Text>
+            <Text style={[griotaStyles.text, {textAlign: 'left', color: 'blue'}]}>Points: {points} </Text>
           </View>
           <Text style={griotaStyles.label}>Loan Details:</Text>
           <View style={{display: 'flex', flexDirection: 'column', marginBottom: 10}}>

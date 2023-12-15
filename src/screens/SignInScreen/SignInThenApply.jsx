@@ -1,15 +1,13 @@
-import { View, Text, Image, StyleSheet, Linking, ScrollView} from 'react-native'
+import { View, Text, Image, StyleSheet, Linking, ScrollView, Button} from 'react-native'
 import React, { useEffect, useState } from 'react'
-import Logo from '../../../assets/images/Griota_logo.png'
-import CustomInput from '../../components/CustomInput/CustomInput';
-import CustomButton from '../../components/CustomButton/CustomButton';
-import { useForm } from 'react-hook-form';
 import {Auth, Notifications} from 'aws-amplify'; 
 import { useRoute } from '@react-navigation/native';
 import { griotaStyles } from '../../../assets/styles/style';
 import { adminUsers } from '../../Lists/adminUsers';
 import {checkPermissions} from '../../resources/requestPermissions'
 import DeepLinking from 'react-native-deep-linking';
+import CustomNumberInput from '../../components/CustomNumberInput';
+import NewCustomButton from '../../components/NewCustomButton';
 
 const SignInScreen = ({navigation}) => {
   
@@ -31,6 +29,8 @@ const SignInScreen = ({navigation}) => {
   }, []);
 
   const [loginError, setLoginError] = useState()
+  const [phoneNumber, setPhoneNumber] = useState('')
+  const [pinCode, setPinCode] = useState('')
   const [status, setStatus] = useState('Sign In')
 
   useEffect(()=>{setLoginError(null)},[])
@@ -39,25 +39,17 @@ const SignInScreen = ({navigation}) => {
     checkPermissions()
   },[])
 
-  const { control, handleSubmit} = useForm({
-    defaultValues: {
-      password: '',
-      username: ''
-    }
-  });
+  const Registering = () => navigation.navigate('SelectDivision');
 
-  const Registering = () => navigation.navigate('Register')
-
-  const SigningIn = async (data) => {
+  const SigningIn = async () => {
     setStatus('Signing In...')
-    const {username, password} = data
-    const phoneNumber = username; 
-    const pin = password; 
     try { 
-      const user = await Auth.signIn(`+256${username.slice(1)}`, `00${password}`)
-      user.attributes.phone_number === adminUsers.Admin1.PhoneNumber
-      ? navigation.navigate('AdminScreen')
-      : navigation.navigate('ApplyForLoan', {phoneNumber, pin})
+      const user = await Auth.signIn(`+256${phoneNumber.slice(1)}`, `00${pinCode}`)
+      if(user) {
+        user.attributes.phone_number === adminUsers.Admin1.PhoneNumber
+        ? navigation.navigate('AdminScreen')
+        : navigation.navigate('ApplyForLoan', {phoneNumber})
+      }
     }
     catch(e){
       setLoginError('Error. Please contact support')
@@ -75,52 +67,28 @@ const SignInScreen = ({navigation}) => {
   return (
       <ScrollView>
         <View style={styles.container }>
-          <View>
-            <Text style={griotaStyles.label}>Are You a New User?</Text>
-          </View>
-          <View style={{width: '60%', marginBottom: 60}}>
-            <CustomButton onPress={Registering} buttonFunction={'Register New Account'} type='PRIMARY'/>
-          </View>
-          <Text style={griotaStyles.label}>Already registered?</Text>
           <Text style={griotaStyles.title}>Sign In to Apply for a Loan</Text>
-          { loginError && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>{loginError}</Text>}
-          <CustomInput
-            name='username'
-            placeholder='Phone Number (07xxxxxxxx)'
-            control={control}
-            rules={{
-              required: "This field is required",
-              pattern: {
-                value: PHONE_REGEX,
-                message: 'Invalid Phone Number (use format 07xxxxxxxx)'
-              },
-            }}
-            type={'tel'}
-          />
-        
-          <CustomInput
-            name='password'
-            placeholder={'PIN Code'}
-            secureTextEntry={true}
-            control={control}
-            rules={{
-              required: "This field is required",
-              minLength: {
-                value: 4,
-                message: "Too short"
-              },
-              maxLength: {
-                value: 4,
-                message: "Only 4 digits allowed"
-              },
-              pattern: {
-                value: PIN_REGEX,
-                message: 'Must be 4-digit Number'
-              },
-            }}
-          />
-          <CustomButton onPress={handleSubmit(SigningIn)} buttonFunction={status} />
+          <View style={styles.newContainer }>
+            <CustomNumberInput handleChange={setPhoneNumber} numberOfInputs={10}
+              label={'Phone Number'}
+            />
+            <CustomNumberInput handleChange={setPinCode} numberOfInputs={4}
+              label={'PIN Code'}
+            />
+            <View style={{marginTop: 10, width: '100%'}}>
+              <NewCustomButton buttonText={status} onPress={SigningIn}
+              disabled={pinCode.toString().length !== 4 || phoneNumber.toString().length !== 10} />
+            </View>
+          </View>
         </View>
+        <View style={styles.container }>
+          <Text style={griotaStyles.label}>Are You a New User?</Text>
+          <View style={{width: '60%', marginBottom: 60}}>
+            <Button onPress={Registering} title='Register New Account' />
+          </View>
+        </View>
+          { loginError && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>{loginError}</Text>}
+          
       </ScrollView>
     
   )
@@ -136,7 +104,18 @@ const styles = StyleSheet.create({
       width: '100%',
       paddingLeft: 20,
       paddingRight: 20,
-      paddingTop: 22
+      paddingTop: 22,
+    },
+    newContainer: {
+      alignItems: 'center',
+      // justifyContent: 'center',
+      width: '100%',
+      paddingLeft: 5,
+      paddingRight: 5,
+      paddingTop: 22,
+      paddingBottom: 40,
+      backgroundColor: '#D7FCFF',
+      marginBottom: 20
     },
     logo: {
         width: 100,

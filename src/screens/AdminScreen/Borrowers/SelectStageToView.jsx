@@ -27,13 +27,13 @@ const SelectStageToView = ({navigation}) => {
         `query MyQuery {
             listStages {
               items {
-                id
+                name
               }
             }
           }`
         ))
         if(stages) {
-            const listOfStages = stages.data.listStages.items.map(item => `${item.id}`)
+            const listOfStages = stages.data.listStages.items.map(item => `${item.name}`)
             listOfStages.unshift('Select from list')
             setStagesList(listOfStages)
         }

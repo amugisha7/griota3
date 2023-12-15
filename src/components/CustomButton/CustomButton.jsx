@@ -3,10 +3,11 @@ import React from 'react'
 
 
 
-const CustomButton = ({onPress, buttonFunction, type}) => {
+const CustomButton = ({onPress, buttonFunction, type, isAble}) => {
 
   return (
-    <Pressable onPress={onPress} style={[styles.container, styles[`container_${type}`]]}>
+    <Pressable onPress={onPress} disabled={isAble}
+      style={[styles.container, styles[`container_${type}`]]}>
       <Text style={[styles.text, styles[`text_${type}`]]} >{buttonFunction}</Text>
       
     </Pressable>

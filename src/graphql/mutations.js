@@ -1,6 +1,216 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const createDivision = /* GraphQL */ `
+  mutation CreateDivision(
+    $input: CreateDivisionInput!
+    $condition: ModelDivisionConditionInput
+  ) {
+    createDivision(input: $input, condition: $condition) {
+      id
+      name
+      district
+      chairman
+      chairmanPhoneNumber
+      viceChairman
+      viceChairmanPhoneNumber
+      stageGroups {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateDivision = /* GraphQL */ `
+  mutation UpdateDivision(
+    $input: UpdateDivisionInput!
+    $condition: ModelDivisionConditionInput
+  ) {
+    updateDivision(input: $input, condition: $condition) {
+      id
+      name
+      district
+      chairman
+      chairmanPhoneNumber
+      viceChairman
+      viceChairmanPhoneNumber
+      stageGroups {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteDivision = /* GraphQL */ `
+  mutation DeleteDivision(
+    $input: DeleteDivisionInput!
+    $condition: ModelDivisionConditionInput
+  ) {
+    deleteDivision(input: $input, condition: $condition) {
+      id
+      name
+      district
+      chairman
+      chairmanPhoneNumber
+      viceChairman
+      viceChairmanPhoneNumber
+      stageGroups {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createLoanOffers = /* GraphQL */ `
+  mutation CreateLoanOffers(
+    $input: CreateLoanOffersInput!
+    $condition: ModelLoanOffersConditionInput
+  ) {
+    createLoanOffers(input: $input, condition: $condition) {
+      id
+      loanAmount
+      loanDurationDays
+      instalment
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateLoanOffers = /* GraphQL */ `
+  mutation UpdateLoanOffers(
+    $input: UpdateLoanOffersInput!
+    $condition: ModelLoanOffersConditionInput
+  ) {
+    updateLoanOffers(input: $input, condition: $condition) {
+      id
+      loanAmount
+      loanDurationDays
+      instalment
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteLoanOffers = /* GraphQL */ `
+  mutation DeleteLoanOffers(
+    $input: DeleteLoanOffersInput!
+    $condition: ModelLoanOffersConditionInput
+  ) {
+    deleteLoanOffers(input: $input, condition: $condition) {
+      id
+      loanAmount
+      loanDurationDays
+      instalment
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createStageGroup = /* GraphQL */ `
+  mutation CreateStageGroup(
+    $input: CreateStageGroupInput!
+    $condition: ModelStageGroupConditionInput
+  ) {
+    createStageGroup(input: $input, condition: $condition) {
+      id
+      name
+      division {
+        id
+        name
+        district
+        chairman
+        chairmanPhoneNumber
+        viceChairman
+        viceChairmanPhoneNumber
+        createdAt
+        updatedAt
+        __typename
+      }
+      stages {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      divisionStageGroupsId
+      __typename
+    }
+  }
+`;
+export const updateStageGroup = /* GraphQL */ `
+  mutation UpdateStageGroup(
+    $input: UpdateStageGroupInput!
+    $condition: ModelStageGroupConditionInput
+  ) {
+    updateStageGroup(input: $input, condition: $condition) {
+      id
+      name
+      division {
+        id
+        name
+        district
+        chairman
+        chairmanPhoneNumber
+        viceChairman
+        viceChairmanPhoneNumber
+        createdAt
+        updatedAt
+        __typename
+      }
+      stages {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      divisionStageGroupsId
+      __typename
+    }
+  }
+`;
+export const deleteStageGroup = /* GraphQL */ `
+  mutation DeleteStageGroup(
+    $input: DeleteStageGroupInput!
+    $condition: ModelStageGroupConditionInput
+  ) {
+    deleteStageGroup(input: $input, condition: $condition) {
+      id
+      name
+      division {
+        id
+        name
+        district
+        chairman
+        chairmanPhoneNumber
+        viceChairman
+        viceChairmanPhoneNumber
+        createdAt
+        updatedAt
+        __typename
+      }
+      stages {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      divisionStageGroupsId
+      __typename
+    }
+  }
+`;
 export const createStage = /* GraphQL */ `
   mutation CreateStage(
     $input: CreateStageInput!
@@ -12,12 +222,23 @@ export const createStage = /* GraphQL */ `
       address
       chairman
       chairmanPhoneNumber
+      viceChairman
+      viceChairmanPhoneNumber
+      stageGroup {
+        id
+        name
+        createdAt
+        updatedAt
+        divisionStageGroupsId
+        __typename
+      }
       bodas {
         nextToken
         __typename
       }
       createdAt
       updatedAt
+      stageGroupStagesId
       __typename
     }
   }
@@ -33,12 +254,23 @@ export const updateStage = /* GraphQL */ `
       address
       chairman
       chairmanPhoneNumber
+      viceChairman
+      viceChairmanPhoneNumber
+      stageGroup {
+        id
+        name
+        createdAt
+        updatedAt
+        divisionStageGroupsId
+        __typename
+      }
       bodas {
         nextToken
         __typename
       }
       createdAt
       updatedAt
+      stageGroupStagesId
       __typename
     }
   }
@@ -54,12 +286,23 @@ export const deleteStage = /* GraphQL */ `
       address
       chairman
       chairmanPhoneNumber
+      viceChairman
+      viceChairmanPhoneNumber
+      stageGroup {
+        id
+        name
+        createdAt
+        updatedAt
+        divisionStageGroupsId
+        __typename
+      }
       bodas {
         nextToken
         __typename
       }
       createdAt
       updatedAt
+      stageGroupStagesId
       __typename
     }
   }
@@ -94,11 +337,16 @@ export const createBoda = /* GraphQL */ `
         address
         chairman
         chairmanPhoneNumber
+        viceChairman
+        viceChairmanPhoneNumber
         createdAt
         updatedAt
+        stageGroupStagesId
         __typename
       }
       type
+      creditRank
+      points
       createdAt
       updatedAt
       stageBodasId
@@ -136,11 +384,16 @@ export const updateBoda = /* GraphQL */ `
         address
         chairman
         chairmanPhoneNumber
+        viceChairman
+        viceChairmanPhoneNumber
         createdAt
         updatedAt
+        stageGroupStagesId
         __typename
       }
       type
+      creditRank
+      points
       createdAt
       updatedAt
       stageBodasId
@@ -178,11 +431,16 @@ export const deleteBoda = /* GraphQL */ `
         address
         chairman
         chairmanPhoneNumber
+        viceChairman
+        viceChairmanPhoneNumber
         createdAt
         updatedAt
+        stageGroupStagesId
         __typename
       }
       type
+      creditRank
+      points
       createdAt
       updatedAt
       stageBodasId
@@ -209,6 +467,8 @@ export const createApplication = /* GraphQL */ `
         picOfNationalId
         pin
         type
+        creditRank
+        points
         createdAt
         updatedAt
         stageBodasId
@@ -216,6 +476,9 @@ export const createApplication = /* GraphQL */ `
       }
       date
       status
+      loanAmount
+      loanInstalment
+      loanDurationDays
       createdAt
       updatedAt
       bodaApplicationsId
@@ -242,6 +505,8 @@ export const updateApplication = /* GraphQL */ `
         picOfNationalId
         pin
         type
+        creditRank
+        points
         createdAt
         updatedAt
         stageBodasId
@@ -249,6 +514,9 @@ export const updateApplication = /* GraphQL */ `
       }
       date
       status
+      loanAmount
+      loanInstalment
+      loanDurationDays
       createdAt
       updatedAt
       bodaApplicationsId
@@ -275,6 +543,8 @@ export const deleteApplication = /* GraphQL */ `
         picOfNationalId
         pin
         type
+        creditRank
+        points
         createdAt
         updatedAt
         stageBodasId
@@ -282,6 +552,9 @@ export const deleteApplication = /* GraphQL */ `
       }
       date
       status
+      loanAmount
+      loanInstalment
+      loanDurationDays
       createdAt
       updatedAt
       bodaApplicationsId
@@ -309,6 +582,8 @@ export const createLoan = /* GraphQL */ `
         picOfNationalId
         pin
         type
+        creditRank
+        points
         createdAt
         updatedAt
         stageBodasId
@@ -317,6 +592,7 @@ export const createLoan = /* GraphQL */ `
       startDate
       duration
       loanType
+      interestRate
       payments {
         nextToken
         __typename
@@ -349,6 +625,8 @@ export const updateLoan = /* GraphQL */ `
         picOfNationalId
         pin
         type
+        creditRank
+        points
         createdAt
         updatedAt
         stageBodasId
@@ -357,6 +635,7 @@ export const updateLoan = /* GraphQL */ `
       startDate
       duration
       loanType
+      interestRate
       payments {
         nextToken
         __typename
@@ -389,6 +668,8 @@ export const deleteLoan = /* GraphQL */ `
         picOfNationalId
         pin
         type
+        creditRank
+        points
         createdAt
         updatedAt
         stageBodasId
@@ -397,6 +678,7 @@ export const deleteLoan = /* GraphQL */ `
       startDate
       duration
       loanType
+      interestRate
       payments {
         nextToken
         __typename
@@ -422,6 +704,7 @@ export const createPayment = /* GraphQL */ `
         startDate
         duration
         loanType
+        interestRate
         status
         createdAt
         updatedAt
@@ -455,6 +738,7 @@ export const updatePayment = /* GraphQL */ `
         startDate
         duration
         loanType
+        interestRate
         status
         createdAt
         updatedAt
@@ -488,6 +772,7 @@ export const deletePayment = /* GraphQL */ `
         startDate
         duration
         loanType
+        interestRate
         status
         createdAt
         updatedAt
@@ -559,6 +844,99 @@ export const deleteAccount = /* GraphQL */ `
         __typename
       }
       openingBalance
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createAdminstrator = /* GraphQL */ `
+  mutation CreateAdminstrator(
+    $input: CreateAdminstratorInput!
+    $condition: ModelAdminstratorConditionInput
+  ) {
+    createAdminstrator(input: $input, condition: $condition) {
+      id
+      phoneNumber
+      firstName
+      othrName
+      pin
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateAdminstrator = /* GraphQL */ `
+  mutation UpdateAdminstrator(
+    $input: UpdateAdminstratorInput!
+    $condition: ModelAdminstratorConditionInput
+  ) {
+    updateAdminstrator(input: $input, condition: $condition) {
+      id
+      phoneNumber
+      firstName
+      othrName
+      pin
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteAdminstrator = /* GraphQL */ `
+  mutation DeleteAdminstrator(
+    $input: DeleteAdminstratorInput!
+    $condition: ModelAdminstratorConditionInput
+  ) {
+    deleteAdminstrator(input: $input, condition: $condition) {
+      id
+      phoneNumber
+      firstName
+      othrName
+      pin
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createCommitment = /* GraphQL */ `
+  mutation CreateCommitment(
+    $input: CreateCommitmentInput!
+    $condition: ModelCommitmentConditionInput
+  ) {
+    createCommitment(input: $input, condition: $condition) {
+      id
+      statement
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateCommitment = /* GraphQL */ `
+  mutation UpdateCommitment(
+    $input: UpdateCommitmentInput!
+    $condition: ModelCommitmentConditionInput
+  ) {
+    updateCommitment(input: $input, condition: $condition) {
+      id
+      statement
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteCommitment = /* GraphQL */ `
+  mutation DeleteCommitment(
+    $input: DeleteCommitmentInput!
+    $condition: ModelCommitmentConditionInput
+  ) {
+    deleteCommitment(input: $input, condition: $condition) {
+      id
+      statement
       createdAt
       updatedAt
       __typename
