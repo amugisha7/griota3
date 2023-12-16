@@ -37,34 +37,34 @@ const CheckLoanBalance = ({navigation}) => {
     // Define an array of weekday names
     const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-    // Check if the current time is past 9 AM
-    if (currentHour >= 9) {
-      // If it's past 9 AM, set the date string to "Day DD-MMM" of the current day
+    // Check if the current time is past 11 AM
+    if (currentHour >= 11) {
+      // If it's past 11 AM, set the date string to "Day DD-MMM" of the current day
       const day = currentDateTime.getDate();
       const month = currentDateTime.toLocaleString('default', { month: 'short' });
       const weekday = weekdays[currentDateTime.getDay()];
-      const formattedDate = `9am ${weekday} ${day}-${month}`;
+      const formattedDate = `11am ${weekday} ${day}-${month}`;
       setDateString(formattedDate);
       const nextDay = new Date(currentDateTime)
       nextDay.setDate(currentDateTime.getDate() + 1);
       const nextday = nextDay.getDate();
       const nextmonth = nextDay.toLocaleString('default', { month: 'short' });
       const nextweekday = weekdays[nextDay.getDay()];
-      const nextFormattedDate = `9am ${nextweekday} ${nextday}-${nextmonth}`;
+      const nextFormattedDate = `11am ${nextweekday} ${nextday}-${nextmonth}`;
       setNextDateString(nextFormattedDate)
     } else {
-      // If it's before 9 AM, set the date string to "Day DD-MMM" of the previous day
+      // If it's before 11 AM, set the date string to "Day DD-MMM" of the previous day
       const previousDay = new Date(currentDateTime);
       previousDay.setDate(currentDateTime.getDate() - 1);
       const day = previousDay.getDate();
       const month = previousDay.toLocaleString('default', { month: 'short' });
       const weekday = weekdays[previousDay.getDay()];
-      const formattedDate = `9am ${weekday} ${day}-${month}`;
+      const formattedDate = `11am ${weekday} ${day}-${month}`;
       setDateString(formattedDate);
       const nowday = currentDateTime.getDate();
       const nowmonth = currentDateTime.toLocaleString('default', { month: 'short' });
       const nowweekday = weekdays[currentDateTime.getDay()];
-      const nowformattedDate = `9am ${nowweekday} ${nowday}-${nowmonth}`;
+      const nowformattedDate = `11am ${nowweekday} ${nowday}-${nowmonth}`;
       setNextDateString(nowformattedDate)
     }
   }, []);
@@ -114,6 +114,8 @@ const CheckLoanBalance = ({navigation}) => {
           boda.data.getBoda.loans.items[0].duration,
           boda.data.getBoda.loans.items[0].interestRate
         ))
+          console.log('compliantDate.slice(0, -1)::: ', compliantDate.slice(0, -1));
+          console.log('date', new Date(compliantDate.slice(0, -1)));
       }
     } 
     catch(e)

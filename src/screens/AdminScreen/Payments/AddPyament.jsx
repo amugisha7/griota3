@@ -45,8 +45,8 @@ const AddPayment = ({navigation}) => {
             loans {
               items {
                 id
-                createdAt
                 duration
+                startDate
               }
             }
           }
@@ -56,7 +56,7 @@ const AddPayment = ({navigation}) => {
         setStatus("Get Boda Info")
         setBodaId(phoneNumber)
         setLoanId(bodaLoanDetails.data.getBoda.loans.items[0].id)
-        setStartDate(bodaLoanDetails.data.getBoda.loans.items[0].createdAt)
+        setStartDate(bodaLoanDetails.data.getBoda.loans.items[0].startDate)
         setDuration(bodaLoanDetails.data.getBoda.loans.items[0].duration)
         setFirstName(bodaLoanDetails.data.getBoda.firstname)
         setOtherName(bodaLoanDetails.data.getBoda.othername)

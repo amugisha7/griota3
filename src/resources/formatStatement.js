@@ -64,6 +64,7 @@ const convertDateFormat = (dateString) => {
     "Jul": "07",
     "Aug": "08",
     "Sep": "09",
+    "Sept": "09",
     "Oct": "10",
     "Nov": "11",
     "Dec": "12"

@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import CustomInput from '../../../components/CustomInput/CustomInput';
 import { API, graphqlOperation } from "aws-amplify";
 import DatePickerComponent from '../../../components/DatePicker';
+import { convertDateFormat } from '../../../resources/formatStatement';
 
 const RegisterPayment = ({ firstName, otherName, stage, stageAddress, 
   points, mobileMoneyName, setDone, loanId, bodaId, startDate, duration }) => {
@@ -18,10 +19,10 @@ const RegisterPayment = ({ firstName, otherName, stage, stageAddress,
   const [plainDate, setPlainDate] = useState()
 
   //date checking for points award. 
+  const endDate = new Date(convertDateFormat(startDate).slice(0, -1))
+  endDate.setDate(endDate.getDate() + duration + 1);
+
   const checkDateForPoints = ()=>{
-    const startDateObj = new Date(startDate)
-    const endDate = new Date(startDateObj);
-    endDate.setDate(startDateObj.getDate() + duration + 2);
     const date = new Date(plainDate)
     setPaymentInTime(date < endDate)
   }
