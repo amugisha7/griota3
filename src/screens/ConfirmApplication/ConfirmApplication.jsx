@@ -110,7 +110,7 @@ const ConfirmApplication = ({navigation}) => {
             <Text style={[styles.text]}>
               I will pay back a total of {totalPayment.toLocaleString('en-US')} before {dueDate.toLocaleDateString('en-UK', options)}. 
             </Text>
-          </View>
+          </View> 
       {/* commitments */}
           {arrayCheck && commitments.map((commitment, ind)=>{
             return(

@@ -4,7 +4,7 @@ import { griotaStyles } from '../../assets/styles/style'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { dateFormat } from '../resources/dateFormat';
 
-const DatePickerComponent = ({setTheDate, dateLabel, dateButtonText}) => {
+const DatePickerComponent = ({setTheDate, dateLabel, dateButtonText, setPlainDate}) => {
     const [date, setDate] = useState(new Date());
     
     useEffect(()=>{
@@ -14,6 +14,7 @@ const DatePickerComponent = ({setTheDate, dateLabel, dateButtonText}) => {
 
     const onChange = (event, selectedDate) => {
       setDate(selectedDate);
+      setPlainDate(selectedDate)
     };
   
     const showDatepicker = () => {

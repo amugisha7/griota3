@@ -20,6 +20,8 @@ const AddPayment = ({navigation}) => {
   const [done, setDone] = useState()
   const [points, setPoints] = useState()
   const [bodaId, setBodaId] = useState()
+  const [startDate, setStartDate] = useState()
+  const [duration, setDuration] = useState()
 
   useEffect(()=>{
     done && setTimeout(()=> navigation.navigate('AdminScreen'), 1000)
@@ -43,6 +45,8 @@ const AddPayment = ({navigation}) => {
             loans {
               items {
                 id
+                createdAt
+                duration
               }
             }
           }
@@ -52,6 +56,8 @@ const AddPayment = ({navigation}) => {
         setStatus("Get Boda Info")
         setBodaId(phoneNumber)
         setLoanId(bodaLoanDetails.data.getBoda.loans.items[0].id)
+        setStartDate(bodaLoanDetails.data.getBoda.loans.items[0].createdAt)
+        setDuration(bodaLoanDetails.data.getBoda.loans.items[0].duration)
         setFirstName(bodaLoanDetails.data.getBoda.firstname)
         setOtherName(bodaLoanDetails.data.getBoda.othername)
         setPoints(bodaLoanDetails.data.getBoda.points)
@@ -98,7 +104,7 @@ const AddPayment = ({navigation}) => {
             firstName && <RegisterPayment
               firstName={firstName} otherName={otherName} loanId={loanId} setDone={setDone}
               stage={stage} stageAddress={stageAddress} mobileMoneyName={mobileMoneyName}
-              points={points} bodaId={bodaId}/>
+              points={points} bodaId={bodaId} startDate={startDate} duration={duration}/>
           }
         </View>
       </View>

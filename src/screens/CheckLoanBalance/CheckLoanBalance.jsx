@@ -13,16 +13,22 @@ const CheckLoanBalance = ({navigation}) => {
   const route = useRoute()
   const [firstName, setFirstName] = useState()
   const [otherName, setOtherName] = useState()
-  const [stage, setStage] = useState()
   const [startDate, setStartDate] = useState()
+  const [interestRate, setInterestRate] = useState()
+  const [duration, setDuration] = useState()
   const [principal, setPrincipal] = useState()
   const [payments, setPayments] = useState()
   const [errorMessage, setErrorMessage] = useState()
   const [dateString, setDateString] = useState()
   const [nextDateString, setNextDateString] = useState()
   const [points, setPoints] = useState()
+  const [ifactor, setIfactor] = useState()
 
   const phoneNumber = route?.params?.phoneNumber
+
+  useEffect(() => {
+    interestRate && setIfactor((100 + interestRate)/100)
+  }, [interestRate])
 
   useEffect(() => {
     const currentDateTime = new Date();
@@ -75,13 +81,12 @@ const CheckLoanBalance = ({navigation}) => {
             firstname
             othername
             points
-            stage {
-              name
-            }
             loans {
               items {
                 startDate
+                duration
                 principal
+                interestRate
                 payments {
                   items {
                     paymentAmount
@@ -97,14 +102,17 @@ const CheckLoanBalance = ({navigation}) => {
         setFirstName(boda.data.getBoda.firstname)
         setOtherName(boda.data.getBoda.othername)
         setPoints(boda.data.getBoda.points)
-        setStage(boda.data.getBoda.stage.name)
         setStartDate(boda.data.getBoda.loans.items[0].startDate)
+        setDuration(boda.data.getBoda.loans.items[0].duration)
+        setInterestRate(boda.data.getBoda.loans.items[0].interestRate)
         setPrincipal(boda.data.getBoda.loans.items[0].principal)
         const compliantDate = convertDateFormat(boda.data.getBoda.loans.items[0].startDate)
         setPayments(formatStatement(
           boda.data.getBoda.loans.items[0].payments.items,
           compliantDate.slice(0, -1),
-          boda.data.getBoda.loans.items[0].principal
+          boda.data.getBoda.loans.items[0].principal,
+          boda.data.getBoda.loans.items[0].duration,
+          boda.data.getBoda.loans.items[0].interestRate
         ))
       }
     } 
@@ -121,6 +129,7 @@ const CheckLoanBalance = ({navigation}) => {
   }
 
   const tableHead = ['DATE', 'PAYMENTS', 'BALANCE', 'POINTS']
+  const columnSizes = [2,2,2,1.5]
 
   return (
     <ScrollView>
@@ -134,32 +143,32 @@ const CheckLoanBalance = ({navigation}) => {
           <Text style={griotaStyles.label}>Borrower Details:</Text>
           <View style={{display: 'flex', flexDirection: 'column', marginBottom: 10}}>
             <Text style={[griotaStyles.text, {textAlign: 'left'}]}>Name: {firstName} {otherName}. </Text>
-            <Text style={[griotaStyles.text, {textAlign: 'left'}]}>Phone Number: {phoneNumber} </Text>
-            <Text style={[griotaStyles.text, {textAlign: 'left'}]}>Stage: {stage} </Text>
-            <Text style={[griotaStyles.text, {textAlign: 'left', color: 'blue'}]}>Points: {points} </Text>
+            <Text style={[griotaStyles.text, {textAlign: 'left', color: 'blue'}]}>Total Points: {points} </Text>
+            <Text style={{marginTop: 5, fontSize: 12}}>{`(You get extra points for every payment made on time)`}</Text>
           </View>
           <Text style={griotaStyles.label}>Loan Details:</Text>
           <View style={{display: 'flex', flexDirection: 'column', marginBottom: 10}}>
-            <Text style={[griotaStyles.text, {textAlign: 'left'}]}>Amount Borrowed: {principal}/- </Text>
+            <Text style={[griotaStyles.text, {textAlign: 'left'}]}>Amount Borrowed: {principal.toLocaleString('en-US')}/- </Text>
             <Text style={[griotaStyles.text, {textAlign: 'left'}]}>Date Borrowed: {startDate} </Text>
           </View>
           <Text style={griotaStyles.label}>Payments Made:</Text>
           <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>
-            <Row data={tableHead} style={styles.head} textStyle={styles.textH}/>
-            <Rows data={payments[0]} textStyle={styles.text}/>
-            <Row data={['TOTAL PAID', payments[1], '']} textStyle={styles.textH}/>
+            <Row data={tableHead} style={styles.head} flexArr={columnSizes} textStyle={styles.textH}/>
+            <Rows data={payments[0]} textStyle={styles.text} flexArr={columnSizes}/>
+            <Rows data={payments[2]} textStyle={[styles.text, {color: '#A723A2'}]} flexArr={columnSizes}/>
+            <Row data={['TOTAL PAID', payments[1].toLocaleString('en-US'), '', '']} flexArr={columnSizes} textStyle={styles.textH}/>
           </Table>
           <View style={{display: 'flex', flexDirection: 'column', marginBottom: 20, }}>
             <Text style={[griotaStyles.text, {textAlign: 'left', fontWeight: 500}]}>
-              Loan Balance: {(principal*1.2)-payments[1]}/- </Text>
+              Loan Balance: {((principal*ifactor)-payments[1]).toLocaleString('en-US')}/- </Text>
             <Text style={[griotaStyles.text, {textAlign: 'left'}]}>Days Since Start: {getDaysSinceStart(startDate)} </Text>
             <Text style={[griotaStyles.text, {textAlign: 'left', color: 'green', fontSize: 14}]}>
               Amount that should have been paid so far: {
-              Math.round(getDateDifferenceInDays(startDate) *1.2* principal/30)
+              Math.round(getDateDifferenceInDays(startDate, duration) *ifactor* principal/duration).toLocaleString('en-US')
               }/- </Text>
-            {getDateDifferenceInDays(startDate) > 1 && <Text style={[griotaStyles.text, {textAlign: 'left', color: 'red', fontSize: 14}]}>
+            {getDateDifferenceInDays(startDate, duration) > 1 && <Text style={[griotaStyles.text, {textAlign: 'left', color: 'red', fontSize: 14}]}>
               Amount Late: {
-              Math.round((getDateDifferenceInDays(startDate) *1.2* principal/30)-payments[1])
+              Math.round((getDateDifferenceInDays(startDate, duration) *ifactor* principal/duration)-payments[1]).toLocaleString('en-US')
               }/- </Text>}
           </View>
           <CustomButton onPress={returnToWelcome} buttonFunction={"Close Statement"} />
@@ -175,6 +184,6 @@ export default CheckLoanBalance
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
   head: { height: 40, backgroundColor: '#f1f8ff' },
-  text: { margin: 6, color: 'black', alignSelf: 'center' },
-  textH: {margin: 6, color: 'blue', alignSelf: 'center', fontWeight: 600 }
+  text: { margin: 6, color: 'black', alignSelf: 'center', fontSize: 13},
+  textH: {margin: 6, color: 'blue', alignSelf: 'center', fontWeight: 600, fontSize: 13},
 });

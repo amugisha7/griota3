@@ -8,12 +8,27 @@ import { API, graphqlOperation } from "aws-amplify";
 import DatePickerComponent from '../../../components/DatePicker';
 
 const RegisterPayment = ({ firstName, otherName, stage, stageAddress, 
-  points, mobileMoneyName, setDone, loanId, bodaId }) => {
+  points, mobileMoneyName, setDone, loanId, bodaId, startDate, duration }) => {
 
   const NUMBER_REGEX = /^\d+$/
   const [status, setStatus] = useState('Register Payment')
   const [paymentDate, setPaymentDate] = useState()
   const [paymentReceived, setPaymentReceived] = useState()
+  const [paymentInTime, setPaymentInTime] = useState()
+  const [plainDate, setPlainDate] = useState()
+
+  //date checking for points award. 
+  const checkDateForPoints = ()=>{
+    const startDateObj = new Date(startDate)
+    const endDate = new Date(startDateObj);
+    endDate.setDate(startDateObj.getDate() + duration + 2);
+    const date = new Date(plainDate)
+    setPaymentInTime(date < endDate)
+  }
+  
+  useEffect(()=>{
+    plainDate && checkDateForPoints()
+  },[plainDate])
 
   useEffect(()=>{
     setPaymentReceived(false)
@@ -34,7 +49,8 @@ const RegisterPayment = ({ firstName, otherName, stage, stageAddress,
       ))
       if(pointsUpdated) {
         //create push notification to admin of the application details
-        setStatus("Payment Successful!")
+        setPaymentReceived(true)
+        setStatus("Point Updated")
         setTimeout(()=>setStatus("Register Another Payment"), 2000)
       }
     }
@@ -61,8 +77,11 @@ const RegisterPayment = ({ firstName, otherName, stage, stageAddress,
       if(newPayment){
         //create push notification to admin of the application details
         setStatus("Updating Points...")
-        updatePoints(paymentAmount)
-        setPaymentReceived(true)
+        if(paymentInTime) {
+          updatePoints(paymentAmount)
+        }else{
+          updatePoints(paymentAmount/10)
+        }
       }
     }
     catch(e){
@@ -109,7 +128,7 @@ const RegisterPayment = ({ firstName, otherName, stage, stageAddress,
             }}
           />
           <DatePickerComponent setTheDate={setPaymentDate} dateLabel={'Payment Date'}
-            dateButtonText={'Change Payment Date'}/>
+            dateButtonText={'Change Payment Date'} setPlainDate={setPlainDate}/>
           <CustomButton onPress={handleSubmit(registerPaymentAmount)} buttonFunction={status} />
           {status === "Register Another Payment" && <Text 
             onPress={()=>setDone('done')} 

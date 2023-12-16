@@ -1,12 +1,12 @@
-import { startTransition } from "react";
-
-const formatStatement = (payments, startDate, principal) => {
+const formatStatement = (payments, startDate, principal, duration, interestRate) => {
   const endDate = new Date(startDate);
-  endDate.setDate(endDate.getDate() + 30);
+  endDate.setDate(endDate.getDate() + duration);
   
   const formatDate = (date) => date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  const statementDate = (date) => date.toLocaleDateString('en-GB', { month: 'short', 
+    day: 'numeric', year: '2-digit' });
   
-  const startingBalance = principal * 1.2;
+  const startingBalance = principal * (100 + interestRate) / 100;
   let currentBalance = startingBalance;
   
   let dataArray = [];
@@ -14,6 +14,7 @@ const formatStatement = (payments, startDate, principal) => {
 
   while (currentDate <= endDate) {
     const formattedDate = formatDate(currentDate);
+    const finalDate = statementDate(currentDate);
     const paymentItem = payments.find(item => item.paymentDate === formattedDate);
 
     let paymentAmount = 0;
@@ -22,26 +23,30 @@ const formatStatement = (payments, startDate, principal) => {
     }
 
     currentBalance -= paymentAmount;
-    dataArray.push([formattedDate, paymentAmount, currentBalance]);
+    dataArray.push([finalDate, paymentAmount.toLocaleString('en-US'), currentBalance.toLocaleString('en-US'), 
+      paymentAmount/100 >0 ? `+${paymentAmount/100}`: '-']);
     currentDate.setDate(currentDate.getDate() + 1);
   }
   // Add more dates if loan is past due date. 
+  const latePayments = []
   const today = new Date();
   while (currentDate <= today){
     const formattedDate = formatDate(currentDate);
+    const finalDate = statementDate(currentDate);
     const paymentItem = payments.find(item => item.paymentDate === formattedDate)
 
     if(paymentItem){
       let paymentAmount = paymentItem.paymentAmount; 
       currentBalance -= paymentAmount
-      dataArray.push([formattedDate, paymentAmount, currentBalance])
+      latePayments.push([finalDate, paymentAmount.toLocaleString('en-US'), 
+        currentBalance.toLocaleString('en-US'), `+${paymentAmount/1000}`])
     }
     currentDate.setDate(currentDate.getDate() + 1);
   }
 
   // Calculate the totals
   const paymentTotal = payments.reduce((acc, item) => acc + item.paymentAmount, 0);
-  return [dataArray, paymentTotal];
+  return [dataArray, paymentTotal, latePayments];
 };
 
 const convertDateFormat = (dateString) => {
@@ -70,16 +75,7 @@ const convertDateFormat = (dateString) => {
   return formattedDate;
 };
 
-// const getDateDifferenceInDays = (startDate) => {
-//   const endDate = new Date(startDate);
-//   endDate.setDate(endDate.getDate() + 30);
-//   const oldDate =  convertDateFormat(startDate)
-//   const past = new Date(oldDate.slice(0,-1));
-//   const timeDifferenceInMilliseconds = endDate.getTime() - past.getTime();
-//   const differenceInDays = Math.floor(timeDifferenceInMilliseconds / (1000 * 60 * 60 * 24));
 
-//   return differenceInDays;
-// };
 const getDaysSinceStart = (startDate) => {
   const today = new Date();
   const oldDate =  convertDateFormat(startDate)
@@ -90,9 +86,9 @@ const getDaysSinceStart = (startDate) => {
   return differenceInDays;
 
 }
-const getDateDifferenceInDays = (startDate) =>{
+const getDateDifferenceInDays = (startDate, duration) =>{
   const count = getDaysSinceStart(startDate)
-  return count<=30 ? count : 30
+  return count<=duration ? count : duration
 }
 
 export {formatStatement, convertDateFormat, getDateDifferenceInDays, getDaysSinceStart}
