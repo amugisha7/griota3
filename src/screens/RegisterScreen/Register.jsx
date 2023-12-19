@@ -130,7 +130,6 @@ const Register = ({navigation, route}) => {
     .then(async r => {
       let data = await r.json()
       setNationalIdPicURL(data.secure_url)
-      registerUser()
     })
     .catch(e =>{
       console.log('Error uploading NationalID: ', e)

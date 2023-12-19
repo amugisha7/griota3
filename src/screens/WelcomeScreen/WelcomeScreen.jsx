@@ -7,11 +7,11 @@ const WelcomeScreen = ({navigation}) => {
 
   const applyForLoan = () =>{
     navigation.navigate('SignInThenApply')
-    // navigation.navigate('AddPayment') // remove this
   }
   
   const checkLoanBalance = () =>{
-    navigation.navigate('SignInThenBalance')
+    // navigation.navigate('SignInThenBalance')
+    navigation.navigate('AdminScreen/CreateLoanFromApplications') // remove this
   }
   
   const payLoan = () =>{

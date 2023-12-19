@@ -57,7 +57,7 @@ const CreateNewPin = ({navigation}) => {
             mobileMoneyName: "${mobileMoneyName}"
             nationalIdNumber: "${nationalIdNumber}"
             picOfNationalId: "${nationalIdPicURL}"
-            points: 850
+            points: 700
           }){
             id
           }

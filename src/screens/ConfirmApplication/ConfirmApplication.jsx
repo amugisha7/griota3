@@ -21,7 +21,6 @@ const ConfirmApplication = ({navigation}) => {
     const backButtonColor = '#00A9FF'
     const today = new Date()
     const dueDate = new Date(today);
-    const saveDate = today.toString()
     dueDate.setDate(dueDate.getDate() + loanDuration +1 );
     const totalPayment = instalment * loanDuration
     const options = {
@@ -52,12 +51,11 @@ const ConfirmApplication = ({navigation}) => {
           const application = await API.graphql(graphqlOperation(
             `mutation MyMutation2 {
               createApplication(input: {
-                date: "${saveDate}", 
-                status: "new", 
+                status: "pending", 
                 bodaApplicationsId: "${phoneNumber}",
-                loanAmount: "${loanAmount}",
-                loanInstalment: "${instalment}",
-                loanDurationDays: "${loanDuration}",
+                loanAmount: ${loanAmount},
+                loanInstalment: ${instalment},
+                loanDurationDays: ${loanDuration},
               }) {
                 createdAt
               }
@@ -71,8 +69,7 @@ const ConfirmApplication = ({navigation}) => {
           }
         }
         catch(e){
-          setErrorMessage('ERROR: Please contact Support')
-          setTimeout(()=> navigation.navigate('SignIn'), 3000)
+          console.log('Unable to create application', e)
         }
     }
     

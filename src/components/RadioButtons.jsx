@@ -2,9 +2,9 @@ import { StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import RadioGroup from 'react-native-radio-buttons-group';
 
-const RadioButtons = ({options, setChosen}) => {
+const RadioButtons = ({options, setChosen, first, layout}) => {
 
-    const [selectedId, setSelectedId] = useState(1)
+    const [selectedId, setSelectedId] = useState(first)
     useEffect(() =>{
         setChosen(selectedId)
     }, [selectedId])
@@ -15,7 +15,7 @@ const RadioButtons = ({options, setChosen}) => {
         radioButtons={options} 
         onPress={setSelectedId}
         selectedId={selectedId}
-        layout='row'
+        layout={layout ? layout : 'row'}
       />
     </View>
   )

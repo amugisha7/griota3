@@ -20,6 +20,7 @@ import ApplyForLoan from './src/screens/ApplyForLoan/ApplyForLoan';
 import AddPayment from './src/screens/AdminScreen/Payments/AddPyament';
 import CreateStage from './src/screens/AdminScreen/Stages/CreateStage';
 import CreateLoan from './src/screens/AdminScreen/Loans/CreateLoan';
+import CreateLoanFromApplications from './src/screens/AdminScreen/Loans/CreateLoanFromApplications';
 import LoanStatementAdmin from './src/screens/AdminScreen/Loans/LoanStatementAdmin'
 import WelcomeScreen from './src/screens/WelcomeScreen/WelcomeScreen'
 import PaymentInstructions from './src/screens/WelcomeScreen/PaymentInstructions'
@@ -71,6 +72,7 @@ const App= () => {
            <Stack.Screen name='AdminScreen/AddPayment' component={AddPayment} />
            <Stack.Screen name='AdminScreen/CreateStage' component={CreateStage} />
            <Stack.Screen name='AdminScreen/CreateLoan' component={CreateLoan} />
+           <Stack.Screen name='AdminScreen/CreateLoanFromApplications' component={CreateLoanFromApplications} />
            <Stack.Screen name='AdminScreen/ViewBorrowers' component={ViewBorrowers} />
            <Stack.Screen name='AdminScreen/SelectStageToView' component={SelectStageToView} />
            <Stack.Screen name='AdminScreen/SelectApplicationDate' component={SelectApplicationDate} />

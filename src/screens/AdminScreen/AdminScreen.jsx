@@ -25,7 +25,7 @@ const AdminScreen = ({navigation}) => {
   }
 
   const viewApplications = async()=>{
-    navigation.navigate('AdminScreen/SelectApplicationDate')
+    navigation.navigate('AdminScreen/CreateLoanFromApplications')
   }
 
   return (
