@@ -1,8 +1,13 @@
 import { StyleSheet, Text, View, Button, ScrollView } from 'react-native'
 import React, {  } from 'react'
 import { griotaStyles } from '../../../assets/styles/style'
+import { useRoute } from '@react-navigation/native';
 
 const AdminScreen = ({navigation}) => {
+
+  const route = useRoute()
+  const level = route?.params?.level
+  console.log('level::: ', level);
 
   const addPayment = () =>{
     navigation.navigate('AdminScreen/AddPayment')
@@ -27,6 +32,10 @@ const AdminScreen = ({navigation}) => {
   const viewApplications = async()=>{
     navigation.navigate('AdminScreen/CreateLoanFromApplications')
   }
+  
+  const approvedLoans = async()=>{
+    navigation.navigate('AdminScreen/ApprovedLoans')
+  }
 
   return (
     <ScrollView>
@@ -35,7 +44,8 @@ const AdminScreen = ({navigation}) => {
         <Button onPress={createStage} title='Create Stage'></Button>
         <Button onPress={addPayment} title='Add Payment'></Button>
         <Button onPress={viewApplications} title='View Applications'></Button>
-        <Button onPress={createLoan} title='Create Loan'></Button>
+        {level >9 && <Button onPress={createLoan} title='Create Loan'></Button>}
+        {level > 9 && <Button onPress={approvedLoans} title='Approved Loans'></Button>}
         <Button onPress={getLoanStatement} title='Loan Statements'></Button>
         <Button onPress={veiwBorrowers} title='View Borrowers'></Button>
       </View>

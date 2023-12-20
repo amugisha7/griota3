@@ -94,7 +94,8 @@ type Adminstrator @model {
   id: ID!
   phoneNumber: String
   firstName: String
-  othrName: String
+  otherName: String
+  level: Int
   pin: String
 }
 type Commitment @model {

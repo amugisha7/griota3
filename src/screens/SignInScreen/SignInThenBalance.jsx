@@ -10,10 +10,15 @@ import { griotaStyles } from '../../../assets/styles/style';
 import { adminUsers } from '../../Lists/adminUsers';
 import {checkPermissions} from '../../resources/requestPermissions'
 import DeepLinking from 'react-native-deep-linking';
+import { API, graphqlOperation } from "aws-amplify";
+
 
 const SignInThenBalance = ({navigation}) => {
   
   const route = useRoute()
+  const admin = route?.params?.admin
+  const title = admin ? 'Admin Login' : 'Sign In to Check Loan Balance'
+
 // // SETTING UP A ROUTE FOR NOTIFICATIONS: 
   DeepLinking.addRoute('/admin', (response) => {
     navigation.navigate("AdminScreen");
@@ -32,12 +37,42 @@ const SignInThenBalance = ({navigation}) => {
 
   const [loginError, setLoginError] = useState()
   const [status, setStatus] = useState('Sign In')
+  const [adminObject, setAdminObject] = useState()
 
   useEffect(()=>{setLoginError(null)},[])
 
   useEffect(()=>{
     checkPermissions()
+    admin && getAdmins()
   },[])
+
+  const getAdmins = async() => {
+    try {
+      const admins = await API.graphql(graphqlOperation(
+        `query MyQuery {
+          listAdminstrators {
+            items {
+              phoneNumber
+              level
+            }
+          }
+        }`
+      ))
+      if(admins) {
+        const adminObj = {}
+        for(let i = 0; i < admins.data.listAdminstrators.items.length; i++) {
+          if(!adminObj[`+256${admins.data.listAdminstrators.items[i].phoneNumber.slice(1)}`]) {
+            adminObj[`+256${admins.data.listAdminstrators.items[i].phoneNumber.slice(1)}`] = 
+            admins.data.listAdminstrators.items[i].level
+          }
+        }
+        setAdminObject(adminObj)
+      }
+    }catch(e){
+      console.log('Error getting admins', e)
+    }
+  }
+  
 
   const { control, handleSubmit} = useForm({
     defaultValues: {
@@ -53,11 +88,15 @@ const SignInThenBalance = ({navigation}) => {
     const pin = password; 
     try { 
       const user = await Auth.signIn(`+256${username.slice(1)}`, `00${password}`)
-      user.attributes.phone_number === adminUsers.Admin1.PhoneNumber
-      ? navigation.navigate('AdminScreen')
-      : navigation.navigate('CheckLoanBalance', {phoneNumber, pin})
-    }
-    catch(e){
+      if(user){
+        if(adminObject[user.attributes.phone_number]){
+          const level = adminObject[user.attributes.phone_number]
+          navigation.navigate('AdminScreen', {level})
+        }else{
+          navigation.navigate('CheckLoanBalance', {phoneNumber, pin})
+        }
+      }
+    }catch(e){
       setLoginError('Error. Please contact support')
       setTimeout(()=> navigation.navigate('WelcomeScreen'), 3000)    
     }
@@ -73,7 +112,7 @@ const SignInThenBalance = ({navigation}) => {
   return (
       <ScrollView>
         <View style={styles.container }>
-          <Text style={griotaStyles.title}>Sign In to Check Loan Balance</Text>
+          <Text style={griotaStyles.title}>{title}</Text>
         
           { loginError && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>{loginError}</Text>}
         

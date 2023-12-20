@@ -81,7 +81,7 @@ const CheckLoanBalance = ({navigation}) => {
             firstname
             othername
             points
-            loans {
+            loans (filter: {status: {eq: "active"}}) {
               items {
                 startDate
                 duration
