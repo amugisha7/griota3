@@ -6,7 +6,7 @@ import RNImmediatePhoneCall from 'react-native-immediate-phone-call';
 import NewCustomButton from './NewCustomButton';
 
 const ApplicantCard = ({onPress, name, phoneNumber, stage, chairmanPhone, amount, instalment, 
-    duration, selected, dateCreated, approve, onCancel, status, visibility}) => {
+    duration, selected, dateCreated, approve, onCancel, status, visibility, level}) => {
         
     //states
     const [checked, setChecked] = useState(false)
@@ -31,7 +31,7 @@ const ApplicantCard = ({onPress, name, phoneNumber, stage, chairmanPhone, amount
         <View style={{width: '15%'}}>
             <CheckBox
                 value={checked}
-                disabled={disabled}
+                disabled={disabled || level !== 10}
                 onValueChange={(newValue) => {
                     setChecked(newValue)
                     if(newValue) onPress()
@@ -60,7 +60,8 @@ const ApplicantCard = ({onPress, name, phoneNumber, stage, chairmanPhone, amount
                     disabled={false} color={'green'}/>
             </View>}
             {selected && <View style={{width: 240, paddingVertical: 10}}>
-                <NewCustomButton buttonText={status} onPress={approve} disabled={status !=='APPROVE'}/>
+                <NewCustomButton buttonText={status} onPress={approve} 
+                    disabled={status !=='APPROVE' || level !==10 }/>
             </View>}
         </View>
     </View>

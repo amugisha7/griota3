@@ -7,7 +7,6 @@ const AdminScreen = ({navigation}) => {
 
   const route = useRoute()
   const level = route?.params?.level
-  console.log('level::: ', level);
 
   const addPayment = () =>{
     navigation.navigate('AdminScreen/AddPayment')
@@ -15,6 +14,9 @@ const AdminScreen = ({navigation}) => {
   
   const createStage = () =>{
     navigation.navigate('AdminScreen/CreateStage')
+  }
+  const editStage = () =>{
+    navigation.navigate('AdminScreen/SelectStageToEdit')
   }
   
   const createLoan = () =>{
@@ -30,24 +32,30 @@ const AdminScreen = ({navigation}) => {
   }
 
   const viewApplications = async()=>{
-    navigation.navigate('AdminScreen/CreateLoanFromApplications')
+    navigation.navigate('AdminScreen/CreateLoanFromApplications', {level})
   }
   
   const approvedLoans = async()=>{
-    navigation.navigate('AdminScreen/ApprovedLoans')
+    navigation.navigate('AdminScreen/ApprovedLoans', {level})
   }
+//update stage
+//create Admin user
 
   return (
     <ScrollView>
       <View style={{gap: 20, flexDirection: 'column', padding: 22}}>
-        <Text style={griotaStyles.title}>AdminScreen</Text>
+        <Text style={[griotaStyles.title, {marginBottom: -10}]}>AdminScreen</Text>
+        <Text style={griotaStyles.label}>Loan Applications:</Text>
+        <Button onPress={viewApplications} title='New Applications'></Button>
+        <Button onPress={approvedLoans} title='Approved Applications'></Button>
+        <Text style={griotaStyles.label}>Bodas & Stages:</Text>
         <Button onPress={createStage} title='Create Stage'></Button>
-        <Button onPress={addPayment} title='Add Payment'></Button>
-        <Button onPress={viewApplications} title='View Applications'></Button>
-        {level >9 && <Button onPress={createLoan} title='Create Loan'></Button>}
-        {level > 9 && <Button onPress={approvedLoans} title='Approved Loans'></Button>}
+        <Button onPress={editStage} title='Update Stage Details'></Button>
+        <Button onPress={veiwBorrowers} title='View Bodas'></Button>
+        <Text style={griotaStyles.label}>Loan Management:</Text>
+        {level >1 && <Button onPress={addPayment} title='Add Payment'></Button>}
+        {level >1 && <Button onPress={createLoan} title='Create Loan'></Button>}
         <Button onPress={getLoanStatement} title='Loan Statements'></Button>
-        <Button onPress={veiwBorrowers} title='View Borrowers'></Button>
       </View>
     </ScrollView>
   )

@@ -5,14 +5,14 @@ import CustomButton from '../../../components/CustomButton/CustomButton';
 import {API, graphqlOperation} from 'aws-amplify'; 
 import { griotaStyles } from '../../../../assets/styles/style';
 
-const SelectStageToView = ({navigation}) => {
+const SelectStageToEdit = ({navigation}) => {
   
   const [errorMessage, setErrorMessage] = useState()
   const [selectedStage, setSelectedStage] = useState()
   const [selectedDivision, setSelectedDivision] = useState()
   const [stagesList, setStagesList] = useState()
   const [divisionsList, setDivisionsList] = useState()
-  const [status, setStatus] = useState('View Bodas at this Stage')
+  const [status, setStatus] = useState('Edit this Stage')
   const [displayCheck, setDisplayCheck] = useState()
 
   useEffect(()=>{
@@ -82,8 +82,8 @@ const SelectStageToView = ({navigation}) => {
     }
   }
 
-  const viewBodas =() => {
-    navigation.navigate("AdminScreen/ViewBorrowers", {selectedStage})
+  const editStage =() => {
+    navigation.navigate("AdminScreen/EditStage", {selectedStage})
   }
 
   return (
@@ -102,13 +102,13 @@ const SelectStageToView = ({navigation}) => {
               mylabel={'Select Stage'}
           />}
           <View style={{display: displayCheck ? 'flex' : 'none'}}>
-            <CustomButton onPress={viewBodas} buttonFunction={status}/>
+            <CustomButton onPress={editStage} buttonFunction={status}/>
           </View>
         </View>
       </ScrollView>
   )
 }
-export default SelectStageToView
+export default SelectStageToEdit
 
 const styles = StyleSheet.create({
     

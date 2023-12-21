@@ -38,6 +38,7 @@ const ViewBorrowers = ({navigation}) => {
         // const bodasArray = bodasList.map(({ 
         //     phoneNumber, firstname, othername }) => [`${firstname} ${othername}`, phoneNumber]);
         setStageBodas(bodasArray)
+        console.log('bodasArray::: ', bodasArray);
       }
     }
     catch(e)

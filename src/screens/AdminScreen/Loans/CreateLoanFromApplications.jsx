@@ -2,9 +2,10 @@
 import { StyleSheet, Text, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { API, graphqlOperation } from "aws-amplify";
-import { griotaStyles } from '../../../../assets/styles/style';
+import { useRoute } from '@react-navigation/native';
 
 //component imports
+import { griotaStyles } from '../../../../assets/styles/style';
 import ApplicantCard from '../../../components/ApplicantCard';
 import RadioButtons from '../../../components/RadioButtons';
 
@@ -12,6 +13,8 @@ const CreateLoanFromApplications = () => {
     
     //enable filtering
     const filterObj = {} 
+    const route = useRoute()
+    const level = route?.params?.level
 
     //states
     const [applicants, setApplicants] = useState()
@@ -124,7 +127,7 @@ const CreateLoanFromApplications = () => {
               duration={applicant.loanDurationDays} dateCreated={date.toLocaleDateString('en-GB', options)} 
               approve={approve} selected={applicant.id === applicationId} 
               onPress={()=>{setApplicationId(applicant.id)}} key={ind}
-              onCancel={()=>{setApplicationId(null)}} status={status}
+              onCancel={()=>{setApplicationId(null)}} status={status} level={level}
               visibility={applicant.boda.stage.name === filteredStage || filteredStage === 'All'}/>)
         })}
         {applicants && applicants.length === 0 && <Text style={griotaStyles.label}>No new applications</Text>}

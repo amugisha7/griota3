@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react'
 import RNImmediatePhoneCall from 'react-native-immediate-phone-call';
 import NewCustomButton from './NewCustomButton';
 
-const LoanCreationCard = ({onPress, name, phoneNumber, stage, amount, instalment, 
+const LoanCreationCard = ({onPress, name, phoneNumber, stage, amount, instalment, level,
     duration, selected, dateUpdated, createLoan, onCancel, smsStatus, visibility, mmName,
     sendSms, sendMtn, sendAirtel, mtnStatus, airtelStatus, createLoanStatus}) => {
         
@@ -29,7 +29,7 @@ const LoanCreationCard = ({onPress, name, phoneNumber, stage, amount, instalment
         <View style={{width: '15%'}}>
             <CheckBox
                 value={checked}
-                disabled={disabled}
+                disabled={disabled || level < 2 || !level}
                 onValueChange={(newValue) => {
                     setChecked(newValue)
                     if(newValue) onPress()

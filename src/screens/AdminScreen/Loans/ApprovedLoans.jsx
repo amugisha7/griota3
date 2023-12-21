@@ -6,6 +6,7 @@ import { griotaStyles } from '../../../../assets/styles/style';
 import RNImmediatePhoneCall from 'react-native-immediate-phone-call';
 import { SendDirectSms } from 'react-native-send-direct-sms';
 import Clipboard from '@react-native-clipboard/clipboard';
+import { useRoute } from '@react-navigation/native';
 
 //component imports
 import LoanCreationCard from '../../../components/LoanCreationCard';
@@ -16,7 +17,9 @@ const ApprovedLoans = () => {
     
     //enable filtering
     const filterObj = {} 
-
+    const route = useRoute()
+    const level = route?.params?.level
+  
     //states
     const [applicants, setApplicants] = useState()
     const [applicationId, setApplicationId] = useState()
@@ -191,7 +194,7 @@ const ApprovedLoans = () => {
               createLoan={createLoan} selected={applicant.id === applicationId} 
               key={ind} mmName={applicant.boda.mobileMoneyName} sendSms={sendSMS} sendMtn={sendMtn} sendAirtel={sendAirtel}
               onCancel={()=>{setApplicationId(null)}} smsStatus={smsStatus} mtnStatus={mtnStatus}
-              airtelStatus={airtelStatus} createLoanStatus={createLoanStatus}
+              airtelStatus={airtelStatus} createLoanStatus={createLoanStatus} level={level}
               visibility={applicant.boda.stage.name === filteredStage || filteredStage === 'All'}
               onPress={()=>{
                 setApplicationId(applicant.id)
