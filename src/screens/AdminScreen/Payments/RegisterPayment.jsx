@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react';
 import { griotaStyles } from '../../../../assets/styles/style';
-import CustomButton from '../../../components/CustomButton/CustomButton';
+import NewCustomButton from '../../../components/NewCustomButton';
 import { useForm } from 'react-hook-form';
 import CustomInput from '../../../components/CustomInput/CustomInput';
 import { API, graphqlOperation } from "aws-amplify";
@@ -129,8 +129,8 @@ const RegisterPayment = ({ firstName, otherName, stage, stageAddress,
             }}
           />
           <DatePickerComponent setTheDate={setPaymentDate} dateLabel={'Payment Date'}
-            dateButtonText={'Change Payment Date'} setPlainDate={setPlainDate}/>
-          <CustomButton onPress={handleSubmit(registerPaymentAmount)} buttonFunction={status} />
+            dateButtonText={'Select Payment Date'} setPlainDate={setPlainDate}/>
+          <NewCustomButton onPress={handleSubmit(registerPaymentAmount)} buttonText={status} disabled={!plainDate} />
           {status === "Register Another Payment" && <Text 
             onPress={()=>setDone('done')} 
             style={{marginVertical: 10, color: 'red'}}>Exit</Text>}

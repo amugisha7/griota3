@@ -23,9 +23,14 @@ const CheckLoanBalanceAdmin = ({navigation}) => {
   const [nextDateString, setNextDateString] = useState()
   const [points, setPoints] = useState()
   const [ifactor, setIfactor] = useState()
+  const [cleared, setCleared] = useState('MARK AS CLEARED')
+  const [defaulted, setDefaulted] = useState('MARK AS DEFAULTED')
+  const [loanId, setLoanId] = useState()
+  const [noLoansFound, setNoLoansFound] = useState()
 
   const phoneNumber = route?.params?.phoneNumber
-
+  const level = route?.params?.level
+  
   useEffect(() => {
     interestRate && setIfactor((100 + interestRate)/100)
   }, [interestRate])
@@ -84,6 +89,7 @@ const CheckLoanBalanceAdmin = ({navigation}) => {
             loans (filter: {status: {eq: "active"}}) {
               items {
                 startDate
+                id
                 duration
                 principal
                 interestRate
@@ -98,7 +104,8 @@ const CheckLoanBalanceAdmin = ({navigation}) => {
           }
         }`
       ))
-      if(boda) {
+      if(boda.data.getBoda.loans.items.length >0) {
+        console.log('boda::: ', boda);
         setFirstName(boda.data.getBoda.firstname)
         setOtherName(boda.data.getBoda.othername)
         setPoints(boda.data.getBoda.points)
@@ -106,6 +113,7 @@ const CheckLoanBalanceAdmin = ({navigation}) => {
         setDuration(boda.data.getBoda.loans.items[0].duration)
         setInterestRate(boda.data.getBoda.loans.items[0].interestRate)
         setPrincipal(boda.data.getBoda.loans.items[0].principal)
+        setLoanId(boda.data.getBoda.loans.items[0].id)
         const compliantDate = convertDateFormat(boda.data.getBoda.loans.items[0].startDate)
         setPayments(formatStatement(
           boda.data.getBoda.loans.items[0].payments.items,
@@ -116,20 +124,42 @@ const CheckLoanBalanceAdmin = ({navigation}) => {
         ))
           console.log('compliantDate.slice(0, -1)::: ', compliantDate.slice(0, -1));
           console.log('date', new Date(compliantDate.slice(0, -1)));
+      }else {
+        setNoLoansFound(true)
       }
     } 
     catch(e)
     {
       setErrorMessage('ERROR: Please contact Support')
-      setTimeout(()=> navigation.navigate('WelcomeScreen'), 3000)
       console.log('Error getting boda details', e)
     }
   }
 
-  const returnToWelcome = ()=> {
-    navigation.navigate("WelcomeScreen")
+  const updateLoan = async(str) =>{
+    try {
+      const updatedLoan = await API.graphql(graphqlOperation(
+        `mutation MyMutation {
+          updateLoan(input: {
+            id: "${loanId}", 
+            status: "${str}"
+          }) {
+            id
+          }
+        }`
+      ))
+      if(updatedLoan) {
+        if(str === 'cleared') setCleared('SUCCESS')
+        if(str === 'defaulted') setDefaulted('SUCCESS')
+        setTimeout(()=> navigation.navigate('LoanStatementAdmin', {level}), 3000)
+      }
+    } 
+    catch(e)
+    {
+      setErrorMessage('ERROR: Please contact Support')
+      setTimeout(()=> navigation.navigate('WelcomeScreen', {level}), 3000)
+      console.log('Error updating loan', e)
+    }
   }
-  const markAsCleared = () =>{}
 
   const tableHead = ['DATE', 'PAYMENTS', 'BALANCE', 'POINTS']
   const columnSizes = [2,2,2,1.5]
@@ -137,7 +167,8 @@ const CheckLoanBalanceAdmin = ({navigation}) => {
   return (
     <ScrollView>
       <View style={{padding: 22}}>
-        {!payments ? <Text style={griotaStyles.title}>Loading...</Text> :
+        {noLoansFound && <Text style={griotaStyles.title}>No Active Loans Found</Text>}
+        {!payments ? (!noLoansFound && <Text style={griotaStyles.title}>Loading...</Text>) :
         <View>
           {errorMessage && <Text style={griotaStyles.title}>{errorMessage}</Text>}
           <Text style={griotaStyles.title}>Loan Statement</Text>
@@ -174,16 +205,16 @@ const CheckLoanBalanceAdmin = ({navigation}) => {
               Math.round((getDateDifferenceInDays(startDate, duration) *ifactor* principal/duration)-payments[1]).toLocaleString('en-US')
               }/- </Text>}
           </View>
-          <View style={{gap: 40, marginBottom: 40}}>
-            <NewCustomButton buttonText={'MARK AS CLEARED'} disabled={false}
-              onPress={markAsCleared} color="red" />
-            <NewCustomButton buttonText={'CONFIRM CLEAR LOAN'} disabled={false}
-              onPress={markAsCleared} color="green" />
-            <NewCustomButton buttonText={'MARK AS DEFAULTER'} disabled={false}
-              onPress={markAsCleared} color="orange" />
-            <NewCustomButton buttonText={'CONFIRM DEFAULT'} disabled={false}
-              onPress={markAsCleared} color="brown" />
-          </View>
+          {level >1 && <View style={{gap: 40, marginBottom: 40}}>
+            {cleared === 'MARK AS CLEARED' ? <NewCustomButton buttonText={cleared} disabled={false}
+              onPress={()=>setCleared('CONFIRM CLEAR LOAN')} color="red" />
+            : <NewCustomButton buttonText={cleared} disabled={false}
+              onPress={()=>updateLoan('cleared')} color="green" />}
+            {defaulted === 'MARK AS DEFAULTED'? <NewCustomButton buttonText={defaulted} disabled={false}
+              onPress={()=>setDefaulted('CONFIMR DEFAULT')} color="orange" />
+            : <NewCustomButton buttonText={defaulted} disabled={false}
+              onPress={()=>updateLoan('defaulted')} color="brown" />}
+          </View>}
         </View>
         }
       </View>

@@ -7,6 +7,7 @@ import CustomInput from '../../../components/CustomInput/CustomInput';
 import { API, graphqlOperation } from "aws-amplify";
 import CustomNumberInput from '../../../components/CustomNumberInput';
 import CustomDropDown from '../../../components/CustomDropDown/CustomDropDown';
+import { useRoute } from '@react-navigation/native';
 
 const CreateStage = ({navigation}) => {
 
@@ -16,6 +17,9 @@ const CreateStage = ({navigation}) => {
   const [viceChairPhoneNumber, setViceChairPhoneNumber] = useState()
   const [divisionsList, setDivisionsList] = useState()
   const [selectedDivision, setSelectedDivision] = useState()
+
+  const route = useRoute()
+  const level = route?.params?.level
 
   const PHONE_REGEX = /^07\d{8}$/
 
@@ -73,7 +77,7 @@ const CreateStage = ({navigation}) => {
       if(newStage) {
         setMessage(`${newStage.data.createStage.name} (${newStage.data.createStage.address}) Created`)
         setStatus('DONE')
-        setTimeout(()=> navigation.navigate('AdminScreen'), 3000)
+        setTimeout(()=> navigation.navigate('AdminScreen', {level}), 3000)
       }
     }
     catch(e)

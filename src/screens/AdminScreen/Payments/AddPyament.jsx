@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import CustomInput from '../../../components/CustomInput/CustomInput';
 import { API, graphqlOperation } from "aws-amplify";
 import RegisterPayment from './RegisterPayment';
+import { useRoute } from '@react-navigation/native';
 
 const AddPayment = ({navigation}) => {
 
@@ -23,8 +24,11 @@ const AddPayment = ({navigation}) => {
   const [startDate, setStartDate] = useState()
   const [duration, setDuration] = useState()
 
+  const route = useRoute()
+  const level = route?.params?.level
+
   useEffect(()=>{
-    done && setTimeout(()=> navigation.navigate('AdminScreen'), 1000)
+    done && setTimeout(()=> navigation.navigate('AdminScreen', {level}), 1000)
   },[done])
 
   const getBodaDetails = async(data)=>{
@@ -42,7 +46,7 @@ const AddPayment = ({navigation}) => {
               name
               address
             }
-            loans {
+            loans(filter: {status: {eq: "active"}}) {
               items {
                 id
                 duration

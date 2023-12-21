@@ -34,6 +34,7 @@ import ViewBorrowers from './src/screens/AdminScreen/Borrowers/ViewBorrowers';
 import SelectStageToView from './src/screens/AdminScreen/Borrowers/SelectStageToView';
 import SelectApplicationDate from './src/screens/AdminScreen/Applications/SelectApplicationDate';
 import ConfirmApplication from './src/screens/ConfirmApplication/ConfirmApplication';
+import CreateAdminUser from './src/screens/AdminScreen/AdminUsers/CreateAdminUser';
 
 Amplify.configure(config)
 
@@ -82,6 +83,7 @@ const App= () => {
            <Stack.Screen name='AdminScreen/SelectStageToEdit' component={SelectStageToEdit} />
            <Stack.Screen name='AdminScreen/EditStage' component={EditStage} />
            <Stack.Screen name='AdminScreen/SelectApplicationDate' component={SelectApplicationDate} />
+           <Stack.Screen name='AdminScreen/CreateAdminUser' component={CreateAdminUser} />
            <Stack.Screen name='LoanStatementAdmin' component={LoanStatementAdmin} />
 
        </Stack.Navigator>

@@ -37,7 +37,7 @@ const SignInThenBalance = ({navigation}) => {
 
   const [loginError, setLoginError] = useState()
   const [status, setStatus] = useState('Sign In')
-  const [adminObject, setAdminObject] = useState()
+  const [adminObject, setAdminObject] = useState({})
 
   useEffect(()=>{setLoginError(null)},[])
 
@@ -97,8 +97,8 @@ const SignInThenBalance = ({navigation}) => {
         }
       }
     }catch(e){
+      console.log('unable to sign in to view balance', e);
       setLoginError('Error. Please contact support')
-      setTimeout(()=> navigation.navigate('WelcomeScreen'), 3000)    
     }
     finally{
       setStatus("Sign In")

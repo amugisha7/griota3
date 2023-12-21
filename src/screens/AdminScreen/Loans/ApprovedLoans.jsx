@@ -17,6 +17,7 @@ const ApprovedLoans = () => {
     
     //enable filtering
     const filterObj = {} 
+    const pointsObj ={}
     const route = useRoute()
     const level = route?.params?.level
   
@@ -34,6 +35,7 @@ const ApprovedLoans = () => {
     const [loanAmount, setLoanAmount] = useState()
     const [duration, setDuration] = useState()
     const [startDate, setStartDate] = useState()
+    const [points, setPoints] = useState()
 
     //constants
     const options = {year: '2-digit', month: 'short', day: '2-digit', hour: 'numeric',
@@ -59,6 +61,7 @@ const ApprovedLoans = () => {
                     boda {
                       firstname
                       id
+                      points
                       mobileMoneyName
                       othername
                       stage {
@@ -70,7 +73,6 @@ const ApprovedLoans = () => {
               }`
             ))
             if(applications) {
-              console.log('applications::: ', applications.data.listApplications.items.length);
               for(let i=0; i<applications.data.listApplications.items.length; i++) {
                 if(!filterObj[applications.data.listApplications.items[i].id]){
                   filterObj[applications.data.listApplications.items[i].id] = 
@@ -79,6 +81,15 @@ const ApprovedLoans = () => {
               }
               setFilter(filterObj)
               setApplicants(applications.data.listApplications.items); 
+              //recording points
+              for(let i=0; i<applications.data.listApplications.items.length; i++) {
+                if(!pointsObj[applications.data.listApplications.items[i].boda.id]){
+                  pointsObj[applications.data.listApplications.items[i].boda.id] = 
+                  applications.data.listApplications.items[i].boda.points
+                }
+              }
+              setPoints(pointsObj)
+              console.log('pointsObj::: ', pointsObj);
               const stageList = {}
               for(let i = 0; i < applications.data.listApplications.items.length; i++) {
                 if(!stageList[applications.data.listApplications.items[i].boda.stage.name]){
@@ -88,7 +99,6 @@ const ApprovedLoans = () => {
               }
               const arr = ['All', ...Object.values(stageList)]
               setStagesArray(arr)
-              console.log('arr::: ', arr);
             }
           }
           catch(e)
@@ -142,6 +152,29 @@ const ApprovedLoans = () => {
           }`
         ))
         if(updatedApplication) {
+          setCreateLoanStatus('UPDATING POINTS...'); 
+          updatePoints() 
+        }
+      }
+      catch(e){
+        console.log('unable to update application', e)
+      }
+    }
+
+    const updatePoints = async()=>{
+      const newPoints = points[phoneNumber] - (loanAmount / 100)
+      try {
+        const pointsUpdated = await API.graphql(graphqlOperation(
+          `mutation MyMutation {
+            updateBoda(input: {
+              id: "${phoneNumber}", 
+              points: ${newPoints}
+            }) {
+              points
+            }
+          }`
+        ))
+        if(pointsUpdated) {
           const obj = filter
           delete obj[applicationId]
           setFilter(obj)
@@ -149,9 +182,9 @@ const ApprovedLoans = () => {
         }
       }
       catch(e){
-        console.log('unable to update application', e)
+        console.log("Error updating points", e)
       }
-    }
+    } 
 
     const sendSMS = (amount, instalment, duration) => {
       setSmsStatus('SENDING...')

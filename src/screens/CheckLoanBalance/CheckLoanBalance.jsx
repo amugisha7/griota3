@@ -6,7 +6,7 @@ import { useRoute } from '@react-navigation/native';
 import { API, graphqlOperation } from "aws-amplify";
 import { formatStatement, convertDateFormat, getDateDifferenceInDays, 
   getDaysSinceStart } from '../../resources/formatStatement';
-import { Table, Row, Rows } from 'react-native-reanimated-table';
+import { Table, Row, Rows } from 'react-native-reanimated-table'; 
 
 const CheckLoanBalance = ({navigation}) => {
 
@@ -23,6 +23,7 @@ const CheckLoanBalance = ({navigation}) => {
   const [nextDateString, setNextDateString] = useState()
   const [points, setPoints] = useState()
   const [ifactor, setIfactor] = useState()
+  const [noLoansFound, setNoLoansFound] = useState()
 
   const phoneNumber = route?.params?.phoneNumber
 
@@ -98,7 +99,7 @@ const CheckLoanBalance = ({navigation}) => {
           }
         }`
       ))
-      if(boda) {
+      if(boda.data.getBoda.loans.items.length >0) {
         setFirstName(boda.data.getBoda.firstname)
         setOtherName(boda.data.getBoda.othername)
         setPoints(boda.data.getBoda.points)
@@ -116,6 +117,8 @@ const CheckLoanBalance = ({navigation}) => {
         ))
           console.log('compliantDate.slice(0, -1)::: ', compliantDate.slice(0, -1));
           console.log('date', new Date(compliantDate.slice(0, -1)));
+      }else {
+        setNoLoansFound(true)
       }
     } 
     catch(e)
@@ -136,7 +139,8 @@ const CheckLoanBalance = ({navigation}) => {
   return (
     <ScrollView>
       <View style={{padding: 22}}>
-        {!payments ? <Text style={griotaStyles.title}>Loading...</Text> :
+        {noLoansFound && <Text style={griotaStyles.title}>No Active Loans Found</Text>}
+        {!payments ? (!noLoansFound && <Text style={griotaStyles.title}>Loading...</Text>) :
         <View>
           {errorMessage && <Text style={griotaStyles.title}>{errorMessage}</Text>}
           <Text style={griotaStyles.title}>Loan Statement</Text>
@@ -147,7 +151,7 @@ const CheckLoanBalance = ({navigation}) => {
             <Text style={[griotaStyles.text, {textAlign: 'left'}]}>Name: {firstName} {otherName}. </Text>
             <Text style={[griotaStyles.text, {textAlign: 'left', color: 'blue'}]}>Total Points: {points} </Text>
             <Text style={{marginTop: 5, fontSize: 12}}>{`(You get extra points for every payment made on time)`}</Text>
-          </View>
+          </View> 
           <Text style={griotaStyles.label}>Loan Details:</Text>
           <View style={{display: 'flex', flexDirection: 'column', marginBottom: 10}}>
             <Text style={[griotaStyles.text, {textAlign: 'left'}]}>Amount Borrowed: {principal.toLocaleString('en-US')}/- </Text>

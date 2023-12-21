@@ -20,6 +20,7 @@ const EditStage = ({navigation}) => {
   const [status, setStatus] = useState('CONFIRM UPDATE')
 
   const selectedStage = route?.params?.selectedStage
+  const level = route?.params?.level
   
   useEffect(()=>{
     getStageDetails()
@@ -81,7 +82,7 @@ const EditStage = ({navigation}) => {
       if(updatedStage) {
         console.log('updatedStage::: ', updatedStage);
         setStatus('SUCCESS')
-        setTimeout(()=> navigation.navigate('AdminScreen'), 3000)
+        setTimeout(()=> navigation.navigate('AdminScreen', {level}), 3000)
       }
     }
     catch(e)

@@ -9,26 +9,26 @@ const AdminScreen = ({navigation}) => {
   const level = route?.params?.level
 
   const addPayment = () =>{
-    navigation.navigate('AdminScreen/AddPayment')
+    navigation.navigate('AdminScreen/AddPayment', {level})
   }
   
   const createStage = () =>{
-    navigation.navigate('AdminScreen/CreateStage')
+    navigation.navigate('AdminScreen/CreateStage', {level})
   }
   const editStage = () =>{
-    navigation.navigate('AdminScreen/SelectStageToEdit')
+    navigation.navigate('AdminScreen/SelectStageToEdit', {level})
   }
   
   const createLoan = () =>{
-    navigation.navigate('AdminScreen/CreateLoan')
+    navigation.navigate('AdminScreen/CreateLoan', {level})
   }
 
   const getLoanStatement = async()=>{
-    navigation.navigate('LoanStatementAdmin')
+    navigation.navigate('LoanStatementAdmin', {level})
   }
   
   const veiwBorrowers = async()=>{
-    navigation.navigate('AdminScreen/SelectStageToView')
+    navigation.navigate('AdminScreen/SelectStageToView', {level})
   }
 
   const viewApplications = async()=>{
@@ -37,6 +37,10 @@ const AdminScreen = ({navigation}) => {
   
   const approvedLoans = async()=>{
     navigation.navigate('AdminScreen/ApprovedLoans', {level})
+  }
+
+  const createAdmin = async()=>{
+    navigation.navigate('AdminScreen/CreateAdminUser', {level})
   }
 //update stage
 //create Admin user
@@ -56,6 +60,8 @@ const AdminScreen = ({navigation}) => {
         {level >1 && <Button onPress={addPayment} title='Add Payment'></Button>}
         {level >1 && <Button onPress={createLoan} title='Create Loan'></Button>}
         <Button onPress={getLoanStatement} title='Loan Statements'></Button>
+        {level === 10 && <Text style={griotaStyles.label}>Admin Users Management:</Text>}
+        {level === 10 && <Button onPress={createAdmin} title='Create Admin User'></Button>}
       </View>
     </ScrollView>
   )

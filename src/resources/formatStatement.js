@@ -32,13 +32,13 @@ const formatStatement = (payments, startDate, principal, duration, interestRate)
   const today = new Date();
   while (currentDate <= today){
     const formattedDate = formatDate(currentDate);
-    const finalDate = statementDate(currentDate);
+    const finalDate2 = statementDate(currentDate);
     const paymentItem = payments.find(item => item.paymentDate === formattedDate)
 
     if(paymentItem){
       let paymentAmount = paymentItem.paymentAmount; 
       currentBalance -= paymentAmount
-      latePayments.push([finalDate, paymentAmount.toLocaleString('en-US'), 
+      latePayments.push([finalDate2, paymentAmount.toLocaleString('en-US'), 
         currentBalance.toLocaleString('en-US'), `+${paymentAmount/1000}`])
     }
     currentDate.setDate(currentDate.getDate() + 1);
@@ -46,6 +46,7 @@ const formatStatement = (payments, startDate, principal, duration, interestRate)
 
   // Calculate the totals
   const paymentTotal = payments.reduce((acc, item) => acc + item.paymentAmount, 0);
+  console.log('latePayments::: ', latePayments);
   return [dataArray, paymentTotal, latePayments];
 };
 

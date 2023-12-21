@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import CustomInput from '../../../components/CustomInput/CustomInput';
 import { API, graphqlOperation } from "aws-amplify";
 import RegisterLoan from './RegisterLoan';
+import { useRoute } from '@react-navigation/native';
 
 const CreateLoan = ({navigation}) => {
 
@@ -19,8 +20,11 @@ const CreateLoan = ({navigation}) => {
   const [bodaPhoneNumber, setBodaPhoneNumber] = useState()
   const [done, setDone] = useState()
 
+  const route = useRoute()
+  const level = route?.params?.level
+
   useEffect(()=>{
-   done && setTimeout(()=> navigation.navigate('AdminScreen'), 3000)
+   done && setTimeout(()=> navigation.navigate('AdminScreen', {level}), 3000)
   },[done])
 
   const getBodaDetails = async(data)=>{
