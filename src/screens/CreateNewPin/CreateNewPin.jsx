@@ -70,7 +70,8 @@ const CreateNewPin = ({navigation}) => {
     }
     catch(e)
     {
-      console.log('failed to create boda: ', e) 
+      setErrorMessage(`ERROR: ${e.message}`)
+      setTimeout(()=>setErrorMessage(null), 5000)
     }
   }
 
@@ -84,7 +85,10 @@ const CreateNewPin = ({navigation}) => {
       .then(()=>{
         uploadToAmplify(password);
       })
-      .catch((err) => console.log('unable to change password ', err));
+      .catch((e) => {
+        setErrorMessage(`ERROR: ${e.message}`)
+        setTimeout(()=>setErrorMessage(null), 5000)
+      });
   }
 
   return (

@@ -17,6 +17,7 @@ const RegisterPayment = ({ firstName, otherName, stage, stageAddress,
   const [paymentReceived, setPaymentReceived] = useState()
   const [paymentInTime, setPaymentInTime] = useState()
   const [plainDate, setPlainDate] = useState()
+  const [errorMessage, setErrorMessage] = useState()
 
   //date checking for points award. 
   const endDate = new Date(convertDateFormat(startDate).slice(0, -1))
@@ -56,9 +57,8 @@ const RegisterPayment = ({ firstName, otherName, stage, stageAddress,
       }
     }
     catch(e){
-      console.log("Error updating points", e)
-      setStatus("POINTS UPDATE FAILED")
-      setTimeout(()=>setStatus("Register Another Payment"), 2000)
+      setErrorMessage(`ERROR: ${e.message}`)
+      setTimeout(()=>setErrorMessage(null), 5000)
     }
   }
 
@@ -86,8 +86,8 @@ const RegisterPayment = ({ firstName, otherName, stage, stageAddress,
       }
     }
     catch(e){
-      console.log("Error making payment", e)
-      setStatus("PAYMENT FAILED")
+      setErrorMessage(`ERROR: ${e.message}`)
+      setTimeout(()=>setErrorMessage(null), 5000)
     }
   }
 
@@ -105,6 +105,7 @@ const RegisterPayment = ({ firstName, otherName, stage, stageAddress,
 
   return (
       <View style={{padding: 22}}>
+        {errorMessage && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>{errorMessage}</Text>}
         {paymentReceived && 
         <Text style={{color: '#007700', marginBottom: 20}}>
           Payment by {firstName+" "+otherName} Successful</Text>}

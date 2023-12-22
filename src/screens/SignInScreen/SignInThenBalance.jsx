@@ -11,7 +11,8 @@ import { adminUsers } from '../../Lists/adminUsers';
 import {checkPermissions} from '../../resources/requestPermissions'
 import DeepLinking from 'react-native-deep-linking';
 import { API, graphqlOperation } from "aws-amplify";
-
+import CustomNumberInput from '../../components/CustomNumberInput';
+import NewCustomButton from '../../components/NewCustomButton';
 
 const SignInThenBalance = ({navigation}) => {
   
@@ -38,6 +39,8 @@ const SignInThenBalance = ({navigation}) => {
   const [loginError, setLoginError] = useState()
   const [status, setStatus] = useState('Sign In')
   const [adminObject, setAdminObject] = useState({})
+  const [phoneNumber, setPhoneNumber] = useState('')
+  const [pinCode, setPinCode] = useState('')
 
   useEffect(()=>{setLoginError(null)},[])
 
@@ -69,41 +72,30 @@ const SignInThenBalance = ({navigation}) => {
         setAdminObject(adminObj)
       }
     }catch(e){
-      console.log('Error getting admins', e)
+      setLoginError(`ERROR: ${e.message}`)
+      setTimeout(()=>setLoginError(null), 5000)
     }
   }
-  
 
-  const { control, handleSubmit} = useForm({
-    defaultValues: {
-      password: '',
-      username: ''
-    }
-  });
-
-  const SigningIn = async (data) => {
+  const SigningIn = async () => {
     setStatus('Signing In...')
-    const {username, password} = data
-    const phoneNumber = username; 
-    const pin = password; 
     try { 
-      const user = await Auth.signIn(`+256${username.slice(1)}`, `00${password}`)
+      const user = await Auth.signIn(`+256${phoneNumber.slice(1)}`, `00${pinCode}`)
       if(user){
         if(adminObject[user.attributes.phone_number]){
           const level = adminObject[user.attributes.phone_number]
           navigation.navigate('AdminScreen', {level})
         }else{
-          navigation.navigate('CheckLoanBalance', {phoneNumber, pin})
+          navigation.navigate('CheckLoanBalance', {phoneNumber})
         }
       }
     }catch(e){
-      console.log('unable to sign in to view balance', e);
-      setLoginError('Error. Please contact support')
+      setLoginError(`ERROR: ${e.message}`)
+      setTimeout(()=>setLoginError(null), 5000)
     }
     finally{
       setStatus("Sign In")
     }
-    
   }
 
   const PHONE_REGEX = /^07\d{8}$/
@@ -113,52 +105,22 @@ const SignInThenBalance = ({navigation}) => {
       <ScrollView>
         <View style={styles.container }>
           <Text style={griotaStyles.title}>{title}</Text>
-        
-          { loginError && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>{loginError}</Text>}
-        
-          {/* {accountCreatedMessage &&  <Text style={{color: 'green', marginVertical: 20}}>{accountCreatedMessage}</Text>} */}
-          <CustomInput
-            name='username'
-            placeholder='Phone Number (07xxxxxxxx)'
-            control={control}
-            rules={{
-              required: "This field is required",
-              pattern: {
-                value: PHONE_REGEX,
-                message: 'Invalid Phone Number (use format 07xxxxxxxx)'
-              },
-            }}
-            type={'tel'}
-          />
-        
-          <CustomInput
-            name='password'
-            placeholder={'PIN Code'}
-            secureTextEntry={true}
-            control={control}
-            rules={{
-              required: "This field is required",
-              minLength: {
-                value: 4,
-                message: "Too short"
-              },
-              maxLength: {
-                value: 4,
-                message: "Only 4 digits allowed"
-              },
-              pattern: {
-                value: PIN_REGEX,
-                message: 'Must be 4-digit Number'
-              },
-            }}
-          />
-          <CustomButton onPress={handleSubmit(SigningIn)} buttonFunction={status} />
-          {/* <Text style={[styles.link, {marginTop: 20, marginBottom: 20}]} onPress={ForgotPasswordPressed}>Forgot Password</Text> */}
-        
-          <View style={{width: '50%', marginTop: 30}}>
-            <CustomButton onPress={()=>navigation.navigate("WelcomeScreen")} buttonFunction={'Go Back'} type='SECONDARY'/>
+          <View style={styles.newContainer }>
+            <CustomNumberInput handleChange={setPhoneNumber} numberOfInputs={10}
+              label={'Phone Number'}
+              />
+            {!PHONE_REGEX.test(phoneNumber) && String(phoneNumber).length === 10 && 
+            <Text style={griotaStyles.errors}>Invalid Phone Number</Text>}
+            <CustomNumberInput handleChange={setPinCode} numberOfInputs={4}
+              label={'PIN Code'}
+              />
+            <View style={{marginTop: 10, width: '100%'}}>
+              <NewCustomButton buttonText={status} onPress={SigningIn}
+              disabled={pinCode.toString().length !== 4 || phoneNumber.toString().length !== 10 
+                || !PHONE_REGEX.test(phoneNumber) || status !== "Sign In"} />
+            </View>
+            {loginError && <Text style={griotaStyles.errors}>{loginError}</Text>}
           </View>
-        
         </View>
       </ScrollView>
     
@@ -168,23 +130,33 @@ export default SignInThenBalance
 
 const styles = StyleSheet.create({
     
-    container: {
-      flex: 1,
-      alignItems: 'center',
-      // justifyContent: 'center',
-      
-      width: '100%',
-      paddingLeft: 20,
-      paddingRight: 20,
-      paddingTop: 22
-    },
-    logo: {
-        width: 100,
-        height: 100,
-    },
-    link: {
-      color: 'blue',
-    }
-    
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    // justifyContent: 'center',
+    width: '100%',
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 22,
+  },
+  newContainer: {
+    alignItems: 'center',
+    // justifyContent: 'center',
+    width: '100%',
+    paddingLeft: 5,
+    paddingRight: 5,
+    paddingTop: 22,
+    paddingBottom: 40,
+    backgroundColor: '#D7FCFF',
+    marginBottom: 20
+  },
+  logo: {
+      width: 100,
+      height: 100,
+  },
+  link: {
+    color: 'blue',
+  }
+  
 })
 

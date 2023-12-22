@@ -8,7 +8,7 @@ import { API, graphqlOperation } from "aws-amplify";
 import { useRoute } from '@react-navigation/native';
 
 const LoanStatementAdmin = ({navigation}) => {
-
+ 
   const PHONE_REGEX = /^07\d{8}$/
   const [status, setStatus] = useState('View Loan Statement')
   const route = useRoute()

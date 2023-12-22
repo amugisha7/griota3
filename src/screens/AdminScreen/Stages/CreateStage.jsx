@@ -17,9 +17,10 @@ const CreateStage = ({navigation}) => {
   const [viceChairPhoneNumber, setViceChairPhoneNumber] = useState()
   const [divisionsList, setDivisionsList] = useState()
   const [selectedDivision, setSelectedDivision] = useState()
+  const [errorMessage, setErrorMessage] = useState()
 
   const route = useRoute()
-  const level = route?.params?.level
+  const level = route?.params?.level 
 
   const PHONE_REGEX = /^07\d{8}$/
 
@@ -47,7 +48,8 @@ const CreateStage = ({navigation}) => {
     }
     catch(e)
     {
-      console.log('unable to get divisons', e)
+      setErrorMessage(`ERROR: ${e.message}`)
+      setTimeout(()=>setErrorMessage(null), 5000)
     }
   }
 
@@ -82,7 +84,8 @@ const CreateStage = ({navigation}) => {
     }
     catch(e)
     {
-      console.log('unable to create stage ', e)
+      setErrorMessage(`ERROR: ${e.message}`)
+      setTimeout(()=>setErrorMessage(null), 5000)
     }
   }
 
@@ -98,6 +101,7 @@ const CreateStage = ({navigation}) => {
   return (
       <ScrollView>
           <View style={{padding: 22}}>
+            {errorMessage && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>{errorMessage}</Text>}
             <View>
               <Text style={griotaStyles.title}>Create a Stage</Text>
               <CustomDropDown

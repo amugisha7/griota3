@@ -4,6 +4,7 @@ import CustomDropDown from '../../../components/CustomDropDown/CustomDropDown';
 import CustomButton from '../../../components/CustomButton/CustomButton';
 import {API, graphqlOperation} from 'aws-amplify'; 
 import { griotaStyles } from '../../../../assets/styles/style';
+import { useRoute } from '@react-navigation/native';
 
 const SelectStageToView = ({navigation}) => {
   
@@ -14,6 +15,9 @@ const SelectStageToView = ({navigation}) => {
   const [divisionsList, setDivisionsList] = useState()
   const [status, setStatus] = useState('View Bodas at this Stage')
   const [displayCheck, setDisplayCheck] = useState()
+
+  const route = useRoute()
+  const level = route?.params?.level
 
   useEffect(()=>{
     getDivisions()
@@ -53,8 +57,8 @@ const SelectStageToView = ({navigation}) => {
     }
     catch(e)
     {
-      setErrorMessage('Error. Please contact support')
-      console.log('Unable to get stages', e)
+      setErrorMessage(`ERROR: ${e.message}`)
+      setTimeout(()=>setErrorMessage(null), 5000)
     }
   }
   const getDivisions = async() => {
@@ -77,20 +81,20 @@ const SelectStageToView = ({navigation}) => {
     }
     catch(e)
     {
-      setErrorMessage('Error. Please contact support')
-      console.log('unable to get divisons', e)
+      setErrorMessage(`ERROR: ${e.message}`)
+      setTimeout(()=>setErrorMessage(null), 5000)
     }
   }
 
   const viewBodas =() => {
-    navigation.navigate("AdminScreen/ViewBorrowers", {selectedStage})
+    navigation.navigate("AdminScreen/ViewBorrowers", {selectedStage, level})
   }
 
   return (
       <ScrollView>
         <View style={styles.container }>
-          <Text style={griotaStyles.title}>View Registered Bodas</Text>
           {errorMessage && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>{errorMessage}</Text>}
+          <Text style={griotaStyles.title}>View Registered Bodas</Text>
           <CustomDropDown
               items={divisionsList ? divisionsList : ['list Loading... PLEASE WAIT']}
               setSelectedItem={setSelectedDivision} 

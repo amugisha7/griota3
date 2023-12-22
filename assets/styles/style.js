@@ -48,8 +48,9 @@ export const griotaStyles = StyleSheet.create({
     },
     errors: {
         color: 'red',
-        fontSize: 12,
-        marginHorizontal: 10
+        fontSize: 14,
+        marginHorizontal: 10,
+        marginVertical: 10
       },
     successMessage: {
         color: 'green',

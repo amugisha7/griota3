@@ -10,7 +10,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Amplify } from 'aws-amplify';
 import config from './src/aws-exports';
 import { View, Text, Dimensions, BackHandler } from 'react-native';
-import FormScreen from './src/screens/FormScreens/FormScreen';
 import Tester from './src/screens/Tester';
 import ResetPassword from './src/screens/ResetPassword/ResetPassword';
 import AdminScreen from './src/screens/AdminScreen/AdminScreen';
@@ -18,10 +17,10 @@ import ApplicationReceived from './src/screens/ApplicationReceived/ApplicationRe
 import CreateNewPin from './src/screens/CreateNewPin/CreateNewPin';
 import ApplyForLoan from './src/screens/ApplyForLoan/ApplyForLoan';
 import AddPayment from './src/screens/AdminScreen/Payments/AddPyament';
+import EditPayment from './src/screens/AdminScreen/Payments/EditPayment';
 import CreateStage from './src/screens/AdminScreen/Stages/CreateStage';
 import SelectStageToEdit from './src/screens/AdminScreen/Stages/SelectStageToEdit';
 import EditStage from './src/screens/AdminScreen/Stages/EditStage';
-import CreateLoan from './src/screens/AdminScreen/Loans/CreateLoan';
 import CreateLoanFromApplications from './src/screens/AdminScreen/Loans/CreateLoanFromApplications';
 import ApprovedLoans from './src/screens/AdminScreen/Loans/ApprovedLoans';
 import LoanStatementAdmin from './src/screens/AdminScreen/Loans/LoanStatementAdmin'
@@ -60,7 +59,6 @@ const App= () => {
            <Stack.Screen name='SelectDivision' component={SelectDivision} />
            <Stack.Screen name='ForgotPassword' component={ForgotPassword} />
            <Stack.Screen name='ConfirmPhoneNumber' component={ConfirmPhoneNumber} />
-           <Stack.Screen name='FormScreen' component={FormScreen} />
            <Stack.Screen name='Tester' component={Tester} />
            <Stack.Screen name='ResetPassword' component={ResetPassword} />
            <Stack.Screen name='AdminScreen' component={AdminScreen} />
@@ -74,8 +72,8 @@ const App= () => {
            <Stack.Screen name='CheckLoanBalance' component={CheckLoanBalance} />
            <Stack.Screen name='CheckLoanBalanceAdmin' component={CheckLoanBalanceAdmin} />
            <Stack.Screen name='AdminScreen/AddPayment' component={AddPayment} />
+           <Stack.Screen name='AdminScreen/EditPayment' component={EditPayment} />
            <Stack.Screen name='AdminScreen/CreateStage' component={CreateStage} />
-           <Stack.Screen name='AdminScreen/CreateLoan' component={CreateLoan} />
            <Stack.Screen name='AdminScreen/CreateLoanFromApplications' component={CreateLoanFromApplications} />
            <Stack.Screen name='AdminScreen/ApprovedLoans' component={ApprovedLoans} />
            <Stack.Screen name='AdminScreen/ViewBorrowers' component={ViewBorrowers} />

@@ -14,6 +14,7 @@ const ViewBorrowers = ({navigation}) => {
   const [stageBodas, setStageBodas] = useState()
 
   const selectedStage = route?.params?.selectedStage
+  const level = route?.params?.level
   
   useEffect(()=>{
     getBodaDetails()
@@ -43,13 +44,13 @@ const ViewBorrowers = ({navigation}) => {
     }
     catch(e)
     {
-      setErrorMessage('ERROR: Please contact Support')
-      console.log('Error getting boda details', e)
+      setErrorMessage(`ERROR: ${e.message}`)
+      setTimeout(()=>setErrorMessage(null), 5000)
     }
   }
 
   const returnToWelcome = ()=> {
-    navigation.navigate("AdminScreen/SelectStageToView")
+    navigation.navigate("AdminScreen/SelectStageToView", {level})
   }
 
   const tableHead = ['#', 'NAME', 'PHONE NUMBER']
@@ -57,9 +58,9 @@ const ViewBorrowers = ({navigation}) => {
   return (
     <ScrollView>
       <View style={{padding: 22}}>
+        {errorMessage && <Text style={griotaStyles.errors}>{errorMessage}</Text>}
         {!stageBodas ? <Text style={griotaStyles.title}>Loading...</Text> :
         <View>
-          {errorMessage && <Text style={griotaStyles.title}>{errorMessage}</Text>}
           <Text style={griotaStyles.title}>Stage: {selectedStage}</Text>
           <Text style={griotaStyles.label}>Boda Details:</Text>
           <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>

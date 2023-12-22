@@ -13,6 +13,7 @@ const CreateAdminUser = ({navigation}) => {
   const [status, setStatus] = useState('Create Admin User')
   const [phoneNumber, setPhoneNumber] = useState()
   const [userLevel, setUserLevel] = useState()
+  const [errorMessage, setErrorMessage] = useState()
 //concstants
   const route = useRoute()
   const level = route?.params?.level
@@ -41,13 +42,15 @@ const CreateAdminUser = ({navigation}) => {
     }
     catch(e)
     {
-      console.log('unable to create adminUser ', e)
+      setErrorMessage(`ERROR: ${e.message}`)
+      setTimeout(()=>setErrorMessage(null), 5000)
     }
   }
 
   return (
     <ScrollView>
       <View style={{padding: 22}}>
+      {errorMessage && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>{errorMessage}</Text>}
         <Text style={griotaStyles.title}>Create Admin User</Text>
         <CustomDropDown
           items={['<-- Select -->', 'LEVEL 1: FIELD AGENT', 'LEVEL 2: OFFICE ADMIN']}

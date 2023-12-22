@@ -36,6 +36,7 @@ const ApprovedLoans = () => {
     const [duration, setDuration] = useState()
     const [startDate, setStartDate] = useState()
     const [points, setPoints] = useState()
+    const [errorMessage, setErrorMessage] = useState()
 
     //constants
     const options = {year: '2-digit', month: 'short', day: '2-digit', hour: 'numeric',
@@ -103,7 +104,8 @@ const ApprovedLoans = () => {
           }
           catch(e)
           {
-            console.log('unable to get applications ', e)
+            setErrorMessage(`ERROR: ${e.message}`)
+            setTimeout(()=>setErrorMessage(null), 5000)
           }
     }
 
@@ -135,8 +137,9 @@ const ApprovedLoans = () => {
         }
       }
       catch(e){
-        console.log('unable to create loan ', e)
-      }
+        setErrorMessage(`ERROR: ${e.message}`)
+        setTimeout(()=>setErrorMessage(null), 5000)
+        }
     }
 
     const updateApplicationStatus = async()=>{
@@ -157,8 +160,9 @@ const ApprovedLoans = () => {
         }
       }
       catch(e){
-        console.log('unable to update application', e)
-      }
+        setErrorMessage(`ERROR: ${e.message}`)
+        setTimeout(()=>setErrorMessage(null), 5000)
+        }
     }
 
     const updatePoints = async()=>{
@@ -182,8 +186,9 @@ const ApprovedLoans = () => {
         }
       }
       catch(e){
-        console.log("Error updating points", e)
-      }
+        setErrorMessage(`ERROR: ${e.message}`)
+        setTimeout(()=>setErrorMessage(null), 5000)
+        }
     } 
 
     const sendSMS = (amount, instalment, duration) => {
@@ -195,7 +200,10 @@ const ApprovedLoans = () => {
           console.log(bodySMS)
           setSmsStatus('SEND SMS')
         })
-        .catch((err) => console.log("catch", err))
+        .catch((e) => {
+          setErrorMessage(`ERROR: ${e.message}`)
+          setTimeout(()=>setErrorMessage(null), 5000)
+        })
     }
 
     const sendMtn = () => {
@@ -210,12 +218,13 @@ const ApprovedLoans = () => {
 
   return (
     <ScrollView style={[griotaStyles.container, {padding: 22}]}>
+      {errorMessage && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>{errorMessage}</Text>}
         <Text style={griotaStyles.title}>Approved Loans</Text>
     {/* filtering  */}
         {stagesArray && stagesArray.length >1 && <RadioButtons setChosen={setFilteredStage}
               options={stagesArray.map((stage, i)=>({
                 id: stage, label: stage, value: stage
-              }))} first={'All'} layout={'column'} />}
+              }))} first={'All'} layout={'column'} />} 
     {/* applicants */}
         { applicants && applicants.map((applicant, ind) =>{
             const date = new Date(applicant.updatedAt);

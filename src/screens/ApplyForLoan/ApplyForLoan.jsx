@@ -18,6 +18,7 @@ const ApplyForLoan = ({navigation}) => {
   const [instalment, setInstalment] = useState()
   const [loanDuration, setLoanDuration] = useState()
   const [commitments, setCommitments] = useState()
+  const [errorMessage, setErrorMessage] = useState()
 
   BackHandler.addEventListener('hardwareBackPress', ()=> {
     navigation.navigate('WelcomeScreen')
@@ -57,7 +58,8 @@ const ApplyForLoan = ({navigation}) => {
     }
     catch(e)
     {
-      console.log('unable to retrieve boda details ', e)
+      setErrorMessage(`ERROR: ${e.message}`)
+      setTimeout(()=>setErrorMessage(null), 5000)
     }
   }
   const getLoanOffers = async()=>{
@@ -76,13 +78,12 @@ const ApplyForLoan = ({navigation}) => {
       if(savedLoanOffers) {
         setLoanOffers(savedLoanOffers.data.listLoanOffers.items);
         getCommitments()
-        //remove the following line
-        // points === undefined && setPoints(700)
       }
     }
     catch(e)
     {
-      console.log('unable to get loan offers ', e)
+      setErrorMessage(`ERROR: ${e.message}`)
+      setTimeout(()=>setErrorMessage(null), 5000)
     }
   }
 
@@ -103,7 +104,8 @@ const ApplyForLoan = ({navigation}) => {
     }
     catch(e)
     {
-      console.log('unable to get commitments ', e)
+      setErrorMessage(`ERROR: ${e.message}`)
+      setTimeout(()=>setErrorMessage(null), 5000)
     }
   }
 
@@ -115,6 +117,7 @@ const ApplyForLoan = ({navigation}) => {
   return (
     <ScrollView>
       <View style={{padding: 22, paddingBottom: 60}}>
+        {errorMessage && <Text style={griotaStyles.errors}>{errorMessage}</Text>}
         {!commitments ? <Text style={griotaStyles.title}>Loading...</Text> :
         <View>
           <Text style={griotaStyles.title}>Select a Loan</Text>

@@ -123,9 +123,8 @@ const CheckLoanBalance = ({navigation}) => {
     } 
     catch(e)
     {
-      setErrorMessage('ERROR: Please contact Support')
-      setTimeout(()=> navigation.navigate('WelcomeScreen'), 3000)
-      console.log('Error getting boda details', e)
+      setErrorMessage(`ERROR: ${e.message}`)
+      setTimeout(()=>setErrorMessage(null), 5000)
     }
   }
 
@@ -140,9 +139,9 @@ const CheckLoanBalance = ({navigation}) => {
     <ScrollView>
       <View style={{padding: 22}}>
         {noLoansFound && <Text style={griotaStyles.title}>No Active Loans Found</Text>}
+        {errorMessage && <Text style={griotaStyles.errors}>{errorMessage}</Text>}
         {!payments ? (!noLoansFound && <Text style={griotaStyles.title}>Loading...</Text>) :
         <View>
-          {errorMessage && <Text style={griotaStyles.title}>{errorMessage}</Text>}
           <Text style={griotaStyles.title}>Loan Statement</Text>
           <Text style={{color: 'red'}}>Last updated at: {dateString}</Text>
           <Text style={{color: 'green'}}>Next update: {nextDateString}</Text>

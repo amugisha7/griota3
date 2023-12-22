@@ -23,6 +23,7 @@ const AddPayment = ({navigation}) => {
   const [bodaId, setBodaId] = useState()
   const [startDate, setStartDate] = useState()
   const [duration, setDuration] = useState()
+  const [errorMessage, setErrorMessage] = useState()
 
   const route = useRoute()
   const level = route?.params?.level
@@ -74,7 +75,8 @@ const AddPayment = ({navigation}) => {
     }
     catch(e)
     {
-      console.log('unable to retrieve boda details ', e)
+      setErrorMessage(`ERROR: ${e.message}`)
+      setTimeout(()=>setErrorMessage(null), 5000)
     }
   }
 
@@ -87,6 +89,7 @@ const AddPayment = ({navigation}) => {
   return (
     <ScrollView>
       <View style={{padding: 22}}>
+      {errorMessage && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>{errorMessage}</Text>}
         <View>
           <Text style={griotaStyles.title}>Register a Payment</Text>
           <CustomInput

@@ -11,6 +11,9 @@ const AdminScreen = ({navigation}) => {
   const addPayment = () =>{
     navigation.navigate('AdminScreen/AddPayment', {level})
   }
+  const editPayment = () =>{
+    navigation.navigate('AdminScreen/EditPayment', {level})
+  }
   
   const createStage = () =>{
     navigation.navigate('AdminScreen/CreateStage', {level})
@@ -19,10 +22,6 @@ const AdminScreen = ({navigation}) => {
     navigation.navigate('AdminScreen/SelectStageToEdit', {level})
   }
   
-  const createLoan = () =>{
-    navigation.navigate('AdminScreen/CreateLoan', {level})
-  }
-
   const getLoanStatement = async()=>{
     navigation.navigate('LoanStatementAdmin', {level})
   }
@@ -58,7 +57,7 @@ const AdminScreen = ({navigation}) => {
         <Button onPress={veiwBorrowers} title='View Bodas'></Button>
         <Text style={griotaStyles.label}>Loan Management:</Text>
         {level >1 && <Button onPress={addPayment} title='Add Payment'></Button>}
-        {level >1 && <Button onPress={createLoan} title='Create Loan'></Button>}
+        {level >1 && <Button onPress={editPayment} title='Edit Payment'></Button>}
         <Button onPress={getLoanStatement} title='Loan Statements'></Button>
         {level === 10 && <Text style={griotaStyles.label}>Admin Users Management:</Text>}
         {level === 10 && <Button onPress={createAdmin} title='Create Admin User'></Button>}

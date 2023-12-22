@@ -23,6 +23,7 @@ const CreateLoanFromApplications = () => {
     const [filter, setFilter] = useState(filterObj)
     const [stagesArray, setStagesArray] = useState()
     const [filteredStage, setFilteredStage] = useState('All')
+    const [errorMessage, setErrorMessage] = useState()
 
     //constants
     const options = {year: '2-digit', month: 'short', day: '2-digit', hour: 'numeric',
@@ -32,13 +33,13 @@ const CreateLoanFromApplications = () => {
     useEffect(() => {
         getApplications()
     },[]); 
-
+ 
    //functions 
     const getApplications = async() => {
         try {
             const applications = await API.graphql(graphqlOperation(
               `query MyQuery {
-                listApplications(filter: {status: {eq: "pending"}}) {
+                listApplications(filter: {status: {eq: "newApp"}}) {
                   items {
                     createdAt
                     id
@@ -82,9 +83,10 @@ const CreateLoanFromApplications = () => {
           }
           catch(e)
           {
-            console.log('unable to get applications ', e)
+            setErrorMessage(`ERROR: ${e.message}`)
+            setTimeout(()=>setErrorMessage(null), 5000)
           }
-    }
+    } 
 
     const approve = async()=>{
         setStatus('PROCESSING...')
@@ -105,12 +107,14 @@ const CreateLoanFromApplications = () => {
           }
           catch(e)
           {
-            console.log('unable to approve loan ', e)
+            setErrorMessage(`ERROR: ${e.message}`)
+            setTimeout(()=>setErrorMessage(null), 5000)
           }
     }
 
   return (
     <ScrollView style={[griotaStyles.container, {padding: 22}]}>
+        {errorMessage && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>{errorMessage}</Text>}
         <Text style={griotaStyles.title}>New Applications</Text>
     {/* filtering  */}
         {stagesArray && stagesArray.length >1 && <RadioButtons setChosen={setFilteredStage}

@@ -4,6 +4,7 @@ import CustomDropDown from '../../../components/CustomDropDown/CustomDropDown';
 import CustomButton from '../../../components/CustomButton/CustomButton';
 import {API, graphqlOperation} from 'aws-amplify'; 
 import { griotaStyles } from '../../../../assets/styles/style';
+import { useRoute } from '@react-navigation/native';
 
 const SelectStageToEdit = ({navigation}) => {
   
@@ -14,6 +15,9 @@ const SelectStageToEdit = ({navigation}) => {
   const [divisionsList, setDivisionsList] = useState()
   const [status, setStatus] = useState('Edit this Stage')
   const [displayCheck, setDisplayCheck] = useState()
+
+  const route = useRoute()
+  const level = route?.params?.level
 
   useEffect(()=>{
     getDivisions()
@@ -47,14 +51,13 @@ const SelectStageToEdit = ({navigation}) => {
         if(stages) {
             const listOfStages = ['Select from list', 
             ...stages.data.listStages.items.map(item => `${item.id}`).sort()]
-            // listOfStages.unshift('Select from list')
             setStagesList(listOfStages)
         }
     }
     catch(e)
     {
-      setErrorMessage('Error. Please contact support')
-      console.log('Unable to get stages', e)
+      setErrorMessage(`ERROR: ${e.message}`)
+      setTimeout(()=>setErrorMessage(null), 5000)
     }
   }
   const getDivisions = async() => {
@@ -74,23 +77,23 @@ const SelectStageToEdit = ({navigation}) => {
             // listOfDivisions.unshift('Select from list')
             setDivisionsList(listOfDivisions)
         }
-    }
+    } 
     catch(e)
     {
-      setErrorMessage('Error. Please contact support')
-      console.log('unable to get divisons', e)
+      setErrorMessage(`ERROR: ${e.message}`)
+      setTimeout(()=>setErrorMessage(null), 5000)
     }
   }
 
   const editStage =() => {
-    navigation.navigate("AdminScreen/EditStage", {selectedStage})
+    navigation.navigate("AdminScreen/EditStage", {selectedStage, level})
   }
 
   return (
       <ScrollView>
         <View style={styles.container }>
-          <Text style={griotaStyles.title}>View Registered Bodas</Text>
           {errorMessage && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>{errorMessage}</Text>}
+          <Text style={griotaStyles.title}>View Registered Bodas</Text>
           <CustomDropDown
               items={divisionsList ? divisionsList : ['list Loading... PLEASE WAIT']}
               setSelectedItem={setSelectedDivision} 

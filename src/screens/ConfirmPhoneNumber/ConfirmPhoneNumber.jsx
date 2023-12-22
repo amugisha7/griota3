@@ -39,8 +39,8 @@ const ConfirmPhoneNumber = ({navigation}) => {
       }
     }
     catch(e){
-      setErrorMessage('Error. Please contact support')
-      setTimeout(()=> navigation.navigate('WelcomeScreen'), 3000)    
+      setErrorMessage(`ERROR: ${e.message}`)
+      setTimeout(()=>setErrorMessage(null), 5000)
     }
   }
   const goToRegisterPage = () => {navigation.navigate('Register')}
@@ -51,8 +51,8 @@ const ConfirmPhoneNumber = ({navigation}) => {
       console.log('new code ', newCode)
     }
     catch(e){
-      setLoginError('Error. Please contact support')
-      setTimeout(()=> navigation.navigate('WelcomeScreen'), 3000)    
+      setErrorMessage(`ERROR: ${e.message}`)
+      setTimeout(()=>setErrorMessage(null), 5000)
     }
   }
 

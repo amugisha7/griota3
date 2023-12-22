@@ -75,9 +75,8 @@ const Register = ({navigation, route}) => {
     }
     catch(e)
     {
-      setErrorMessage('Error. Please contact support')
-      setTimeout(()=> navigation.navigate('WelcomeScreen'), 3000)
-      console.log(e) 
+      setErrorMessage(`ERROR: ${e.message}`)
+      setTimeout(()=>setErrorMessage(null), 5000)
     }
   }
 
@@ -113,9 +112,8 @@ const Register = ({navigation, route}) => {
       setStageIdPicURL(data.secure_url)
     }) 
     .catch(e =>{
-      console.log('Error uploading StageID: ', e)
-      setErrorMessage('Error. Please contact support')
-      setTimeout(()=> navigation.navigate('WelcomeScreen'), 3000)
+      setErrorMessage(`ERROR: ${e.message}`)
+      setTimeout(()=>setErrorMessage(null), 5000)
     })
   }
   const uploadNationalIdToCloudinary = async (file)=>{
@@ -132,9 +130,8 @@ const Register = ({navigation, route}) => {
       setNationalIdPicURL(data.secure_url)
     })
     .catch(e =>{
-      console.log('Error uploading NationalID: ', e)
-      setErrorMessage('Error. Please contact support')
-      setTimeout(()=> navigation.navigate('WelcomeScreen'), 3000)
+      setErrorMessage(`ERROR: ${e.message}`)
+      setTimeout(()=>setErrorMessage(null), 5000)
     })
   }
 
@@ -151,9 +148,8 @@ const Register = ({navigation, route}) => {
       }
     } 
     catch(e){
-      console.log('Error creating User: ', e)
-      setErrorMessage('Error. Please contact support')
-      setTimeout(()=> navigation.navigate('WelcomeScreen'), 3000)    
+      setErrorMessage(`ERROR: ${e.message}`)
+      setTimeout(()=>setErrorMessage(null), 5000)
     }
   }
   

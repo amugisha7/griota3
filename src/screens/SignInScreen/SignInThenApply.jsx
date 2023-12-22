@@ -52,13 +52,12 @@ const SignInScreen = ({navigation}) => {
       }
     }
     catch(e){
-      setLoginError('Error. Please contact support')
-      setTimeout(()=> navigation.navigate('WelcomeScreen'), 3000)    
+      setLoginError(`ERROR: ${e.message}`)
+      setTimeout(()=>setLoginError(null), 5000)
     }
     finally{
       setStatus("Sign In")
     }
-    
   }
 
   const PHONE_REGEX = /^07\d{8}$/
@@ -72,12 +71,15 @@ const SignInScreen = ({navigation}) => {
             <CustomNumberInput handleChange={setPhoneNumber} numberOfInputs={10}
               label={'Phone Number'}
             />
+            {!PHONE_REGEX.test(phoneNumber) && String(phoneNumber).length === 10 && 
+            <Text style={griotaStyles.errors}>Invalid Phone Number</Text>}
             <CustomNumberInput handleChange={setPinCode} numberOfInputs={4}
               label={'PIN Code'}
             />
             <View style={{marginTop: 10, width: '100%'}}>
               <NewCustomButton buttonText={status} onPress={SigningIn}
-              disabled={pinCode.toString().length !== 4 || phoneNumber.toString().length !== 10} />
+              disabled={pinCode.toString().length !== 4 || phoneNumber.toString().length !== 10 
+                || !PHONE_REGEX.test(phoneNumber) || status !== "Sign In"} />
             </View>
           </View>
         </View>
@@ -86,8 +88,8 @@ const SignInScreen = ({navigation}) => {
           <View style={{width: '60%', marginBottom: 60}}>
             <Button onPress={Registering} title='Register New Account' />
           </View>
+          {loginError && <Text style={griotaStyles.errors}>{loginError}</Text>}
         </View>
-          { loginError && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>{loginError}</Text>}
           
       </ScrollView>
     

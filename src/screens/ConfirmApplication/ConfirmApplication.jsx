@@ -34,7 +34,8 @@ const ConfirmApplication = ({navigation}) => {
     const [status, setStatus] = useState('APPLY')
     const[paymentCommitment, setPaymentCommitment] = useState(false)
     const[durationCommitment, setDurationCommitment] = useState(false)
-    const[arrayCheck, setArrayCheck] = useState()
+    const[arrayCheck, setArrayCheck] = useState() 
+    const[errorMessage, setErrorMessage] = useState() 
 
     useEffect(()=>{
       const arr = []
@@ -51,7 +52,7 @@ const ConfirmApplication = ({navigation}) => {
           const application = await API.graphql(graphqlOperation(
             `mutation MyMutation2 {
               createApplication(input: {
-                status: "pending", 
+                status: "newApp", 
                 bodaApplicationsId: "${phoneNumber}",
                 loanAmount: ${loanAmount},
                 loanInstalment: ${instalment},
@@ -69,7 +70,8 @@ const ConfirmApplication = ({navigation}) => {
           }
         }
         catch(e){
-          console.log('Unable to create application', e)
+          setErrorMessage(`ERROR: ${e.message}`)
+          setTimeout(()=>setErrorMessage(null), 5000)
         }
     }
     
@@ -139,6 +141,7 @@ const ConfirmApplication = ({navigation}) => {
                   ? true : false}
               />
           </View>
+          {errorMessage && <Text style={[griotaStyles.errors, {marginVertical: 20}]}>{errorMessage}</Text>}
       </View>
     </ScrollView>
   )

@@ -5,12 +5,11 @@ import CustomButton from '../../../components/CustomButton/CustomButton';
 import { useRoute } from '@react-navigation/native';
 import { API, graphqlOperation } from "aws-amplify";
 import { Table, Row, Rows } from 'react-native-reanimated-table';
-import { formatBodaInfo } from '../../../resources/formatBodaInfo';
 import CustomInput from '../../../components/CustomInput/CustomInput';
 import { useForm } from 'react-hook-form';
 import CustomNumberInput from '../../../components/CustomNumberInput';
 
-const EditStage = ({navigation}) => {
+const EditStage = ({navigation}) => { 
 
   const route = useRoute()
   const [errorMessage, setErrorMessage] = useState()
@@ -55,8 +54,8 @@ const EditStage = ({navigation}) => {
     }
     catch(e)
     {
-      setErrorMessage('ERROR: Please contact Support')
-      console.log('Error getting boda details', e)
+      setErrorMessage(`ERROR: ${e.message}`)
+      setTimeout(()=>setErrorMessage(null), 5000)
     }
   }
 
@@ -87,13 +86,14 @@ const EditStage = ({navigation}) => {
     }
     catch(e)
     {
-      console.log('unable to update stage ', e)
+      setErrorMessage(`ERROR: ${e.message}`)
+      setTimeout(()=>setErrorMessage(null), 5000)
     }
   }
 
 
   const returnToWelcome = ()=> {
-    navigation.navigate("AdminScreen/SelectStageToView")
+    navigation.navigate("AdminScreen/SelectStageToEdit", {level})
   }
 
   const { control, handleSubmit} = useForm({
@@ -106,9 +106,9 @@ const EditStage = ({navigation}) => {
   return (
     <ScrollView>
       <View style={{padding: 22}}>
+        {errorMessage && <Text style={griotaStyles.title}>{errorMessage}</Text>}
         {!stageDetails ? <Text style={griotaStyles.title}>Loading...</Text> :
         <View>
-          {errorMessage && <Text style={griotaStyles.title}>{errorMessage}</Text>}
           <Text style={griotaStyles.title}>Edit {selectedStage}</Text>
           <Text style={griotaStyles.label}>Stage Details:</Text>
           <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>
